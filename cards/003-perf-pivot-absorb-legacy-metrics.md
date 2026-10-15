@@ -1,6 +1,6 @@
 # 003 · 新版透视吸收旧版四指标并下线旧版 + 计划逐层化（川业务员/团队、晋 2027 全层级）
 
-- 状态: discussed
+- 状态: scouted
 - 目标仓: chexian-api（owner 原文点名「该仓有计划域」）
 - 类型: 功能 + 数据口径/数据扩展
 - 录入: 2026-10-15
@@ -44,9 +44,55 @@
 - 与 001/002 无并卡关系（不同页面不同面）。
 - 裁定落点（AUQ 后）：吸收范围 = 四指标 + 系数两控件（Q4=A）——新版透视需引入 coefficientSegment 参数透传与控件、coefficientCaliber 切换 UI；下线验收门 = 指标对拍 + 能力验收双通过（Q2 owner 原话）；晋 2027 数据面 = 上游业务员级计划源（Q1=A），仓库侧 ETL 走既有 level='salesman' 通道、SX 特例分支待收敛。
 
-## 探索 #1
+## 探索 #1（2026-10-15）
 
-（未探索——AUQ 答复后按「确认即探索」进目标仓写到 PR 实施方案深度）
+- 探查锚: chexian-api @ 61063382（origin/main，2026-10-15 晨 fetch 成功；午后二次 fetch SSL 抖动，工作树即该锚）
+- 防撞车: 开放 issue/PR 无同面；#1834（热力图残留选中格）、#1980（同业报价域）相邻不同面。
+
+### 现状结构（PR 改动面的地基）
+
+- **旧版达成率实现**（`server/src/sql/performance-heatmap.ts:587-674`）：`plan_by_dim`（SX 分支读 PlanFact level='organization'；SC 分支读 SalesmanTeamMapping `car_insurance_plan_2026`＝最新计划年业务员计划，按 org/team/salesman 维聚合）× 时间进度（`EXTRACT('doy')/全年天数`，闰年感知，按每期 `current_cutoff`）= `plan_period`；分子 `ytd_by_dim_period`（年初→各期 cutoff 的累计保费，随 exclude 口径谓词）。达成率仅组织三维（`heatmapSupportsAnnualPlan` :271），SX 再叠加 `isSxOrganizationPlanScope` + 禁团队/业务员（`heatmapHasPersonPlanScope` :339）。
+- **报价域**（`server/src/sql/performance-analysis/quote-metrics.ts:703-760`）：`buildQuoteHeatmapCtes` 产 `quote_dim_period`（维度×期，`COUNT(DISTINCT frame_key)` 报价量/成交量）+ `quote_period_total`（周期整体重算）+ `quote_scope`（覆盖闸）。锚点跟随 dateField（quote_time / insurance_start_date 双锚）。
+- **新版透视**（`server/src/sql/performance-pivot.ts` + `routes/query/performance.ts:1008-1053`）：服务端**已接受** `coefficientSegment`（缺省 all）/ `coefficientCaliber`（缺省 exclude）/ `yoyAlign`——系数两控件是**纯前端接线**缺口。透视无 planScope、无报价 CTE——达成率与报价是**服务端原子扩展**缺口。
+- **共享聚合引擎**（`src/shared/pivot/types.ts:79-97`）：reducer 纯 addTo 求和；**已有 `PivotTotals='server'` 钩子**（行业对标先例：服务端吐各维 TOTAL 合计原子，前端绝不对成员求和得合计）。业绩透视当前 sum 模式。
+- **SX 计划源通道**（`server/src/services/data-bootstrapper.ts:613-665`）：`resolveBranchDimExtras('plan')` 已支持 `warehouse/validation/SX/dim/plan/latest.parquet` 多省副本探测→UNION 进 PlanFact 携 branch_code——**晋 2027 业务员级计划源的基础设施已在**，缺的是上游数据 + SX 特判收敛。
+- **消费方**：`PerformanceAnalysisPanel` 两处消费——通用页 `PerformanceAnalysisPage` + **战略驾驶舱 `StrategyCockpitPage`**（传 allowedHeatmapDimensions/defaultHeatmapDimension 收窄）。下线旧版＝驾驶舱热力图区块同切 pivot，需一并适配验收。
+- **测试面**：E2E 07（heatmap drilldown）/39（url-state）/42（gray-assembly）；`performance-cube.test.ts` F5 golden sha256 锁热力图 SQL 文本；pivot 族 vitest（pivotModel/pivotConfig/性能 pivot 路由契约）。
+
+### 两大设计难点（转正方案核心）
+
+1. **计划/YTD 非可加**：计划沿维成员可加、沿期不累加（每期同值会重复计入）；YTD 是期末快照，跨期求和无意义（时间轴合计格应取窗口末期快照）。且透视任意布局下，达成率可表达条件 = **非时间轴全部为计划维（org/team/salesman）**——org×category 交叉格计划无法归属（计划拆不到业务维），C15 置灰需从「维度级」升为「布局级」判据。
+2. **报价 VIN 去重跨格不可加**：同车架号可跨维成员/跨期重复，`quote-metrics.ts` 明写「车架号跨维度可重复，禁止前端加总」（旧版整体行由服务端 `quote_period_total` 单独重算）。sum 引擎直接加总会虚增。
+   - 两个难点的共同解法方向：**合计原子走 server 模式**（复用既有 `PivotTotals='server'` 钩子）——透视 SQL 以 GROUPING SETS 产出各维 TOTAL 组合的计划/YTD/报价合计原子；或引擎把 totals 来源细到指标级（保费等仍 sum、报价/计划字段取 server 原子）。实施期二选一，倾向后者（原子行数增长最小）。
+
+### 实施要点（改动面清单）
+
+- **PR-A 服务端原子扩展**（`performance-pivot.ts` + 路由）：
+  - 加 planScope 解析（复用 heatmap 路由的 `resolveRequiredPlanFactBranchCode`/`extractTeamPlanScope`，performance.ts:780/:905/:1093 同款）；
+  - 加计划/YTD CTE（从 performance-heatmap.ts 的 planCtes 平移到多维 GROUP BY 版本，期窗同源 `buildHeatmapPeriodSpec`）；
+  - 加报价 CTE（`buildQuoteHeatmapCtes` 多维版 + 路由 buildQuoteFilterContext + 三态/覆盖闸元信息随响应下发）；
+  - GROUPING SETS 合计原子（或指标级 totals 方案）。
+- **PR-B 前端**（`PerformancePivot/`）：PivotMetric 扩 achievement/quote_count/deal_count/deal_rate（阈值复用 V2 config 的 ACHIEVEMENT/DEAL_RATE_THRESHOLDS，配色 legacyColorInput 已有映射范式）；布局级置灰判据（达成率×非计划维布局、报价×含 business_nature 布局，平移 C15/C16/C17）；报价三态呈现（数字/-/不适用）与口径脚注（QuoteMetricsCaption 机制）；系数两控件接线（服务端参数已在，纯 UI + usePerformancePivot 透传）。
+- **PR-C 下线旧版**（验收门 = Q2：指标对拍 + 能力验收双通过后）：删 Panel legacy 分支/PerformanceOrgHeatmapV2 树/HeatmapHeader/usePerformanceOrgHeatmap；灰度转全量（PERFORMANCE_PIVOT_GRAY_USERS 退役）；驾驶舱 StrategyCockpitPage 适配；E2E 07/39/42 改造；F5 golden 随热力图退役。`/performance-heatmap` 路由是 MCP 公开契约（cx_query_performance_org_heatmap）——建议按 premium-report 前例保留为「界面已下线、程序化访问保留」，去留单独裁定，不随 PR-C 强删。
+- **晋 2027 数据面**（独立 issue，上游数据到位后）：SX plan parquet 落 `validation/SX/dim/plan/latest.parquet`（level='salesman'，携 branch_code='SX'）→ 既有 loader 通道自动 UNION；随后收敛特判：`buildSxPremiumPlanCore` 分支退役、`isSxOrganizationPlanScope`/`heatmapHasPersonPlanScope` 门控退役、前端 HINT_DISABLED_SX 退役、SX 团队/业务员达成率自然出数。PlanFact 计划年动态取 MAX(plan_year)，2027 行入库即生效。
+
+### 风险
+
+- 透视 SQL 复杂度显著上升（plan/ytd/quote 三组 CTE + GROUPING SETS），60k 行上限（PERFORMANCE_PIVOT_MAX_ROWS）可能提前触顶——需在 PR-A 里压测业务员维 × 12 期的原子行数。
+- 旧版 F5 golden 与热力图 SQL 字节锁：PR-A/B 不得动 performance-heatmap.ts（下线前双轨并存期）。
+- 驾驶舱收窄维度（战略两维）× 新指标（达成率不可表达、报价战略段有缺口）——置灰/脚注须覆盖驾驶舱形态，能力验收要含驾驶舱。
+- 报价三态（数字/-/不适用）超出 pivot CellMetrics 数值模型，聚焦卡/走势图对 null 与 NA 的呈现需区分。
+
+### 转正映射建议
+
+- issue 1（type/feature + area/api+frontend）：新版透视吸收四指标+系数两控件（PR-A/B），随附对拍验收；PR-C 下线旧版挂在同 issue 或其子任务（验收门见 Q2 裁定）。
+- issue 2（type/data 或 feature）：晋 2027 业务员级计划源入库 + SX 特判收敛（上游数据依赖，独立推进）。
+
+### 验收
+
+- 服务端：`bun run governance`；pivot/heatmap 路由契约测试（对拍：同布局同筛选下透视格值 = 旧热力图逐格相等——达成率/报价三列 + 既有指标回归；报价三态与覆盖闸用例）。
+- 前端：pivot 族 vitest（pivotModel/pivotConfig/置灰判据）；E2E 07/39/42 改造版通过。
+- 能力验收（Q2）：系数段过滤、口径切换、达成率置灰提示、驾驶舱形态、AI 解读（pivot 自带）逐项清单核对。
 
 ## 开工记录
 
