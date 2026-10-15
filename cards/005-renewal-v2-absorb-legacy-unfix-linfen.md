@@ -1,6 +1,6 @@
 # 005 · 续保页旧版下线评估 + 临汾续保四指标不固定
 
-- 状态: discussed
+- 状态: scouted
 - 目标仓: chexian-api（owner 原文点名）
 - 类型: 功能 + 数据口径
 - 录入: 2026-10-15
@@ -52,9 +52,52 @@ chexian-api，评估旧版下线，能力和指标设计是否吸收到新版，
 - 临汾面板特殊性：它是企微智能表的主站镜像（业务侧催办工具），泛化后若与企微表解耦，「逐行同口径」的对拍锚换成什么——这是 Q4 的实质。
 - v2 phase 模式已覆盖临汾面板约半数能力（未报价/已报未续/未续回队列），真正的指标设计缺口集中在节奏锚与 T-7 未成交件数/在管件数两枚计数。
 
-## 探索 #1
+## 探索 #1（2026-10-15）
 
-（未探索——AUQ 答复后按「确认即探索」进目标仓写到 PR 实施方案深度）
+- 探查锚: chexian-api @ 034d9378（origin/main，2026-10-15）。建卡锚 61063382 → 034d9378 漂移仅理赔域 P2-E（#2088），续保/临汾相关文件 diff 为空，零增量重探。
+- 防撞车: 开放 PR 无同面；issue #1791/#1709 数据管道面不相交（已录）。交叉项一处：`docs/plans/2026-09-26-续保追踪页AI植入-准备方案.md` 以**旧版视图为宿主**（洞察卡联动复用 handleSelectOrg、aiDepsKey 签名含 timeView/timeRange、LinfenKpiPanel 仅布局参照）——见风险 5。
+
+### 对拍清单（旧版能力 → v2 覆盖判定）
+
+| 旧版能力 | v2 判定 |
+|---|---|
+| A-E 五量（A 应续/B 报价/C 已续/D 未报价/E 流失）+ 派生率 | 覆盖：due/quoted/dealt + quote_rate/renew_rate；D/E 为差值派生，v2 未单列（phase 模式有 unquoted/not_dealt 同义列） |
+| renewal_impact_rate 影响度（renewal.ts:184，L4，E÷同层ΣA 窗口分母） | **缺**——真缺口，转正时裁定平移（v2 全窗行 bucket=null 可承载分母）或显式弃用 |
+| 24 层（4 基础层 × 5 维度 GROUPING SETS） | 覆盖（形态不同）：八维行/平铺 + salesman/customer_category 明细带（useRenewalPivotDetail，同 API month 模式） |
+| 时间窗自由 start/end/cutoff（TimeFilter） | **收缩**：v2 零时间参数，固定滚动窗（当前月前 11 后 3）；任意窗口需求由 MCP /cube 续保族兜底——取舍在 issue 声明 |
+| 20 字段通用筛选 + RLS 四段 + 报价留痕披露（quoteCoverageStart） | 覆盖：同款消费 + meta 已披露 |
+| 空态守卫（A=0 → EmptyState，多省装载保护） | 需确认 v2 等价守恒（v2 空窗行为转正时核） |
+| 临汾四指标（首日/首周/T-14 报价率 + T-7 未成交件数 + 在管件数，分业务员+机构合计） | 本卡吸收面：锚统一 v2（T-30/-24，T-14 同锚无需换）；T-7 未成交件数/在管件数补为 v2 命名指标 |
+
+### 实施要点（文件:行号，全部对 origin/main 只读取证）
+
+**A. v2 吸收（功能 PR）**
+- `server/src/sql/renewal-pivot.ts`：month 模式补 t7_unrenewed_count（到期日 ≤ today+7 ∧ ¬is_renewed，COUNT DISTINCT VIN）与 managed_count；落点二选一在 issue 定——month 列组 vs KPI 带年度累计（`v2/KpiBand.tsx`，与六指标同窗 当年1/1~today）。
+- ⚠ 时间锚口径点：v2 全套用服务器 today；临汾指标按口径裁定 #29 一律**数据日**（报价/保单最新日较早者，linfen-renewal-kpi.ts 头注）。吸收时 T-7 分母/窗口锚对齐 #29 还是沿 v2 today，转正 issue 须先裁（影响与临汾旧路由对拍）。
+- `server/src/config/metric-registry/categories/renewal.ts`：新增 renewal_pivot_t7_unrenewed_count / renewal_pivot_managed_count（值域绑定）；linfen_* 四枚 L4 占位（:306-394）退役——changelog 记锚统一 T-30/-24 + SSOT 移仓声明（Q3-B/Q4-A 连带，防后来者拿 1171 行旧对拍当回归基线）。
+- 机构参数化：v2 已吃 orgNames 筛选 + org_level_3 行维，「不固定」主要落前端——v2 视图机构快选（临汾默认 chip，仅 SX）；分业务员盯盘形态由 salesman 行维承载。
+
+**B. 旧版下线（下线 PR）**
+- 前端：`RenewalTrackerPage.tsx` 版本切换条+旧版分支（:125-160）与 TimeFilter/OverviewBand/OrgTable/CategoryTable/HeroFunnel/Crumb 全套、`LinfenKpiPanel.tsx`、`hooks/useLinfenRenewalKpi.ts`、`useRenewalTracker.ts`、types/grading/index 出口、apiClient.getLinfenRenewalKpi/getRenewalTracker。
+- 灰度闸：`src/shared/config/organizations.ts:811` RENEWAL_PIVOT_GRAY_USERS 与后端 `special-feature.ts` 镜像双侧拆除（fs 哨兵测试同步）。
+- 后端路由去留（按 003 先例：前端零调用后仓内纪律定）：`/renewal-tracker`（24 层）与 `/linfen-renewal-kpi`；程序化消费面——`api-wire-conservation.mjs:106`（getLinfenRenewalKpi 登记）、`tests/api/__golden__/client-wire-golden.json`、`query-routes-metadata.ts:954`、`route-param-contracts.ts:381`、`middleware/permission.ts:109`、MCP catalog 描述同步（cx_query_linfen_renewal_kpi / cx_query_renewal_tracker）。
+- ⚠ 共享 SQL：`server/src/agent/routes/agent-diagnosis.ts:424` 的 `/api/agent/diagnosis/renewal-tracker`（A-E + 影响度 + 分省四级判级）与 PAT 工具链消费 `sql/renewal-tracker.ts` 生成器——**页面下线 ≠ 该 SQL 可删**，须先拆分保留 diagnosis 链路再用面。
+- 测试：renewal-tracker.route-contract.test.ts、renewal-pivot.route-contract.test.ts、renewalPivotView.test.tsx、E2E `tests/e2e/25-workbench-renewal.spec.ts`（改写为 v2 独占）+ 04/12/19 联动用例、preset-users/domain-cross-metric 注册表测试。
+- ETL/企微不动：`scripts/lib/wecom-sync-tasks.mjs:103-155` 临汾实例同步任务保留（Q4-A）。
+
+### 风险
+
+1. 节奏无先例：续保将是仓内首个「灰度→全量→旧版下线」三连（业绩/报价透视仍灰度中）；003 先例为「验收通过即具备下线条件、无观察期」，转全量与下线是否同批由 issue 定。
+2. 企微表解耦后临汾业务侧两处数字系统性不同（T-60/-53 vs T-30/-24）——owner 已裁，issue 描述向业务侧交代。
+3. agent diagnosis 与 sql/renewal-tracker.ts 耦合，误删共享 SQL 会断 PAT 链。
+4. today vs 数据日锚（裁定 #29）未决前，T-7/在管指标无法定稿，也无法设计对拍。
+5. AI 植入方案（2026-09-26 准备方案）以旧版视图为宿主——下线先落地则该方案需 v2 宿主适配（联动机制/aiDepsKey 签名重设计），两工作项需排顺序。
+6. 对拍锚收窄：换锚后首日/首周不可与临汾旧路由对拍；可对拍项 = T-14 报价率（同锚）+ T-7 未成交件数（同定义，若锚裁定 #29 则完全同口径）+ v2 内部新旧版 A-E 对拍。
+
+### 转正映射建议
+
+- 卡 005 → **1 个 issue**（吸收+下线一体，内含锚裁定 #29 与影响度平移/弃用两个前置小裁）→ **2 个 PR**：① v2 补 T-7/在管两枚计数+机构入口+注册表退役 changelog（先合，灰度名单内可验）；② 旧版下线（旧视图+灰度闸+路由+测试+MCP 文档），依赖①验收。
+- 验收：`bun run typecheck && bun run test`（renewal 双 route-contract、renewalPivotView、api-wire、注册表测试）+ `bun run test:e2e -- tests/e2e/25-workbench-renewal.spec.ts` + `bun run governance`；走查 harness `src/features/renewal-tracker/v2/__tests__/renewalPivotWalkthrough.harness.js` 基线更新。
 
 ## 开工记录
 
