@@ -42,6 +42,7 @@
 - 新版原子模型适配性初评：报价量/成交量是可加计数原子、成交率分子分母分别求和，直接进原子；达成率需要**非时间可加**的计划原子（计划沿组织维成员可加、沿时间不累加，且时间进度按格值期末取），聚合层要特判——这是转正探索的重点改动面。
 - 下线旧版牵动面：PerformanceOrgHeatmapV2/HeatmapHeader/usePerformanceOrgHeatmap、置灰判据与口径脚注迁移、E2E 07/39 等热力图用例、/performance-heatmap 路由去留（MCP/PAT 程序化消费方需查）。
 - 与 001/002 无并卡关系（不同页面不同面）。
+- 与 004（计划达成起保，另一会话）**不冲突但需协调**（2026-10-15 会话间判定的依据）：004 动 dashboard 域 + /plan-achievement + achievement_cache，003 动 /performance-analysis + 透视原子，文件面无交集；透视达成率原子按旧热力图同构——分子 YTD 随 dateField、计划取静态值，与 004「计划按起保制定」裁定同向，且 003 不读 achievement_cache。转正时 issue 须 cross-link 004 裁定，防达成率公式口径注释两处漂移（004 勘正 metric-registry / 003 写透视新原子）。
 - 裁定落点（AUQ 后）：吸收范围 = 四指标 + 系数两控件（Q4=A）——新版透视需引入 coefficientSegment 参数透传与控件、coefficientCaliber 切换 UI；下线验收门 = 指标对拍 + 能力验收双通过（Q2 owner 原话）；晋 2027 数据面 = 上游业务员级计划源（Q1=A），仓库侧 ETL 走既有 level='salesman' 通道、SX 特例分支待收敛。
 
 ## 探索 #1（2026-10-15）
