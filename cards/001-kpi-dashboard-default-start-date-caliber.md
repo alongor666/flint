@@ -1,6 +1,6 @@
 # 001 · KPI 看板默认起保口径
 
-- 状态: discussed
+- 状态: scouted
 - 目标仓: chexian-api（owner 原文明确）
 - 类型: 优化 / 数据口径（AUQ 回填细化）
 - 录入: 2026-10-15
@@ -42,8 +42,21 @@ chexian-api仓，默认kpi看板默认使用起保口径
   - 口径选择器与全局联动语义（CX-ADR-005）不动；
   - 后端不改动（Q2=A 前提下）；
   - 风险：页级默认与「恢复默认」按钮基线（buildResetFilters 全局基线签单）可能打架——重置后回到签单而非起保，需一并定义「KPI 页的默认」语义；URL 回放（f_ 参数）与页级默认的优先级需对齐既有规整逻辑。
-- 转正映射建议: 单卡单 issue（type/feature + area/frontend），单 PR。
+- 转正映射建议: 与 004 并一个 issue（「业绩墙卡与计划达成默认起保口径」），本卡为轻支 PR。
 - 验收: KPI 看板初载（无 f_ 参数）各面板口径标注为起保；切换签单/起保正常；URL 回放/重置行为符合裁定；相关 filters 测试族（filter-caliber / query-param-equivalence 等）通过。
+
+## 探索 #2（2026-10-15 · 确认后 PR 方案）
+
+- 探查锚: chexian-api @ 034d9378（origin/main，2026-10-15）。⚠ 本地工作区停在旧分支 fix/audit-48h-m6-l1-l3（落后 main），本段已全部按 origin/main 核对；61063382→034d9378 仅 1 个不相关提交（hunch P2-E），SQL 层零漂移。
+- 防撞车: KPI 卡片走势线 /kpi-sparklines 已在 main 实装（2026-10-12 重设计）且**已消费 dateField**（`server/src/routes/query/kpi-sparklines.ts:102` parseFiltersAndBuildBothWhere → `:167` weekCtx.dateField）——体检（kpi.ts 路由 `/health-check` 段 dateField 直传 generateKpiQuery）与走势线「同步起保」**零服务端改动**，前端默认值自动带动。
+- 实施要点（PR 方案）:
+  1. **前端覆写机制**，对齐仓内先例（综合分析页 useComprehensiveBundle「口径 SSOT 在 preset、调用点 pre-build 覆写」）：KPI 看板页数据入口 hooks 构造参数时覆写 dateField——入口清单（origin/main 行号）：useKpiData.ts:102、useDashboardBundle.ts:46、useHealthCheck.ts:35、useKpiSparklines.ts:40、GeoSection.tsx:46、useTrendData、usePolicyGeo（后两者同页模块一并接）。
+  2. **「默认起保 vs 用户显式签单」判定**：URL f_ 参数显式携带 date_criteria 时尊重用户值，未携带时 KPI 域默认 insurance_start_date；判定信号由 FilterContext 地址回放层提供（回放时可知键是否携带）。口径 SSOT 建议落 full preset 扩展（如 defaultDateCriteria），与 cost preset 的 lockedDateCriteria 同文件同形态。
+  3. **全局不动**：buildResetFilters（main 上 `src/shared/types/data.ts`）与 FilterContext 初载基线（main `src/shared/contexts/FilterContext.tsx:261`）保持签单；其他页默认不变；CX-ADR-005 跨页联动语义保持（显式值带出仍有效）。「KPI 页恢复默认」按钮基线需同步定义为页级起保（探索 #1 遗留风险在此收口）。
+  4. **后端零改动**：六列 SQL kpi_date 已消费 dateField（`server/src/sql/kpi.ts:156,308`）；SC 分支达成率已核实分子 bp.vehicle_ytd_premium 随 dateField、分母为计划静态值（achievement_cache plan_vehicle，`server/src/sql/kpi.ts:301-305`）——SC/SX 全分支达成率随 dateField 自动切换。
+  5. **A10/#20 勘正登记**：`数据管理/knowledge/rules/车险数据业务规则字典.md`（裁定 #20 登记行 + 新版本行）、`server/src/config/query-routes-metadata.ts:358-379`（KPI/HEALTH_CHECK/DASHBOARD_BUNDLE timeWindowNote 的 A10 文本）、`server/src/config/metric-registry/categories/growth.ts:103`（A10 补登注释）——「恒 YTD 窗口」语义保留，勘正为「口径字段随 dateField，KPI 前端默认起保（2026-10-15 owner 裁定）」。
+  6. 风险：KPI 页默认起保后六列达成率自动变起保分子，004 落地前与计划达成页现状（签单）短暂不一致——两 PR 同 issue 相邻合并（建议 001 先 004 后，或同批）。
+- 验收命令: 前端 filters/dashboard 契约测试族 + `bun run governance`（目标仓 AGENTS.md 要求）；手工对拍——KPI 看板初载（无 f_）六列/体检/走势线/趋势/地理全模块起保口径且口径标注一致；URL 显式 date_criteria=policy_date 回签单；他页初载仍签单默认。
 
 ## 开工记录
 

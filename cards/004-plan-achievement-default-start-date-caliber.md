@@ -1,6 +1,6 @@
 # 004 · 计划达成默认起保口径
 
-- 状态: discussed
+- 状态: scouted
 - 目标仓: chexian-api（与 001 同族：业绩指标默认口径签单→起保，转正时可并 issue）
 - 类型: 优化 / 数据口径
 - 录入: 2026-10-15
@@ -39,6 +39,19 @@
   - 风险：缓存构建时长与内存翻倍（PR #239 扇出限流先例）；起保口径下「数据内最新起保日」锚与计划年的时间进度分母错位（时间进度锚签单日书写，需重定义）。
 - 转正映射建议: 与 001 并一个 issue，PR 拆两支（001 轻 / 004 重）。
 - 验收: 计划达成页与 KPI 达成率列口径对拍一致；签单/起保切换（如保留）数字正确；buildAchievementView 双口径构建通过 governance；既有计划达成测试族通过。
+
+## 探索 #2（2026-10-15 · 确认后 PR 方案深化）
+
+- 探查锚: chexian-api @ 034d9378（origin/main）。SQL 层（sql/kpi.ts、sql/premiumPlan.ts、routes/query/premium-plan.ts、routes/query/kpi.ts）与旧锚**零差异**，探索 #1 全部有效；行号漂移仅前端（filters.ts 锁口径 main 上 293/320/569/603）。本地工作区旧分支，实施时从 origin/main 切支。
+- 实施要点（PR 方案）:
+  1. **achievement_cache 双口径**：`server/src/services/duckdb-domain-loaders.ts` buildAchievementView 预聚合扩两套（签单现状保留 + 起保新增，表名或 caliber 维度列二选一，实施时按构建内存实测定——PR #239 教训：两并发重查询即触 2048MB 上限，构建侧同样要实测翻倍成本）；time_prog（time_progress 锚「数据内最新签单日」）、月进度月锚、跨年签单剔除、团队分子分母同批人四组语义逐条按起保日重写并对拍（metric-registry/categories/plan.ts:17,247,469 登记了这些列的计算链注释，同步勘正）。
+  2. **路由接参**：`server/src/routes/query/premium-plan.ts` planAchievementSchema 加 dateField 枚举，默认 insurance_start_date；SX 整体/SC 缓存两分支都消费。
+  3. **与 001 的接缝**：KPI 六列 SC 分支计划分母读 achievement_cache plan_vehicle（静态计划值，与口径无关）——001 落地后 KPI 达成率分子自动起保；本卡落地后计划达成页 actual 列起保，两处对拍一致（同口径同筛选相等为验收判据）。
+  4. **前端**：计划达成页（reports 域）默认传起保 + 口径标注；如保留切换，切签单时 URL 显式携带（与 001 的显式判定同一机制）。
+  5. 时间进度分母重定义：起保口径下「数据内最新起保日」锚与 natural_day_progress（自然日进度）的关系在 PR 中写明语义（日历进度不变，锚日切换）。
+- 风险: 缓存构建时长/内存翻倍（实测后若超限，降级方案=起保口径直查 PolicyFact、保留签单缓存，仅计划达成页直查）；SC achievement_cache 为启动预构建，双口径启动时长影响发布窗口。
+- 转正映射建议: 与 001 并一个 issue（「业绩墙卡与计划达成默认起保口径」），本卡为重支 PR（001 先或同批）。
+- 验收命令: 既有计划达成测试族 + governance；手工对拍——计划达成页 vs KPI 六列达成率（同筛选同口径）相等；起保/签单（如保留切换）数字各自正确；启动构建时长与内存记录进 PR 描述。
 
 ## 开工记录
 
