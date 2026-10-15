@@ -26,7 +26,7 @@ chexian-api仓，默认kpi看板默认使用起保口径
 
 - owner 复核推翻 Q2 首答：**六列墙卡（保费/件数/增长率/达成率）默认起保**。
 - 探索勘正（重要）：A10 的「恒签单」实为「恒 YTD 窗口 + 默认签单」——六列 SQL 的 `kpi_date` 本就消费 dateField（`server/src/sql/kpi.ts:156,308`，路由层 `server/src/utils/route-helpers.ts:228` dateField=dateField 参数 ?? policy_date）。故六列默认起保**无需动 SQL 架构**：001 Q1 页面级默认起保（date_criteria=insurance_start_date）即自动生效；需做的是 A10 裁定文本勘正登记（恒 YTD 窗口语义保留，口径随 dateField）。
-- 连带待裁：数据锚 latest_policy_date 随 dateField 变为最新起保日（语义自洽，同比基期同口径平移）；经营体检 /health-check 与 KPI sparklines 同源指标（达成率/增长率恒 YTD）的 dateField 默认是否同步——见 AUQ Q3。
+- 连带待裁：数据锚 latest_policy_date 随 dateField 变为最新起保日（语义自洽，同比基期同口径平移）；经营体检 /health-check 与 KPI sparklines 同源指标（达成率/增长率恒 YTD）的 dateField 默认是否同步——**owner 已裁（2026-10-15，004 卡 Q2）：同步起保，口径单一事实源**。
 
 ## 讨论
 
