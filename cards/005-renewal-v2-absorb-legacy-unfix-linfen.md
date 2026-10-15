@@ -1,6 +1,6 @@
 # 005 · 续保页旧版下线评估 + 临汾续保四指标不固定
 
-- 状态: scouted
+- 状态: building
 - 目标仓: chexian-api（owner 原文点名）
 - 类型: 功能 + 数据口径
 - 录入: 2026-10-15
@@ -101,4 +101,12 @@ chexian-api，评估旧版下线，能力和指标设计是否吸收到新版，
 
 ## 开工记录
 
-（未开工）
+- 2026-10-15：owner 下令「开工 005 + AUQ 裁决」。转正四裁定（AUQ 第二轮）：
+  1. **v2 整体换数据日锚**（未选推荐项「仅新指标数据日」，也未选「沿 today」——牵动全部现有列）；
+  2. 影响度平移进 v2；
+  3. T-7 未成交/在管件数落 KPI 带快照；
+  4. 节奏 ①验收后即②（无观察期）。
+- 目标仓：issue **#2089**（1 issue 2 PR）；worktree `chexian-api-wt-2089` 分支 `i/2089`（base 034d9378，已认领）。
+- **PR①（吸收）= #2093**：数据日锚整体替换（分支最早报价视界探针 + fail-visible 空响应）+ renewal_pivot_impact_rate/managed_count/t7_unrenewed_count 三新指标 + 8 枚锚修订 bump + linfen 四枚退役 + KPI 快照行/影响度列/机构快选（SX 默认临汾）+ 业务规则字典裁定 #40 登记 + 行为锁测试（duckdb-data-date-anchors 22/22、phase-mapping fail-visible 用例）。typecheck / governance 119 项全绿；本机无续保派生域数据，真仓 API 对拍留发布机走查（PR 正文已声明对拍锚：T-14/T-7 可对拍，首日/首周换锚后不可）。
+- 实施中发现并修复：影响度分母首版把月格行计入 ΣA 且总合计落空分区（真 DuckDB 夹具穿测抓获，双处修）；路由缓存键与测试用例同日撞键（假钟隔离）。
+- **待办**：① #2093 对抗评审 + 灰度名单内验收（T-14/T-7 对拍）→ ② PR② 旧版下线（旧视图+灰度闸+路由+agent diagnosis 共享 SQL 拆分+E2E 25 改写）→ Closes #2089。
