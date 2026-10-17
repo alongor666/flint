@@ -1,6 +1,6 @@
 # 005 · 续保页旧版下线评估 + 临汾续保四指标不固定
 
-- 状态: building
+- 状态: shipped
 - 目标仓: chexian-api（owner 原文点名）
 - 类型: 功能 + 数据口径
 - 录入: 2026-10-15
@@ -109,6 +109,10 @@ chexian-api，评估旧版下线，能力和指标设计是否吸收到新版，
 - 目标仓：issue **#2089**（1 issue 2 PR）；worktree `chexian-api-wt-2089` 分支 `i/2089`（base 034d9378，已认领）。
 - **PR①（吸收）= #2093**：数据日锚整体替换（分支最早报价视界探针 + fail-visible 空响应）+ renewal_pivot_impact_rate/managed_count/t7_unrenewed_count 三新指标 + 8 枚锚修订 bump + linfen 四枚退役 + KPI 快照行/影响度列/机构快选（SX 默认临汾）+ 业务规则字典裁定 #40 登记 + 行为锁测试（duckdb-data-date-anchors 22/22、phase-mapping fail-visible 用例）。typecheck / governance 119 项全绿；本机无续保派生域数据，真仓 API 对拍留发布机走查（PR 正文已声明对拍锚：T-14/T-7 可对拍，首日/首周换锚后不可）。
 - 实施中发现并修复：影响度分母首版把月格行计入 ΣA 且总合计落空分区（真 DuckDB 夹具穿测抓获，双处修）；路由缓存键与测试用例同日撞键（假钟隔离）。
+- 2026-10-17（收口）：owner 授权代理走查（本机 air-replica 真数据 + SX 分公司管理员虚拟身份，报告落 PR① 评论 #6231225534）——五项「看」全过、对拍三组差全部与 universe 定义差同向（无实现性错误）、数据日两路由一致。遗留 P2 一项：机构快选生效后明细带标题仍显示「山西分公司」（orgOverride 不进 analysisLabel，一行修）。随后 owner 合并：
+  - PR① #2093 → main @ 3b9621e2（08:32Z）；issue #2089 因正文含 Closes 关键字随①提前关闭（预期为②关闭，无碍）
+  - PR② #2094 → main @ 886e0968（11:07Z，已改基 main）；生产经 deploy.yml 自动部署
+  - 遗留 P2 未修（main 上 RenewalPivotView 仍 effScope ?? scope.analysisLabel）→ 另立卡 006
 - 2026-10-15（续）：**评审与双 PR 齐发**。
   - **PR① #2093 独立对抗评审**（子代理，DuckDB 独立实证）：P0 无；P1×2（KPI 快照月末截界、缓存撞键测试定时炸弹）+P2×6——P1 全修（含 A4 末月回归钉）、P2 修 5 移交 1；报告已落 PR 评论 #6184927432 并入正文锚行。
   - **PR② #2094**（堆叠，base=i/2089，净删约 4200 行）：旧版视图 19 件整删、灰度闸双侧拆除、三路由退役（agent diagnosis 共享生成器保留、tool 改挂 capability 1.2.4）、apiClient 三方法下线（wire 守恒恒等式复立）、E2E 04/25 全量断言改写、addressing 三态 75/74/26。全量 20416 测试 + governance 119 项绿。
