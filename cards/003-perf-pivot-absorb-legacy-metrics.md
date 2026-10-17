@@ -99,5 +99,6 @@
 
 - 2026-10-17 owner 下令开工。锚核对：origin/main @ 0f379430（较探索锚 61063382 +51 提交，卡面文件零触及，探索结论有效）。worktree `.claude/worktrees/i-2164-pivot-atoms`，分支 `i/2164`。
 - issue：功能面 #2164（type/feature + area/server+frontend，PR-A/B/C 挂此 issue）；数据面 #2165（晋 2027 业务员级计划源 + SX 特判收敛，上游数据依赖解耦）。
-- **PR-A 已开**：[PR #2171](https://github.com/alongor666/chexian-api/pull/2171)（服务端原子扩展——YTD 快照/逐期进度/报价成员+合计原子/计划原子；毛改 716 行说明档）。验证：typecheck 三工程 ✅、全量单测 20721 ✅（两处契约棘轮咬合后修：quoteCaliber 下发、维度清单不新增——改导出复用 heatmapSupportsAnnualPlan）、duckdb 真执行 5/5（报价去重合计 2≠成员和 3 实测锁定）、build/governance 119 119 ✅、CI 排队中。
-- 待办：PR-B 前端接线（指标/控件/置灰/三态呈现）；对拍验收后 PR-C 下线旧版（验收门＝Q2 双验收）。
+- **PR-A 已开**：[PR #2171](https://github.com/alongor666/chexian-api/pull/2171)（服务端原子扩展——YTD 快照/逐期进度/报价成员+合计原子/计划原子；毛改 716 行说明档）。验证：typecheck 三工程 ✅、全量单测 20721 ✅（两处契约棘轮咬合后修：quoteCaliber 下发、维度清单不新增——改导出复用 heatmapSupportsAnnualPlan）、duckdb 真执行 5/5（报价去重合计 2≠成员和 3 实测锁定）、build/governance 119/119 ✅、**CI 13/13 全绿**。
+- 独立对抗评审（独立会话 @3656e012，[评论锚](https://github.com/alongor666/chexian-api/pull/2171#issuecomment-6236456724)）：SQL 本体（JOIN 链/GROUPING SETS/SX 门控）四高危点通过；P1 两处已修 @1ee0d689（计划分省过滤条件化漏 org-only 布局→无条件 resolveTeamMappingProvince；quoteCtx 缺 endDate 截止→capQuoteFilterContextAtEndDate + 战略维列守卫）。P2 遗留：rows[0] 依赖 UNION 输出顺序（理论风险，延用旧模式）。
+- 待办：等 #2171 合并（owner 侧）；PR-B 前端接线（指标/控件/置灰/三态呈现）；对拍验收后 PR-C 下线旧版（验收门＝Q2 双验收）。
