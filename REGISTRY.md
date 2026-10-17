@@ -8,3 +8,4 @@
 | [004](cards/004-plan-achievement-default-start-date-caliber.md) | scouted | chexian-api | 计划达成默认起保口径（achievement_cache 双口径改造，与 001 同族） | 2026-10-15 |
 | [005](cards/005-renewal-v2-absorb-legacy-unfix-linfen.md) | shipped | chexian-api | 续保页旧版下线评估（吸收对拍 v2）；临汾四指标机构参数化不锁临汾 | 2026-10-15 |
 | [006](cards/006-renewal-pivot-detail-scope-label.md) | clarifying | chexian-api | 续保透视明细带/趋势带标题未随机构快选（#2089 走查遗留 P2） | 2026-10-17 |
+| [007](cards/007-weekly-release-notes-workflow.md) | scouted | alongor666-skills | 周更发布说明工作流（分类+团队/用户双版；否决 10×10 网格改三层管线） | 2026-10-18 |
