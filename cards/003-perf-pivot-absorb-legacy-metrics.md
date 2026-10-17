@@ -1,6 +1,6 @@
 # 003 · 新版透视吸收旧版四指标并下线旧版 + 计划逐层化（川业务员/团队、晋 2027 全层级）
 
-- 状态: scouted
+- 状态: building
 - 目标仓: chexian-api（owner 原文点名「该仓有计划域」）
 - 类型: 功能 + 数据口径/数据扩展
 - 录入: 2026-10-15
@@ -97,4 +97,7 @@
 
 ## 开工记录
 
-（未开工）
+- 2026-10-17 owner 下令开工。锚核对：origin/main @ 0f379430（较探索锚 61063382 +51 提交，卡面文件零触及，探索结论有效）。worktree `.claude/worktrees/i-2164-pivot-atoms`，分支 `i/2164`。
+- issue：功能面 #2164（type/feature + area/server+frontend，PR-A/B/C 挂此 issue）；数据面 #2165（晋 2027 业务员级计划源 + SX 特判收敛，上游数据依赖解耦）。
+- **PR-A 已开**：[PR #2171](https://github.com/alongor666/chexian-api/pull/2171)（服务端原子扩展——YTD 快照/逐期进度/报价成员+合计原子/计划原子；毛改 716 行说明档）。验证：typecheck 三工程 ✅、全量单测 20721 ✅（两处契约棘轮咬合后修：quoteCaliber 下发、维度清单不新增——改导出复用 heatmapSupportsAnnualPlan）、duckdb 真执行 5/5（报价去重合计 2≠成员和 3 实测锁定）、build/governance 119 119 ✅、CI 排队中。
+- 待办：PR-B 前端接线（指标/控件/置灰/三态呈现）；对拍验收后 PR-C 下线旧版（验收门＝Q2 双验收）。
