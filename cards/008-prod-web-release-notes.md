@@ -12,7 +12,7 @@
 
 ## 澄清（AUQ）
 
-- **F1 更新锚点 → owner 已答（2026-10-18 插话「我是说新pr和commit」）**: 内容源 = 每日新合并的 PR/commit（合并事实锚），非部署事实锚。「合并≠上线」风险已知悉由 owner 接受——展示的是开发进展流。
+- **F1 更新锚点 → owner 已答（2026-10-18 插话「我是说新pr和commit」）**: 内容源 = 每日新合并的 PR/commit（合并事实锚）。**补充裁定（2026-10-18「如果没有上线，为什么要展示呢？」）**: 展示门槛 = 用户可用——合并后经 deploy.yml 自动部署（小时级），绝大多数条目天然满足；**用户界面无可见变化的服务端预埋条目直接剔除，不做「暂未上线」角标**（角标方案已撤）。
 - **F4 回溯范围 → owner 原文已含**: 「包含已经归档的历史pr」= 全历史回填，非增量。
 - **F2 内容生产链 → owner 答（2026-10-18 AUQ）: 「机器规则出+AI改写」**——机器规则定骨架（筛选用户可见项+四类分类）+ AI 定文案（去行话、用户语一句话）。融合方案非预设三选一；owner 未选人审项，按全自动无卡理解（样本/日志可回查），AI 改写失败降级=标题原文直出（fail-open）。
 - **F3 首开展示形态 → owner 答: 铃铛红点+首页卡片**（非阻断，per-username 已读键控仿 FirstRunGuide）。
@@ -24,7 +24,7 @@
 
 1. **每日生成管线**（生产/发布机 cron，git 零网络 + 仓内 LLM 通道）：
    - 源 = `git log --since=<昨日> --until=<今日> --format='%s'` 提取 (#N)+标题（squash 一一对应已验证）；
-   - 规则引擎（SSOT 配置）：前缀（feat/fix）→ 功能/修复基线；scope 白名单+工程 scope 黑名单派生体验/剔除工程项；标题关键词黑名单剔服务端预埋（「前端未接线」「服务端原子」类）；
+   - 规则引擎（SSOT 配置）：前缀（feat/fix）→ 功能/修复基线；scope 白名单+工程 scope 黑名单派生体验/剔除工程项；**服务端预埋剔除为硬规则**（标题关键词黑名单:「前端未接线」「服务端原子」「PR-A/PR-B 分拆」等——用户界面无可见变化即不展示，owner 裁定）；
    - AI 改写：仓内 LLM 通道（链序 OpenRouter→智谱→DeepSeek，#2159）批量改写条目为用户语一句话（输入=标题+类型徽标+scope，输出 JSON）；失败 fail-open 降级标题原文；
    - 产出 `server/data/updates/YYYY-MM-DD.json`（items: {type, title, titleUser, pr, scope}），随每日数据批次发布链同步。
 2. **服务端**：`GET /api/updates?since=&until=` 聚合日文件返回（全员可见无 RLS）；缓存友好。
@@ -50,8 +50,8 @@ owner 诉求拆解：① 面向用户的更新发布到生产网页（而非只�
 
 1. **两类"更新"并存，节奏不同**：
    - 数据更新：`scripts/auto-release-daily.mjs` 每日两批自动发布（早批 01 签单+05 理赔 ~07:40、晚批 02 报价+03 维修+04 厂牌 ~12:00，launchd 每 15 分钟 tick），带飞书/企微告警通道。每日都有。
-   - 代码发布：`scripts/generate-release-metadata.mjs` 构建期写 release.json（releaseSha+builtAt）入前端 dist 与 server/dist；`server/src/config/release.ts` 校验加载；#2130 规划提过「周日晚发布后/周一体检推送前」窗口惯例——代码按周部署，非每日。
-   - ⇒ **PR 合并 ≠ 生产上线**：main 每日 ~20+ PR 合并，但用户系统里看到的功能只随周部署生效。「每日展示前一日 PR」会把未上线内容当更新展示。
+   - 代码发布：**合并≈上线（小时级）**——`deploy.yml` 在 Production Gate 通过后自动部署生产；`scripts/release/pull-code.mjs`（CX-ADR-032，2026-09-06 owner 推翻「不挂自动」）载明 `auto-release-daily.mjs` 每批发布时经 `maybeIntegrateCode()` 自动整合 origin/main 新代码。探索 #1 初版误判「代码按周部署」（#2130 规划文句系特定切换窗口建议，非全局节奏），本条已修正。
+   - ⇒ 「未上线内容」实际只剩**服务端预埋 PR**（如 #2171 服务端原子先行、PR-B 前端后接）——合并进 main 且已部署，但用户界面上无任何可见变化。
 2. **前端已能感知两类版本**：`GET /api/data/version`（server/src/routes/data.ts:568）返回 etlDate + contentVersion（保单内容指纹）+ releaseSha（发布指纹）+ serverStartTime；`src/app/etlVersionPoller.ts` 页面侧 5 分钟轮询、localStorage 基线 `chexian:last-etl-date`、变化即清 SW 缓存+失效 React Query（注释载明 SW 内检查双死的教训）。
 3. **"更新感知"UI 已有家族**：`src/features/data-freshness/`（Host/Panel/Ring 三件套 + useDataFreshness，7 域 × 预计点/数据日期/状态档，全员可见）——用户已习惯在此看数据更新。
 4. **"每日首次打开"的既有模式**：`src/features/first-run-guide/FirstRunGuide.tsx` —— per-username localStorage 存档（`firstrun-guide-v1:${username}`）、scriptId 版本失配即作废重放、App 组合根全局挂载、「重看」入口经 slot 注入 /guide 页尾。是公告已读存档的现成参照（非拦截、零感知闸）。
