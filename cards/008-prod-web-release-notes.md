@@ -1,6 +1,6 @@
 # 008 · 生产网页更新发布（每日首开见更新 + 历史结构化浏览）
 
-- 状态: clarifying
+- 状态: discussed
 - 目标仓: chexian-api（前端路由 + 服务端；数据链可能涉 auto_loadbi / 发布机）
 - 类型: 功能（owner 表述「向生产端网页发布、面向用户的更新」）
 - 录入: 2026-10-18
@@ -14,24 +14,26 @@
 
 - **F1 更新锚点 → owner 已答（2026-10-18 插话「我是说新pr和commit」）**: 内容源 = 每日新合并的 PR/commit（合并事实锚），非部署事实锚。「合并≠上线」风险已知悉由 owner 接受——展示的是开发进展流。
 - **F4 回溯范围 → owner 原文已含**: 「包含已经归档的历史pr」= 全历史回填，非增量。
-- F2 内容生产链（AUQ 未答）→ **保守默认: 机器规则直出**（前缀+scope 白名单筛用户可见项，标题原文+类型徽标，全自动零人审；与「每日」节奏匹配、生产机纯 git 可跑无网络依赖）。升级路径: AI 改写人审版（007 工作流产物）替换当周条目。
-- F3 首开展示形态（AUQ 未答）→ **保守默认: 非阻断**——导航更新铃铛（未读红点）+ 首页「昨日更新」摘要卡，per-username 已读存档仿 FirstRunGuide 键控模式；不做弹窗打断。
-- F5 历史页归属（AUQ 未答）→ **保守默认: guide 域独立 canonical 路由 /updates**（符合 routeRegistry 纪律，铃铛/卡片/深链统一指向）。
-- 假设清单（owner 纠偏即停）: ①用户版口径全员同一份（不按权限分层）；②团队版/工程细节不进生产网页（公开面内容安全）；③数据链走服务端运行时读 JSON（每日更新但每周构建，bundle 打包不可行）。
+- **F2 内容生产链 → owner 答（2026-10-18 AUQ）: 「机器规则出+AI改写」**——机器规则定骨架（筛选用户可见项+四类分类）+ AI 定文案（去行话、用户语一句话）。融合方案非预设三选一；owner 未选人审项，按全自动无卡理解（样本/日志可回查），AI 改写失败降级=标题原文直出（fail-open）。
+- **F3 首开展示形态 → owner 答: 铃铛红点+首页卡片**（非阻断，per-username 已读键控仿 FirstRunGuide）。
+- **F5 历史页归属 → owner 答: guide 域独立 canonical 路由**（/updates）。
+- **F6 用户可见判定源 → owner 答: 纯 git 规则**（scope 白名单+标题关键词黑名单，零网络；已知误差=服务端预埋 PR 误入，接受）。
+- 假设清单（owner 纠偏即停）: ①用户版口径全员同一份（不按权限分层）；②团队版/工程细节不进生产网页；③AI 改写全自动无人工卡点。
 
-## 设计骨架（按保守默认，待 owner 修正 F2/F3/F5 后定稿）
+## 设计定稿（2026-10-18 AUQ 后）
 
-1. **每日生成管线**（生产/发布机 cron，零网络依赖）：
-   - 源 = 本地仓 `git log --since=<昨日> --until=<今日> --format='%s'` 提取 (#N)+标题（squash 一一对应已验证）；
-   - 分类规则引擎（SSOT 配置文件）：conventional 前缀 → 功能/修复基线；scope 白名单（用户可见业务域）+ 工程 scope 黑名单（governance/ci/llm/sentinel/etl/ingest/issues/release/sync-vps/docs…）派生体验/剔除工程项；纯 git 拿不到走查标签，以 scope 近似「用户可见」（已知误差: 标题含「前端未接线」类服务端预埋 PR 会误入，缓解=关键词黑名单或切 gh api 拉标签，取舍待定稿）；
-   - 产出 `server/data/updates/YYYY-MM-DD.json`（items: type/title/pr/scope），随每日数据批次发布链同步（auto-release 基础设施复用）或独立 launchd。
-2. **服务端**：`GET /api/updates?since=&until=` 聚合日文件返回（全员可见无 RLS，内容本就公开面）；缓存友好。
+1. **每日生成管线**（生产/发布机 cron，git 零网络 + 仓内 LLM 通道）：
+   - 源 = `git log --since=<昨日> --until=<今日> --format='%s'` 提取 (#N)+标题（squash 一一对应已验证）；
+   - 规则引擎（SSOT 配置）：前缀（feat/fix）→ 功能/修复基线；scope 白名单+工程 scope 黑名单派生体验/剔除工程项；标题关键词黑名单剔服务端预埋（「前端未接线」「服务端原子」类）；
+   - AI 改写：仓内 LLM 通道（链序 OpenRouter→智谱→DeepSeek，#2159）批量改写条目为用户语一句话（输入=标题+类型徽标+scope，输出 JSON）；失败 fail-open 降级标题原文；
+   - 产出 `server/data/updates/YYYY-MM-DD.json`（items: {type, title, titleUser, pr, scope}），随每日数据批次发布链同步。
+2. **服务端**：`GET /api/updates?since=&until=` 聚合日文件返回（全员可见无 RLS）；缓存友好。
 3. **前端**：
-   - 铃铛+红点：全局导航挂载（App 组合根），已读键 `updates-read-v1:${username}` 存最后已读日期，红点=存在晚于该日的条目；
-   - 首页摘要卡：最近未读日 top 3-5 条 + 「查看全部」深链；
-   - /updates 历史页：guide 域 canonical 路由，周分组时间线 + 类型筛选 chips（✨功能/🔧修复/🎨体验）+ 前端关键词过滤；全历史一次拉取按年懒加载。
-4. **一次性回填**：同一规则引擎跑全历史 git log → 历史 JSON 批量入仓（W42 发布说明的四类规则即规则引擎初版的单点人肉版）。
-5. **不做**：不动 IM 通道；团队版不上面；AI 改写为后续可选升级而非首期范围。
+   - 铃铛+红点：全局导航挂载，已读键 `updates-read-v1:${username}` 存最后已读日期，红点=存在晚于该日的条目；
+   - 首页摘要卡：最近未读日 top 3-5 条（titleUser）+「查看全部」深链；
+   - /updates 历史页：guide 域 canonical 路由，周分组时间线+类型筛选 chips（✨功能/🔧修复/🎨体验）+关键词过滤；全历史按年懒加载。
+4. **一次性回填**：规则引擎+AI 改写跑全历史 git log（量大可分批），历史 JSON 入仓。
+5. **不做**：不动 IM 通道；团队版不上面。
 
 ## 讨论
 
