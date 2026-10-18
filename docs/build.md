@@ -2,7 +2,7 @@
 
 owner 说「开工 NNN」，AI 拿卡进目标仓。以下为**每次开工必须完整符合**的标准流程：
 
-1. flint 侧：卡 → building，commit；fetch 目标仓对锚，锚漂移则只增量重探变化部分（卡内追加「探索 #N」）；
+1. flint 侧：卡 → building，commit；fetch 目标仓对锚，锚漂移则按 [`scout.md`](scout.md) 增量重探；
 2. 目标仓建 issue（工作项住 issue 树的仓必建，打其标签族）；
 3. 从目标仓默认分支切工作分支；
 4. 制定行动规划（实施步骤 / 文件面 / 验收判据）；
