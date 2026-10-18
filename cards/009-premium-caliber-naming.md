@@ -1,6 +1,6 @@
 # 009 · 保费三口径命名正本清源（保费收入/签单保费/实收保费）
 
-- 状态: discussed
+- 状态: building（2026-10-18 开工；对锚 ba25c6cc，漂移 2 commit 均为 deploy 修复与卡面零交集，未重探）
 - 目标仓: chexian-api（主；「几个仓库」是否含 auto_loadbi 待 AUQ，依据：repos.md 三仓中仅 chexian-api 有保费 UI 展示面，auto_loadbi 为 BI 自动化未探）
 - 类型: 数据口径 / 规范
 - 录入: 2026-10-18
