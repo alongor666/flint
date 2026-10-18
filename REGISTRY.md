@@ -10,4 +10,4 @@
 | [006](cards/006-renewal-pivot-detail-scope-label.md) | shipped | chexian-api | 续保透视明细带/趋势带标题未随机构快选（#2089 走查遗留 P2） | 2026-10-17 |
 | [007](cards/007-weekly-release-notes-workflow.md) | scouted | alongor666-skills | 周更发布说明工作流（分类+团队/用户双版；否决 10×10 网格改三层管线） | 2026-10-18 |
 | [008](cards/008-prod-web-release-notes.md) | building | chexian-api | 开工（2026-10-18）：生产网页更新发布——每日管线+前端三件，走标准流程双闸 | 2026-10-18 |
-| [009](cards/009-premium-caliber-naming.md) | building | chexian-api | 开工（2026-10-18）：口径命名正本清源——Q1-Q6 裁定齐，映射 4 PR，走标准流程双闸 | 2026-10-18 |
+| [009](cards/009-premium-caliber-naming.md) | building | chexian-api | 开工：PR-1 #2219 ready（双闸过+全量绿）待 owner 走查合并；PR-2/3/4 后续 | 2026-10-18 |

@@ -107,4 +107,16 @@ IM 推送通道本体（notification-dispatch/outbox/decision-digest 等）0 处
 
 ## 开工记录
 
-（未开工）
+**2026-10-18 开工（PR-1 已 ready 待 owner 走查合并；PR-2/3/4 后续批次）**
+
+- issue: chexian-api [#2213](https://github.com/alongor666/chexian-api/issues/2213)；PR-1: [#2219](https://github.com/alongor666/chexian-api/pull/2219)（分支 i/2213，worktree `~/workspace/chexian-api-wt-2213`）
+- 对锚: 开工锚 ba25c6cc（探索锚 5e468e4f 漂移 2 commit 均为 deploy 修复零交集）；实施后 rebase 至最新 main
+- 规划: `docs/plans/2026-10-18-口径命名正本清源-实施规划.md` v1→v4 四轮演进
+- 闸①（DSH·GLM5.3 strong 档四轮对抗评审）: 首轮 REQUEST_CHANGES 1×P0+3×P1+3×P2（规划外 6 渲染点+「兜底=签单」安全论证被实测推翻——三消费页全部可切口径）→ v2 二审 4×P1+5×P2（truck 切换器 :80/玫瑰图按钮/Dashboard 时间视图「签单日/周/月」/LineChart 双构建器事实——主折线 Y 轴「万元」=单位不经 prop）→ v3 三审 2×P1+2×P2（TrendSection:180 双重归属且 trend 链实测随口径切换非恒签单、验收 grep 判据与件数条件式字面冲突）→ v4 终审 **APPROVE**
+- 实施: 共享层（第三表+孪生兜底+切换器 premiumLabel prop 双分支）+五图表+三页面接线（Dashboard/growth/truck 全覆盖，件数视角条件式防错配）；17 文件 166+/37-
+- 验证: typecheck 三工程过；全量 1379 文件/21040 用例绿；governance 120 项过；验收 3 两法 grep PASS（独立评审复跑证实）
+- 独立评审（步骤 7，DSH 第一路）: **APPROVE 零 P0/P1**+6×P2（兜底名不一致/deps 缺项/词干 undefined 边界/图注无条件式/测试缺口/空态泛词）
+- 闸②（步骤 8，主会话亲自复评修复）: **通过**——P2 修 4+1（兜底统一`总+口径名`/deps 补项/词干 `?? 'policy_date'`+IIFE 单次计算/YoyCombo 图注件数视角条件式/两表同值同步守护断言）；DualYAxis 分组头回归与空态泛词归 PR-2 批次
+- 终态: PR #2219 ready（rebase 最新 main+P2 收尾 0c21129f；pre-push 全量绿）。**待 owner 三页走查（验收 2/4：growth 切换器+对比列头、Dashboard 趋势标题+时间视图词干、truck 切换器+玫瑰图按钮；件数视角回归）后合并**——部署链 PR 不自动合
+- 事故记录: push 卡 40 分钟根因=pre-push hook 全量测试被机器级互斥锁挡（早前被杀 push 的孤儿 vitest 持锁 13 分钟）——kill 孤儿链后正常；TaskStop 杀外层 shell 不杀 hook 子进程树，续接时先 `pgrep -fl pre-push` 清孤儿
+- PR-2 前置项（未做）: kpi.ts YTD 六列 dateField 绑定代码级证据核对（A10 复核）；total_premium 起保窗口聚合 vs inforce_premium 归集差异核对
