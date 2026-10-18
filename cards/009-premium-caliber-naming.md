@@ -89,19 +89,19 @@
 
 IM 推送通道本体（notification-dispatch/outbox/decision-digest 等）0 处裸词（正文由 case 标签拼装）。裸词在：today-top3 文案 4 处（pipeline.ts:241,245、circles.ts:393、sort-keys.ts:71；对照正面例 today-top3.ts:273「保费按签单日」）；告警 2 处（shared.ts:720、dashboard-health-check.ts:68）；AI 诊断文案 6 处（agent-growth-diagnosis:17、diagnosis 四注册表）；路由元数据 query-routes-metadata.ts 51 处（喂 copilot 的描述）；SQL 列别名直出报表（premium-report.ts:105,116-118,125,164、marketing-report.ts:87,89——险种限定无口径）。
 
-### 新真分叉（探索发现，待 owner 裁定，不阻塞映射框架）
+### 新真分叉（探索发现，2026-10-18 owner 已裁）
 
-- Q5 模糊位分档：A（推荐）比值派生与险种限定族维持现名（行业通用词，歧义个案——如车均保费同比跨口径——单独补口径标注），税后保费族维持（整页统一语境），缺口/计划族维持；只改发现 1 的 38 处裸词指标位 / B 五族全量补口径限定 / C 探索报告逐处标注后由 owner 点名
-- Q6 total_premium 主名：A（推荐）主名维持「总保费」，仅删 agent 注册表裸词别名「保费」（agent-metric-registry.ts:79，改一处），「总保费」作为既定专名入通称级豁免 / B 主名改「签单保费」（波及 KPI 墙/热力图全部消费位，大改） / C 加后缀「总保费（签单）」
+- Q5 模糊位分档：A 维持现名 / B 五族全量补口径限定 / C 逐处点名 → **owner 答: A（模糊位不变）**
+- Q6 total_premium 主名：owner 自定第四案（非 A/B/C）——**「总保费」显示名跟随前端选择的口径动态变化：签单口径显示「签单保费」、起保口径显示「保费收入」**。即「总保费」作为静态显示名退役；实现理解为共享 caliber→label 映射（dateField→签单保费/保费收入），全部 total_premium 显示位引用。配套取向（按正本清源精神保留，owner 纠偏即停）：metric-registry 的 id/name 为内部契约不动，只动显示层；agent 注册表裸词别名「保费」删除（agent 无口径上下文，不得吐裸词）；实现时须核对 total_premium 在 insurance_start_date 窗口下的聚合语义与 inforce_premium 归集规则（metric-date-anchor 批改行分支式归集）是否一致，不一致则实施时呈差异请 owner 裁。
+- 命名规则体系终局（Q1-Q6 合成）：①用户可切口径页面——保费主指标名动态随 dateField；②恒定口径位——固定补口径名（金融同业族=签单保费、cost 族=满期/已赚专名、行业对标按域补名：历史域起保/快报签单）；③模糊位五族——维持；④派生口径——专名+注册表锚定（已完成大半）。
 
 ### 转正映射建议
 
 单 issue（口径命名正本清源）分批 PR：
-- PR-1 全局层+列头族：view-perspective 孪生+widgets 图表+四张报表列头（发现 1A/B/C/D/F/G 组，约 25 处）——纯文案，数据零改动；
-- PR-2 cost/行业对标+口径错配修正：1E（含 NewEarnedPremiumTable 起保口径错配高危——「滚动12月保费」应挂已赚/收入名）+1H（历史域起保/快报签单同名跨口径，按域分别补名）；
-- PR-3 server 文案族：today-top3 4 处+告警 2 处+SQL 别名 9 处+agent 裸词别名删除（若 Q6=A 并入）；
+- PR-1 动态命名机制+全局层：共享 caliber→label 映射函数；view-perspective 前后端孪生 label/yAxisLabel 动态化；widgets 图表轴/系列名、dashboard/growth 视角切换位接入（发现 1A/B/C 组）；
+- PR-2 恒定口径位补名：金融同业列头（1F）、cost 族挂满期/已赚名（1E，含 NewEarnedPremiumTable 起保口径错配修正）、行业对标按域补名（1H）、网点/系数监控/零散（1D/G/I）、metric-labels:443 对齐注册名「成交保费（报价口径）」；
+- PR-3 server 文案族：today-top3 4 处+告警 2 处+SQL 别名 9 处+agent 裸词别名删除；
 - PR-4 路由元数据 51 处与 AI 诊断文案（可降级 P2 批次或并 PR-3）。
-Q5/Q6 裁定后定稿范围；预计 3-4 个 PR。
 
 - 验收: ①改造后按探索命令复跑，发现 1 清单 file:line 处裸词指标位零残留（通称位/裁定豁免族除外）；②前后端孪生 view-perspective 两侧一致；③`bun run governance` 过；④抽查 AI 问答（问「本月保费」）确认 agent 输出带口径名。
 
