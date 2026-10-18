@@ -9,3 +9,4 @@
 | [005](cards/005-renewal-v2-absorb-legacy-unfix-linfen.md) | shipped | chexian-api | 续保页旧版下线评估（吸收对拍 v2）；临汾四指标机构参数化不锁临汾 | 2026-10-15 |
 | [006](cards/006-renewal-pivot-detail-scope-label.md) | shipped | chexian-api | 续保透视明细带/趋势带标题未随机构快选（#2089 走查遗留 P2） | 2026-10-17 |
 | [007](cards/007-weekly-release-notes-workflow.md) | scouted | alongor666-skills | 周更发布说明工作流（分类+团队/用户双版；否决 10×10 网格改三层管线） | 2026-10-18 |
+| [008](cards/008-prod-web-release-notes.md) | clarifying | chexian-api | 生产网页更新发布：每日首开见前日更新＋历史结构化浏览（007 用户版的网页产品化） | 2026-10-18 |
