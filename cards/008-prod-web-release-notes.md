@@ -74,4 +74,14 @@ owner 诉求拆解：① 面向用户的更新发布到生产网页（而非只�
 
 ## 开工记录
 
-（未开工）
+### 2026-10-18（开工，闸① 已过）
+
+- 目标仓分支: `i/2208`（worktree `chexian-api-wt-2208`，基于 origin/main @ 42d6cec5）｜ issue: [#2208](https://github.com/alongor666/chexian-api/issues/2208)（type/feature + area/server + area/frontend，paths 已声明，frontier 认领成功）
+- 锚漂移增量重探: +22 commit（LLM 通道 #2196/#2173 影响接线形态）；防撞车维持零命中
+- 行动规划: `docs/plans/2026-10-18-生产网页更新发布-实施规划.md` v1→v2→v3 三轮演进（commit d3a50b21→29cf161b→610f6049）
+- **闸① DSH·GLM5.3（strong 档冒烟自报 glm-5.3）三轮对抗评审**:
+  - 首轮 REQUEST_CHANGES（4×P1: 调度缺失/PERSONAL_ROUTES+iconKey/gitignore 入仓口径/backfill 红线 + 5×P2 + 2×P3）→ v2 落实
+  - 复审 REQUEST_CHANGES（3×P1: evidence 通道 source_tool 注册约束/每日 JSON 送达链路/输入新鲜度+时序 + 4×P2 + 2×P3）→ v3 落实（plain_text allowlist 登记路线、数据链 sync-vps 送达+入仓口径分叉、fetch origin 读引用+08:30）
+  - 三审 **APPROVE**（残留 1×P2 治理闸单一调用点约束 + 5×P3 实施期提示，随实施消化）
+- 下一步: 按规划 v3 开 PR①（服务端：规则引擎/端点/generate-daily/backfill/sync-vps 登记/launchd），实施时消化 V3R-1~6（调用点单一化、分批 ≤8000 字符、开发机验证产物清理、首日到达验证、行号订正）→ PR②（前端三件+PERSONAL_ROUTES）
+- 评审回报存档: /tmp/review-2208-plan{,-v2,-v3}.md（会话内）
