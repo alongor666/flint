@@ -85,3 +85,12 @@ owner 诉求拆解：① 面向用户的更新发布到生产网页（而非只�
   - 三审 **APPROVE**（残留 1×P2 治理闸单一调用点约束 + 5×P3 实施期提示，随实施消化）
 - 下一步: 按规划 v3 开 PR①（服务端：规则引擎/端点/generate-daily/backfill/sync-vps 登记/launchd），实施时消化 V3R-1~6（调用点单一化、分批 ≤8000 字符、开发机验证产物清理、首日到达验证、行号订正）→ PR②（前端三件+PERSONAL_ROUTES）
 - 评审回报存档: /tmp/review-2208-plan{,-v2,-v3}.md（会话内）
+
+### 2026-10-18（实施流水线完成，双 PR 待合并）
+
+- 工作流 `dwfrun-1a98cd02`（4 子代理 + 双闸② hole）全链跑完：
+  - **PR① #2214**（i/2208 @ 6ebf16e6，服务端管线 1344 毛行，含 59 日回填 JSON 393 条）：治理闸三连绿 → DSH 评审 REQUEST_CHANGES（P1×1: 审批档四件套+机判格式；P2×2/P3×3）→ 六条全修 → 闸②主会话实核通过（size-contract 重跑 exit=0）
+  - **PR② #2220**（i/2208-frontend @ a97e377a，stacked，前端三件，走查-可查）：治理闸三连绿 → DSH 评审 REQUEST_CHANGES（P1×1: 年初空窗历史不可达；P2×4/P3×3）→ 八条全修 → 闸②主会话实核通过（F1 canLoadEarlier 实码正确、机判 exit=0）
+- **待合并**（部署链 PR 禁 auto-merge，人工执行）：先 #2214 → #2220 自动 retarget main → 再合并 #2220
+- 未覆盖（留后续）: PR① AI 改写真样本抽检（开发机无 key，生产首跑 --force 重建+≥10 条抽检）；前端走查（walkthrough-ready 四就绪，PR② 合并前）；生产首日数据链到达验证（V3R-5）；生产机 launchd 安装
+- 合并后: 卡 → shipped；周发布说明（007）W43 收录本功能
