@@ -111,3 +111,4 @@ owner 诉求拆解：① 面向用户的更新发布到生产网页（而非只�
 
 - **数据发布不走 PR-first**（升格根全局纪律）：每日更新通道定为两段式——过渡=开发机 harness 生成 → SSH rsync 至 mini server/data/updates/ → 既有 sync-vps 数据链带走（#5214 已登记 updates 任务）；终态=生成迁 mini。纯数据 PR＋说明档判为治理错配（PR-first 正当域=代码/协议/配置；数据治理在生成侧质量闸＋数据链纪律）。
 - 待办: 目标仓 chexian-api 根 AGENTS.md §2 / pr-first-development.md 加「数据发布豁免域」条款——属协议变更，须走其自身 PR 流程，下次开工顺带或 owner 令下。
+- 过渡通道已执行（2026-10-19）: 10-18 文件 rsync 至 mini `chexian-api-release/server/data/updates/`（60 日齐、JSON 可解析验证过）；cron 升级为「生成即同步 mini＋断档自愈」（automation-340249c3）；送达依赖 mini 既有 sync-vps 每日批次（无单任务参数，不手动触链）。节奏裁定: 每日更新（owner「周更是以后的事，AI 时代大概率每日」）。
