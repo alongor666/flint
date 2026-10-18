@@ -39,9 +39,71 @@
 - 已有命名先例（inforce_premium=保费收入 + 双标签）说明方向早已对齐，本卡实际工作面是**系统性覆盖**：清理无口径限定的裸「保费」显示位、报告/推送文案对齐。
 - 【断言】改动面主要是前端 label/表头文案与报告模板文案，数据与口径逻辑零改动，属低风险高面广的文案纪律活；具体面须探索阶段盘点（含 IM 推送、周报 shell、guide 文案）。
 
-## 探索 #1
+## 探索 #1（2026-10-18）
 
-（待 owner 确认后按协议 2 执行）
+- 探查锚: chexian-api @ 5e468e4f（origin/main；本地 worktree 8fb4f069 落后 310 commit，盘点全部 `git grep origin/main` 树取数）
+- 防撞车: 两法同证零命中——法一 `gh pr list --state open`（8 条全为 spark 日报/a11y/deploy，无命名相关）；法二 `gh issue list --state all --search '正本清源 OR 显示名 OR 命名规范'` + `gh pr list --state all --search '命名 OR 文案 OR label'`（命中均为 AI 解读/治理/更名迁移旧案，无保费显示名正名项）。
+- auto_loadbi（Q1 遗留探查）: 不入列。无 UI/报告展示面（BI 下载导出仓），「保费」仅在 docs/ 字段字典——属 BI 源表字段名引用，改名反而与源系统脱钩。入卡披露即止。
+
+### 总量与方法（复核命令）
+
+【事实】`git grep -n '保费' origin/main -- 'src/**/*.ts' 'src/**/*.tsx'` 排除 `*.test.*` = 238 文件/1146 行；剔除已限定（签单/实收/满期/已赚保费、保费收入）与注释后裸词/模糊候选 400 行（server 同法 303 行，SQL 注释占大头）。全仓四名覆盖（含 docs/测试）：签单保费 223 文件、满期保费 204、实收保费 32、保费收入 43。
+
+### 发现 1【事实】裸词指标位 38 处（1a 主清单，按杠杆分组）
+
+- **A 全局共享层（杠杆最大，前后端孪生）**：`src/shared/types/view-perspective.ts:55,58` + `server/src/types/view-perspective.ts:55,58`（视角切换 label「保费」+ Y 轴「保费（万元）」，performance/growth/truck 三页复用，SUM(premium) 签单口径未标——改一处须两侧同步）；`src/widgets/charts/{LineChart:474,QualityBusinessChart:211,DualYAxisComparisonChart:148,160,161,183,211,220}`（Y 轴/系列名/tooltip，当期保费/基期保费等）；`src/shared/config/metric-labels.ts:443`（deal_quote_premium label 裸「保费」，注册名已是「成交保费（报价口径）」quote-pivot.ts:150 可直接对齐）。
+- **B dashboard 族 14 处**：热力图 tooltip/焦点卡（`HeatmapTooltip.tsx:117`、`HeatmapFocusPanel.tsx:125`）、GeoSection:132,154、TableSection:38「总保费」、TruckAnalysisPanel:66、kpiFocus 四文件 6 处（FocusExtraTimelines:96,107 / KpiFocusTool:178,213 / FocusTimelineChart:96 / TrendSection:180）、kpiCardProps.ts:322,346,356,367,442。
+- **C growth**：GrowthAnalysisPanel:137、GrowthComparisonSection:160,161（当期/基期保费列头）。
+- **D 系数监控**：CoefficientMonitorTable:580（列头「保费」，口径只在 tip「签单口径池保费」）、coefficientTrendChartOption:233。
+- **E cost 族 8 处**：CostAnalysisPanel:312,324,340 + EarnedPremiumTable:203,221 + EarnedPremiumCharts:126 + VariableCostKpiBoard:59（「保费合计(万)」族）；NewEarnedPremiumTable:396,412（滚动 12 月保费，实为起保日期口径财务已赚族——错配高危）。
+- **F 金融同业族**：OrgReportTable:62,63（昨日/当月保费，policy_date 签单口径，口径仅存 query-routes-metadata.ts:920）；BranchStackedBars:131、financialChannel.ts:480-482。
+- **G 网点**：NetworkOutletPage:271,306,383（列头「保费(万元)」，同页 KPI 名反而已用「签单保费」metric-labels.ts:229-236——页内自不一致）。
+- **H 行业对标 9 处**：historyModel:388、industryDisplay:5（指标选择器裸「保费」，历史域=起保口径 :509 / 快报=签单口径 InsurerPivot:589——**同名跨口径现成实证**）、InsurerPivot:115、HistoryInsurerBoard:103,224,407,413,427,429、IndustryFocusCard:86,87、IndustryMonthlySources:50。
+- **I 零散**：RepairDiversionList:84、EchartsPanels:139,186。
+- 模式总结：重灾区=表格列头（保费(万)/当期保费/保费合计）、图表 Y 轴与系列名、热力图 tooltip；口径信息往往存在于 tip/脚注/variantNote，主显示名不带。
+
+### 发现 2【事实】通称位 ~12 处合规（Q2 裁定允许）
+
+页面名「保费增长」routeRegistry:266、tab「保费达成明细」、段落标题「保费与件数走势」「保费节奏」等（清单存探索工作稿；边界一处：metric-labels.ts:243 devPickerLabel「保费」是 tab 短名但直切保费数值格）。
+
+### 发现 3【事实+断言】模糊位五家族（不带三口径限定、语义特定——是否纳入需 owner 分档裁定）
+
+1. 比值派生族：车均/件均/人均/单均保费（metric-labels 多处；⚠ 已有同名跨口径实证：车均保费同比 my-items 起保锚 query-routes-metadata.ts:1551 vs KPI 墙签单口径，自注「同名不同数」）。
+2. 险种/客群限定族：车险保费、驾意保费、新能源保费占比、非车险保费、优质保费。
+3. 税后保费族：金融同业整页术语（FinancialChannelPage:1144 等十余处，签单口径税后展示，页内自注）。
+4. 缺口/计划/派生族：保费缺口、阈值保费、承保保费、净保费、新签保费、保费计划。
+5. 「总保费」(total_premium)：主力指标、SUM(premium) 签单口径、无口径词——见发现 4。
+
+### 发现 4【事实】注册表命名分叉（本卡最大结构性发现）
+
+- 同一 SUM(premium)：metric-registry `total_premium` name=「总保费」（foundation.ts:16）vs agent 注册表 `signed_premium` name=「签单保费」且 **aliases 收裸词「保费」/「总保费」/「签单规模」**（agent-metric-registry.ts:79）——AI 问答会直接吐裸词。该文件 :187-209 满期/财务已赚条目口径严谨（#32① 改名先例）。
+- 【断言】两套注册名并存（总保费/签单保费）本身就是「同物异名」，正名方向二选一：agent 侧对齐 metric-registry，或 metric-registry 主名补口径——波及面差异极大（前者只动 agent 文案，后者动全部前端消费位）。
+
+### 发现 5【事实】正面清单（已达标，无需动）
+
+- inforce_premium=「保费收入」链路一致：注册 foundation.ts:49-95（dateAnchor=insurance_start_date、iap 对拍）↔ 前端 metric-addressing.ts:137 同名 ↔ 口径切换词 date-criteria-labels.ts:44。✅
+- 满期家族 description 口径锚定已到位（抽查 3/3 ✅：earned_premium cost.ts:230 含公式+#13+#32① 互替禁令；baseline_earned_premium :353；premium_per_policy_earned :1317）——Q3 裁定的「注册表锚定」满期侧已完成，剩余已赚侧仅 agent 注册表。✅
+- received_premium「实收保费」sales-team.ts:39、deal_quote_premium「成交保费（报价口径）」quote-pivot.ts:150（括号口径=好样板）。✅
+
+### 发现 6【事实】server 报告/推送文案族
+
+IM 推送通道本体（notification-dispatch/outbox/decision-digest 等）0 处裸词（正文由 case 标签拼装）。裸词在：today-top3 文案 4 处（pipeline.ts:241,245、circles.ts:393、sort-keys.ts:71；对照正面例 today-top3.ts:273「保费按签单日」）；告警 2 处（shared.ts:720、dashboard-health-check.ts:68）；AI 诊断文案 6 处（agent-growth-diagnosis:17、diagnosis 四注册表）；路由元数据 query-routes-metadata.ts 51 处（喂 copilot 的描述）；SQL 列别名直出报表（premium-report.ts:105,116-118,125,164、marketing-report.ts:87,89——险种限定无口径）。
+
+### 新真分叉（探索发现，待 owner 裁定，不阻塞映射框架）
+
+- Q5 模糊位分档：A（推荐）比值派生与险种限定族维持现名（行业通用词，歧义个案——如车均保费同比跨口径——单独补口径标注），税后保费族维持（整页统一语境），缺口/计划族维持；只改发现 1 的 38 处裸词指标位 / B 五族全量补口径限定 / C 探索报告逐处标注后由 owner 点名
+- Q6 total_premium 主名：A（推荐）主名维持「总保费」，仅删 agent 注册表裸词别名「保费」（agent-metric-registry.ts:79，改一处），「总保费」作为既定专名入通称级豁免 / B 主名改「签单保费」（波及 KPI 墙/热力图全部消费位，大改） / C 加后缀「总保费（签单）」
+
+### 转正映射建议
+
+单 issue（口径命名正本清源）分批 PR：
+- PR-1 全局层+列头族：view-perspective 孪生+widgets 图表+四张报表列头（发现 1A/B/C/D/F/G 组，约 25 处）——纯文案，数据零改动；
+- PR-2 cost/行业对标+口径错配修正：1E（含 NewEarnedPremiumTable 起保口径错配高危——「滚动12月保费」应挂已赚/收入名）+1H（历史域起保/快报签单同名跨口径，按域分别补名）；
+- PR-3 server 文案族：today-top3 4 处+告警 2 处+SQL 别名 9 处+agent 裸词别名删除（若 Q6=A 并入）；
+- PR-4 路由元数据 51 处与 AI 诊断文案（可降级 P2 批次或并 PR-3）。
+Q5/Q6 裁定后定稿范围；预计 3-4 个 PR。
+
+- 验收: ①改造后按探索命令复跑，发现 1 清单 file:line 处裸词指标位零残留（通称位/裁定豁免族除外）；②前后端孪生 view-perspective 两侧一致；③`bun run governance` 过；④抽查 AI 问答（问「本月保费」）确认 agent 输出带口径名。
 
 ## 开工记录
 
