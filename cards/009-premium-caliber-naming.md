@@ -105,6 +105,30 @@ IM 推送通道本体（notification-dispatch/outbox/decision-digest 等）0 处
 
 - 验收: ①改造后按探索命令复跑，发现 1 清单 file:line 处裸词指标位零残留（通称位/裁定豁免族除外）；②前后端孪生 view-perspective 两侧一致；③`bun run governance` 过；④抽查 AI 问答（问「本月保费」）确认 agent 输出带口径名。
 
+## 探索 #2（2026-10-19，PR-2 前置核对，锚 i/2213=main@9a022e15）
+
+### 核对一【事实】「KPI 墙恒签单」定性错误——A10 的「恒」是恒年初至今窗口，列锚定字段=dateField
+
+- 六列 YTD：`server/src/sql/kpi.ts:355` `CAST(${dateField} AS DATE) AS kpi_date`——窗口建在 kpi_date 上，dateField 由路由透传（kpi.ts:140/173，bundle 同）；A10 原文（query-routes-metadata.ts:392-395、sql/kpi.ts:486）固定的是「年初至今不受 startDate 影响」，「签单日」是缺省口径下的措辞。
+- 唯一真正固定 policy_date 的：**kpiFocus 族**（`kpiFocus/focusScope.ts:9-12` 时间三键 startDate/endDate/dateField 结构性剥除，裁定 #20 设计）+ **热力图下钻明细**（performanceHeatmapSelection.ts:143 #1225 强制 policy_date，主格不强制）。
+- 其余（kpiCardProps 五处/TableSection:38/GeoSection:132,154/HeatmapTooltip:117/HeatmapFocusPanel:125）端点 whereClause 全经 `filter-dimensions.ts:88-96` 单点 `dateField || 'policy_date'`——**跟随 dateField**。
+- **现存错名 bug**：`kpiCardProps.ts:303` 「年初至今签单保费（不随页面日期筛选）」——起保口径下该卡数据锚已是 insurance_start_date，文案错；PR-2 顺手修。
+- 附带：kpi-sparklines 端点内部混口径（窗口族硬编码 policy_date `sql/kpi-sparklines.ts:100`、周演进族随 dateField :167），墙卡走势线起保口径下两族不自洽——登记，PR-2 不扩面。
+- **PR-2 分派修订**：固定补「签单」仅 kpiFocus 族 6 处（+热力图下钻文案若涉）；kpiCardProps 五处+:303、TableSection:38、GeoSection 两处、HeatmapTooltip/FocusPanel 改走 PR-1 动态机制 `dateCriteriaPremiumMetricLabel(dateField)`（这些位现为裸词或错名，起保口径下固定补「签单」会名实不符）。
+
+### 核对二【事实】total_premium@起保 ≠ inforce_premium——批改行归集分支差异，页面「保费收入」系统性偏高
+
+- inforce_premium 归集（owner 2026-08-29 二次裁定，foundation.ts:98）：`((非批改 AND 起期∈窗) OR (批改 AND 签单∈窗))`（metric-date-anchor.ts:153-155，批改判据 SSOT policy-key.ts NON_ENDORSEMENT_COND），与 iap「保费收入」逐日 8/8 对拍；但 2026-09-19 裁定「保留为公式协议，无页面承接计划」（foundation.ts:81）——**无页面消费**。
+- total_premium（foundation.ts:12-28 无 dateAnchor）@insurance_start_date = 简单 `insurance_start_date BETWEEN`，原单批改混同一列落窗。
+- 边界行差异（批改行两类方向相反）：c 类「窗前起保、窗内批改」inforce 计/total 剔——批减批退冲销多为负调整，**起保口径页面「保费收入」漏负调整 → 偏高**（实测锚 foundation.ts:79：山西 08-26 单日 22 条批改净额 −3.08 万，≈当日 5.3%）；b' 类「起期∈窗、批改日<窗」total 计/inforce 剔（量级小）；e' 类起期 NULL 批改行 inforce 计/total 剔。
+- 系统自身已声明不可混：`metric-date-anchor.ts:27 MixedMetricAnchorError`——同窗 inforce_premium+total_premium 请求 400；而 PR-1 把 total_premium 在起保口径下冠以与 inforce 注册指标同名「保费收入」。
+- total_premium@起保仓内**无任何对拍登记**。
+- **PR-1 影响面**：Dashboard 趋势/growth/truck 已挂「保费收入」名的位，起保口径下数值=简单窗口（非 iap 口径）。核对一又证 KPI 六列/salesman-ranking/policy-geo/heatmap 在起保口径下同为简单窗口——若裁定改归集，全部起保口径保费聚合路径受影响。
+
+### 待 owner 裁定（AUQ）
+
+- Q7 起保口径下保费主指标的归集规则：A（推荐）改走 inforce 分支归集——名实相符（页面「保费收入」=对得上 iap 的数），实现取向=在 `filter-dimensions.ts:88-96` 日期条件 SSOT 单点加「起保口径+保费金额聚合」分支（原单看起期/批改看签单），全路径生效；风险=全部起保口径保费数值修正（纳入批改调整，需与 inforce_premium 对拍验证）+推翻 09-19「无页面承接」前裁+锁起保的成本/赔案页筛选语义是否同改需范围限定（独立 PR 带规划评审） / B 维持简单窗口，显示名改「起保保费」与 inforce「保费收入」区分（违背 Q1「起保口径=保费收入」命名裁定，三处命名表同改） / C 接受差异维持「保费收入」名，tooltip/caliberNote 披露「不含窗口内批改对存量保单的调整，显示值偏高约日 5% 量级」+补双口径对拍量化回填 changelog
+
 ## 开工记录
 
 **2026-10-18 开工（PR-1 已 ready 待 owner 走查合并；PR-2/3/4 后续批次）**
