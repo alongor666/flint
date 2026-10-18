@@ -94,3 +94,10 @@ owner 诉求拆解：① 面向用户的更新发布到生产网页（而非只�
 - **待合并**（部署链 PR 禁 auto-merge，人工执行）：先 #2214 → #2220 自动 retarget main → 再合并 #2220
 - 未覆盖（留后续）: PR① AI 改写真样本抽检（开发机无 key，生产首跑 --force 重建+≥10 条抽检）；前端走查（walkthrough-ready 四就绪，PR② 合并前）；生产首日数据链到达验证（V3R-5）；生产机 launchd 安装
 - 合并后: 卡 → shipped；周发布说明（007）W43 收录本功能
+
+### 2026-10-18（owner 数据生产指令 + 裁定变更）
+
+- **裁定变更**: AI 改写执行方由 zhipu plain_text 通道改为**本地 harness（agent 团队）代跑**（owner 指令「AI改写就由跑自动运行的harness负责」）；zhipu 通道保留为生产远期接管。分类/剔除仍由已过审 rules.ts 机械执行（零口径漂移），agent 只写 titleUser。
+- **数据事实**: 带尾缀 commit 自 2026-08-12（#5，弃史重建后新仓起点）方存在——**2026-01~07 无 PR 记录，更新流无从生成**；存量=59 日 393 条（08-12~10-17）。
+- **已执行**: 5 个本地 agent 并行改写 393 条（8 月批 79/9 月批 133/10-01~03 批 10/10-04~10 批 56/10-11~17 批 115），全量对账通过（items 不变、rewriteDegraded 全 0、titleUser 非空，豁免 pr#192 同文最优）；commit ed315953 追加 #2214（曾误落 i/2208-frontend，cherry-pick 修正），PR 正文注明出处，机判 exit=0。
+- **每日节奏**: cron automation-340249c3（每日 07:00，~/updates-harness/{rewrite,apply}-day.mjs + 单 agent 改写），产出本地积累不入 main（PR-first），生产送达链未就位前暂 worktree 落盘。
