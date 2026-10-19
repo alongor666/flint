@@ -112,3 +112,9 @@ owner 诉求拆解：① 面向用户的更新发布到生产网页（而非只�
 - **数据发布不走 PR-first**（升格根全局纪律）：每日更新通道定为两段式——过渡=开发机 harness 生成 → SSH rsync 至 mini server/data/updates/ → 既有 sync-vps 数据链带走（#5214 已登记 updates 任务）；终态=生成迁 mini。纯数据 PR＋说明档判为治理错配（PR-first 正当域=代码/协议/配置；数据治理在生成侧质量闸＋数据链纪律）。
 - 待办: 目标仓 chexian-api 根 AGENTS.md §2 / pr-first-development.md 加「数据发布豁免域」条款——属协议变更，须走其自身 PR 流程，下次开工顺带或 owner 令下。
 - 过渡通道已执行（2026-10-19）: 10-18 文件 rsync 至 mini `chexian-api-release/server/data/updates/`（60 日齐、JSON 可解析验证过）；cron 升级为「生成即同步 mini＋断档自愈」（automation-340249c3）；送达依赖 mini 既有 sync-vps 每日批次（无单任务参数，不手动触链）。节奏裁定: 每日更新（owner「周更是以后的事，AI 时代大概率每日」）。
+
+### 终态迁移执行（2026-10-20，owner 指令「直接 SSH 到 mini 做，替换 Air 侧」）
+
+- mini 全链就绪：bun 1.4.3（~/.bun/bin，命中 launchd 安装器探测路径）；管线试跑验证（fetch origin/main→10-20 落盘 10 条、幂等、无 key fail-open 降级属预期、试跑产物即删防幂等锁死降级版）；launchd `com.chexian.updates-daily` 装入（每日 08:30，仓自带 --install-launchd 渲染，fetch 走 SSH 直连不吃代理）；cron-registry 登记 `chexian-api-release-10`＋CHANGELOG＋本地 commit（78/78/78 零漂移）。
+- 共存态：Air cron（automation-340249c3，05:00 生成+本地 agent 改写+rsync）继续主跑；mini 08:30 幂等兜底（Air 断档日出降级版，好过断档；Air 恢复后 rewrite/apply 支持任意日补改写重推）。
+- 收终态两步（待 owner）：① zhipu key 配入 mini `~/.config/chexian/updates.env`（2026-10-18 已裁定终态=zhipu 接管，key 是唯一缺件）→ 首日盯 titleUser 质量（历史 438 条改写全为 Air 本地 agent 代跑，zhipu 原生改写生产未实证，PR① 遗留「AI 抽检」项届时一并清）；② 首验过后停 Air cron，Air 侧 ~/updates-harness 随之退役。
