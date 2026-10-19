@@ -11,4 +11,4 @@
 | [007](cards/007-weekly-release-notes-workflow.md) | scouted | alongor666-skills | 周更发布说明工作流（分类+团队/用户双版；否决 10×10 网格改三层管线） | 2026-10-18 |
 | [008](cards/008-prod-web-release-notes.md) | shipped | chexian-api | 开工（2026-10-18）：生产网页更新发布——每日管线+前端三件，走标准流程双闸 | 2026-10-18 |
 | [009](cards/009-premium-caliber-naming.md) | building | chexian-api | PR-1 #2219 已合并上线（走查 PASS+auto-merge）；PR-2/3/4 待做（前置核对项见卡） | 2026-10-18 |
-| [010](cards/010-renewal-coverage-migration-matrix.md) | discussed | chexian-api | 续保险别组合迁移矩阵（2021 起）＋保额变化（2025 起）；口径已裁齐（留存+流失/两省分列/宽衔接） | 2026-10-19 |
+| [010](cards/010-renewal-coverage-migration-matrix.md) | scouted | chexian-api | 续保组合迁移矩阵探索毕：mini 直读两省对账过、VIN 级保额源在位，出数方案+验收闸已定，待开工 | 2026-10-19 |
