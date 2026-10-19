@@ -71,7 +71,7 @@
 2. **对账通过**：mini 直读 SX 侧 2021-2026 各年×组合 VIN 分布与 MCP 服务端探针**逐值一致**（如 2021 主全 50,373/交三 106,755/单交 121,937），本地直读=服务端口径。
 3. **两省数据全量**：SC 各年主全 5.3-6.1 万/单交 20.5-29.4 万 VIN——四川单交占比远高于山西（业务结构差异，两省分列裁定正确）。
 4. **VIN 级保额源**：固化区 `数据管理/validation/pricing-research/{sc06,sx06}_coverage_prod.parquet` 在 mini（保单号级 61 列：险别代码/险别名称/险别保额/保险起期/坐位数…），起期窗 2025-01-01~2026-10-08 两省覆盖（sc06 159.5 万行/sx06 80.7 万行，README 配方）。经保单号 join 回 policy parquet 可取 VIN/客户类别/车牌。
-5. **城市维度**：车牌归属地维表 `warehouse/dim/plate_region/latest.parquet`（数据源注册表在册），替代硬编码晋A→太原映射。
+5. **城市维度**：车牌归属地维表 `warehouse/dim/plate_region/latest.parquet`——已知知识非本卡发现（知识锚：目标仓 `数据管理/knowledge/ai/DOMAIN_OVERVIEW.md:39`，根 AGENTS.md 38 行知识指针可达；数据源注册表 数据管理/data-sources.json「车牌归属地」在册），替代硬编码晋A→太原映射。
 6. 固化区口径提醒（README 行口径节）：#06 批单号与主表 endorsement_no 不可对齐，一律保单号聚合 join、净额 SUM；批改冲销负保额行是真实数据原样保留。
 
 ### 【断言】出数执行方案（代码推理，待开工跑数验证）
