@@ -11,3 +11,4 @@
 | [007](cards/007-weekly-release-notes-workflow.md) | scouted | alongor666-skills | 周更发布说明工作流（分类+团队/用户双版；否决 10×10 网格改三层管线） | 2026-10-18 |
 | [008](cards/008-prod-web-release-notes.md) | shipped | chexian-api | 开工（2026-10-18）：生产网页更新发布——每日管线+前端三件，走标准流程双闸 | 2026-10-18 |
 | [009](cards/009-premium-caliber-naming.md) | building | chexian-api | PR-1 #2219 已合并上线（走查 PASS+auto-merge）；PR-2/3/4 待做（前置核对项见卡） | 2026-10-18 |
+| [010](cards/010-renewal-coverage-migration-matrix.md) | clarifying | chexian-api | 续保险别组合迁移矩阵（主全→交三→单交转化，2021-2026.9）＋保额变化补充 | 2026-10-19 |
