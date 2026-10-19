@@ -144,4 +144,12 @@ IM 推送通道本体（notification-dispatch/outbox/decision-digest 等）0 处
 - 闸②（步骤 8，主会话亲自复评修复）: **通过**——P2 修 4+1（兜底统一`总+口径名`/deps 补项/词干 `?? 'policy_date'`+IIFE 单次计算/YoyCombo 图注件数视角条件式/两表同值同步守护断言）；DualYAxis 分组头回归与空态泛词归 PR-2 批次
 - 终态: **PR-1 #2219 已合并（2026-10-19 02:13 本地，merge commit 30027e00，squash）**。合并过程三段曲折：①agent 运行时走查 PASS（8/8 判据，truck 三判据 BLOCKED=面板 UI 先于本 PR 下线并入战略驾驶舱，代码接线已经 diff 确认；走查报告贴 PR 评论）；②最新 main 带入三个新治理闸逐个补齐——评审锚行（评审: <PR 评论 url>，独立评审+闸②+走查摘要发 PR 评论 #issuecomment-6252145887）、UI 走查 label（走查-可查 + 正文「断言:」行指向测试文件）、plan 文档入库清单行（「入库清单: docs/plans/...」）；③合并窗口撞车两轮——等空窗 30+ 分钟期间他人合并 #2221/#2191 致 branch protection「not up to date」拦下，最终 rebase+push+**`gh pr merge --squash --auto`**（GitHub 原生 auto-merge：CI 绿服务器端即刻合并，消除本地等窗空隙）12 分钟内自动完成。issue #2213 被 squash 引用误关已 reopen（PR-2/3/4 继续）
 - 教训入卡: ①push 卡 40 分钟根因=pre-push hook 全量测试被机器级互斥锁挡（早前被 TaskStop 的 push 留下孤儿 vitest 持锁 13 分钟；TaskStop 杀外层 shell 不杀 hook 子进程树——续接先 `pgrep -fl 'pre-push|run-vitest'` 清孤儿）；②改 PR body 会触发 Governance Consistency 重跑（types 含 edited），补锚行前先本地 `pr-body-contracts.mjs` 预验；③「等空窗」与「CI 绿后即时合并」不可分离——绿后等待期他人合并即过期，长会话用 --auto 一次性解决；④轮询脚本的合并冷却 cutoff 必须滑动（固定 cutoff 会永久误判占用）；⑤squash commit 引用 #N 会关 issue——多 PR 共用 issue 时正文用 Refs 且合并后核 issue 态，误关即 reopen
-- PR-2 前置项（未做）: kpi.ts YTD 六列 dateField 绑定代码级证据核对（A10 复核）；total_premium 起保窗口聚合 vs inforce_premium 归集差异核对
+- PR-2 前置项（未做）: kpi.ts YTD 六列 dateField 绑定代码级证据核对（A10 复核）；total_premium 起保窗口聚合 vs inforce_premium 归集差异核对 → **两项已毕（2026-10-19，见探索 #2）**
+
+### PR-2a 开工记录（2026-10-19）
+
+- PR: chexian-api **#2236**（分支 i/2213-pr2，worktree 复用 wt-2213）；规划=plan 文档 §PR-2 修订 v5→v6（闸① DSH 两轮：首轮 1P0+4P1+6P2——repair 毛保费非净两源两列/综合分析五处反向错标/historyModel 双口径撤回/测试锁纠偏；v6 复审 APPROVE）
+- 实施: 28 文件（21 源+7 测试）——cost 族「保费收入」8 文件（含综合分析反向错标修正）、行业主体「签单保费」/历史板「保费收入」、金融三窗签单+税后专名、网点/系数/维修签单、kpiFocus 签单 4 文件、deal_quote_premium→「成交保费」+codegen 产物；typecheck 三工程/全量 21291 用例/governance 120 项全过；验收 grep 正反向零残留
+- 独立评审: DSH APPROVE 零 P0/P1+5P2（3 处同屏半改已修进 PR；DISPLAY_METRICS 过渡态留 PR-2b；**网点「签单保费」vs 金融页「税后保费」同 SQL 域两页两名并存——待 owner 裁定，PR-3 收口时呈**）；闸②主会话复评过；评审锚评论+走查-可查 label+断言行齐
+- **合并卡点（五轮 BEHIND 实测）**: 改动纯文案已全绿（head 1e5c3573），但 branch protection strict up-to-date 下，CI 20 分钟窗口内必有他人 PR 合并（凌晨节奏 20-30 分钟/个）→ 每轮绿时已 BEHIND。gitleaks 两个坑已根治（generic-api-key 误报：先 fingerprint 豁免——绑 commit sha rebase 即失效两轮实测；终解=.gitleaks.toml 精确单值豁免 `^rolling_12m_premium$`，rebase 无关）。**呈 owner 四选一：A 开 merge queue（治本）/ B 安静窗口手点合并（PR 常绿只差 rebase 一次）/ C 授权 --admin / D 继续自动追**
+- PR-2b（待做）: KPI 墙跟随位动态（kpiCardProps ctx 扩参/TableSection/Geo/Heatmap 穿透）、strategy-cockpit、industryDisplay 函数化 8 消费处、chartLedger、TrendSection 空态、devPickerLabel 裁定、DualYAxis 分组头回归测试
