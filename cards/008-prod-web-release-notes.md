@@ -117,4 +117,12 @@ owner 诉求拆解：① 面向用户的更新发布到生产网页（而非只�
 
 - mini 全链就绪：bun 1.4.3（~/.bun/bin，命中 launchd 安装器探测路径）；管线试跑验证（fetch origin/main→10-20 落盘 10 条、幂等、无 key fail-open 降级属预期、试跑产物即删防幂等锁死降级版）；launchd `com.chexian.updates-daily` 装入（每日 08:30，仓自带 --install-launchd 渲染，fetch 走 SSH 直连不吃代理）；cron-registry 登记 `chexian-api-release-10`＋CHANGELOG＋本地 commit（78/78/78 零漂移）。
 - 共存态：Air cron（automation-340249c3，05:00 生成+本地 agent 改写+rsync）继续主跑；mini 08:30 幂等兜底（Air 断档日出降级版，好过断档；Air 恢复后 rewrite/apply 支持任意日补改写重推）。
-- 收终态两步（待 owner）：① zhipu key 配入 mini `~/.config/chexian/updates.env`（2026-10-18 已裁定终态=zhipu 接管，key 是唯一缺件）→ 首日盯 titleUser 质量（历史 438 条改写全为 Air 本地 agent 代跑，zhipu 原生改写生产未实证，PR① 遗留「AI 抽检」项届时一并清）；② 首验过后停 Air cron，Air 侧 ~/updates-harness 随之退役。
+
+### 终态收口（2026-10-20 同日，owner 指明「不需要 API key，mini 已用 DSH」）
+
+- 改写执行方改为 **mini DSH headless**（`dsh --profile headless`，GLM-5.3 一问一答；zhipu key 路线作废，2026-10-18「终态=zhipu 接管」裁定由 DSH 接管取代）。冒烟三判据过（stdout 非空/stderr 无 NO_ADAPTER；非交互 PATH 无 node——以 homebrew node 绝对路径拉 dsh，com.dsh.web plist 同款判例）。
+- 编排 `~/updates-harness/rewrite-dsh.mjs`（bun 跑；提取→DSH 只读输入打印 JSON→校验回写对账，职责切分：DSH 零写盘零命令）＋ launchd `com.chexian.updates-rewrite` 08:45（登记 chexian-api-release-11，79/79/79 零漂移）。
+- **演练实证**：10-20 文件 11 条 DSH 改写全合格（行话全去/产品名保留/内部项诚实降级/rewriteDegraded=0），质量与 Air agent 版同档——PR① 遗留「AI 改写抽检」项就此清账。
+- **Air 侧退役**：cron automation-340249c3 已删，Air ~/updates-harness 停用。mini 全链=08:30 生成→08:45 DSH 改写→sync-vps 带走。
+- 断档兜底（人工两条命令，mini 常驻机断档概率低）：`bun ~/workspace/chexian-api-release/scripts/updates/generate-daily.mjs --date=N` + `bun ~/updates-harness/rewrite-dsh.mjs --date=N`。
+- 首验点（待观察）：10-20 文件经 sync-vps 每日批次到 VPS，生产 /api/updates 出现 10-20 即全链确认。
