@@ -69,9 +69,69 @@ UI哪些页面哪些指标固定编码用签单口径、哪些默认签单口径
 - 锚漂移: 918e6d75b → b0706e1cf（3 提交：#2478 verify os-p2 / #2465 VCR 台账 / #2504 ADR 追记），全在 operating-loop/VCR/verify 域。
 - 零波及两法同证: ①`git diff --stat` 27 文件全列无 011 文件面；②`git diff --name-only | grep -iE 'filter|vehicle|quick|fuel|guide-question|strategy-segment'` 零命中（exit=1）。探索 #1–#3 结论全部有效，锚平移 b0706e1cf。
 
+## 行动规划 v1（2026-10-23，基线 chexian-api @ b0706e1cf，branch i/2508，issue #2508）
+
+### PR① 筛选器「车型」→「客群」更名＋「低风险」段
+
+**A. 更名（纯呈现词，owner 纠偏后范围＝仅筛选器 vehicle 维语境）**
+- 判定规则：只改指涉 vehicle_quick_filter 维度的 label/标题/摘要/胶囊/向导文案；`vehicle_model` 厂牌语境（「车型明细字段」等）、报价转化与维修等域自有的「车型」概念、后端注册表内部注释描述一律不动。
+- 文件面（实施时逐处 grep 判定语境）：
+  - `src/features/filters/guide-questions.ts:158`（`label: '车型'`→`'客群'`；aliases 加 `'客群'`）
+  - `src/features/filters/AdvancedFilterPanel.tsx` / `PageFilterPanel.tsx`（行③④分组标题与隐藏注中的筛选器语境「车型」）
+  - `src/shared/utils/quickFilterHelpers.ts`（摘要函数里的「车型」文案）
+  - `src/features/filters/summaryChips.ts`（车型片文案→客群片）
+  - `src/features/filters/useFilterPresets.ts`、`filter-caliber.ts`、`src/shared/components/quick-filters/QuickFilterControls.tsx`、`src/shared/types/filters.ts`（同上语境判定）
+  - `src/features/guide/guideContent.ts`（教学文案中指涉该维的「车型」）
+- 不动红线：URL 参数 `vehicleQuickFilter`、18 段 id、`server/src/config/vehicle-quick-segments.ts` 注册表结构（label 是后端描述用，段名不含「车型」字样不动）、守恒测试。
+
+**B. 低风险段（QuickFilters 新键 `lowRisk?: boolean`，语义=战略 1+2 段完整并集）**
+- 服务端：
+  - `server/src/config/strategy-segments.ts` 新导出 `buildLowRiskWhere(prefix?)`：`(组1并集) OR (组2并集)`，复用 STRATEGY_SEGMENTS whereExpr（SSOT 不复写；先例 `buildStrategyGroupWhere`，同构参照行业对标 `lowRiskPredicate` industry-benchmark-pivot.ts:722——签单域直接用 whereExpr 并集，不需要 BENCHMARK_GROUPS 车种映射那层）。
+  - `server/src/config/filter-dimensions.ts` 新维度条目 `lowRisk`（照 `vehicleQuickFilter` :173 compile 模式；`lowRisk=true` → emit 战略1+2并集）。
+  - `server/src/utils/filter-params.ts` schema 增 `lowRisk` 布尔（csv 单值 'true'/'false'）。
+  - `route-param-contracts.ts` / `query-routes-metadata.ts` 契约注册跟随既有模式。
+  - 列依赖＝customer_category＋is_nev＋insurance_type（strategy-segments whereExpr 实际引用列）；各域可用性＝既有 capability（fuel 形态＋insuranceType）可推导，缺列域不 emit 并在前端 locked。
+- 前端：
+  - `src/shared/components/quick-filters/config.ts`：`QuickFilters.lowRisk?: boolean`；新常量 `LOW_RISK_COMPATIBLE_TYPES`（=home_car/enterprise_car/gov_car，**派生自** `CAR_ROW_CHIPS` 前三或显式 Set＋注释指向战略段 SSOT）；「低风险」chip 呈现在行③（客群行），写 lowRisk 键而非 vehicleType 成员。
+  - 互斥状态机（新 `applyLowRiskToggle`，方向＝「低风险 vs 非成员组双向禁选、成员组内可叠加」）：
+    - 点「低风险」：`lowRisk=true`，vehicleType 剥离非成员（只留 home/enterprise/gov）；
+    - `lowRisk=true` 时：非成员 chip（公交/公路/网约/出租/摩托＋行④全部 13 段）置 disabled＋原因文案（可见锁定不隐藏，CX-ADR-005 同法）；
+    - 再点「低风险」取消；businessNature 联动不受影响（低风险成员均非营业）。
+  - `effectiveFilters.ts`（域能力剥离：无战略段列的域 lowRisk 剥离）、`quickFilterHelpers.ts` 摘要片、`summaryChips.ts` 胶囊、`filterUrlSync/filterParams` 序列化、`bun scripts/filter-url-keys/generate.ts` 重新生成 URL 键表。
+  - 向导：`guide-questions.ts` vehicle 维（已更名客群）选项增「低风险」，写径走 lowRisk。
+- 测试：互斥状态机单测（点低风险清非成员/禁选态/取消）、lowRisk 谓词单测（=组1∪组2 逐段 OR 文本比对）、URL 序列化往返、前后端对账不变量保持。
+
+### PR② 燃料维多选（油/气可并选）
+
+- 前端：
+  - `config.ts`：`QuickFilters.fuelCategory: FuelCategory → FuelCategory[]`；⑤A 燃料 chips 单选→多选（新 `applyFuelToggle` 数组状态机；`FUEL_CHIPS_BY_CAPABILITY` 三形态成员裁剪保留——no-gas=电/油两选、electric-only=仅电退化单值）；`FUEL_CATEGORY_TOGGLE` 循环钮退役（append-only 保留常量或按死代码清理纪律处理，实施时按仓规裁量）。
+  - `quickFilterHelpers.ts`：`fuelCategoryToIsNev` 数组化（全成员非电→false、全电→true、混选→undefined）；摘要 `FUEL_LABELS` 数组化（如「油+气」）。
+  - `effectiveFilters.ts` 能力剥离数组化（成员∩allowed，空→undefined）；`filterParams.ts`/`filterUrlSync.ts` csv 序列化；**口径胶囊旧快照归一**：旧单值 'oil' → ['oil']。
+  - 向导 `guide-questions.ts` fuel 维 `type:'single'→'multi'`＋`FilterGuide.tsx` 写径适配（向导维数组化必须随本 PR，防类型分叉）。
+- 后端：
+  - `filter-params.ts:101` `z.enum` → csv 数组（照 `vehicleQuickFilter` csv 先例 :178）。
+  - `policy-scope-conditions.ts:208-213` 三分支 → 成员谓词 OR 组合（`[oil,gas]` → `is_nev=false`，`[oil,gas,electric]` → 恒真可省略条件）。
+  - `quote-strategy-scope.ts:190` 列依赖（集含 oil/gas 才 push fuel_type）；`domain-filter-sanitizer.ts` 归一数组化；`dashboard-tier1.ts`/`performance.ts`/`renewal-scope-conditions.ts`/`quote-conversion.ts` 等消费点逐处适配。
+- isNev 兼容键语义：混选时 undefined（filter-params isNev 只在同极性时随发）。
+- 测试：SQL 生成断言（成员组合→谓词文本）、URL 归一（旧单值快照）、能力裁剪、摘要片。
+
+### PR③ 向导单选维多选化＋「>2 选项多选」上位规则登记
+
+- `guide-questions.ts` `insuranceGrade` `type:'single'→'multi'`（9 值）；`FilterGuide.tsx` :271 `isMultiFocus` 渲染分支已有（org/channel/coverage 先例），写径核对（主抽屉 `insurance_grade` 本是 string[]，data.ts:129）。
+- 燃料向导维多选若未随 PR② 完成则此处收口（规划倾向 PR② 内完成）。
+- `数据管理/knowledge/rules/车险数据业务规则字典.md` 登记「筛选器交互：超过 2 个选项的维度一律多选」上位规则（登记在筛选相关原则区，注明 owner 2026-10-23 裁定、生效范围=全站筛选器、已多选维清单与豁免（2 值单选保留））。
+- 报价转化域 renewalType 3 值（端点单选 enum）：**本卡不实施**，登记边界注记（随域改造评估）。
+
+### 顺序/关联/验收
+
+- 顺序：PR①→PR②→PR③（更名先行，后续 PR 新文案直接用「客群」）。PR①② `Refs #2508`，PR③ `Closes #2508`。
+- 验收（每 PR）：`bun run typecheck`；相关单测绿（vehicle-quick-segment-frontend-parity、新增互斥/归一/谓词测试）；推送前 `bun run governance && git diff --check`。PR① 附「筛选器语境『车型』清零、其余语境不动」grep 佐证。
+- 风险：燃料数组化波及面最大（前后端 12+ 文件消费点）；低风险互斥是新模式（无完全同构先例，applyChannelToggle 是单选替换方向不同）；URL 兼容（fuelCategory 旧单值、lowRisk 新键）。
+
 ## 开工记录
 
-（未开工）
+- 2026-10-23 开工（build 协议）：issue #2508 建立并认领（branch i/2508），锚 b0706e1cf。
+- **owner 纠偏（2026-10-23 开工中）**：更名范围＝**仅筛选器内的「车型」维度名**（维度 label、摘要/胶囊片名、向导维名等直接指涉该维的呈现词）；全站其余「车型」字样一律不动——vehicle_model 厂牌/型号语境（如「车型明细字段」）、报价转化/维修等业务域自有「车型」概念、后端注册表内部描述均保留。验收佐证改为「筛选器维度语境清零、其余语境不动」（替代探索#1 的全站 grep 清零表述）。
 
 ### 完成度核实（2026-10-23，owner 问「怎么没结束、已经完成了吧」触发）
 
