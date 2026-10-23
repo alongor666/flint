@@ -91,7 +91,7 @@ UI哪些页面哪些指标固定编码用签单口径、哪些默认签单口径
   - `server/src/utils/filter-params.ts` schema 增 `lowRisk` 布尔（csv 单值 'true'/'false'）。
   - **`server/src/utils/domain-filter-sanitizer.ts` FIELD_COLUMNS 登记** `lowRisk: ['customer_category','is_nev','insurance_type']`——未登记则净化四域（crossSellAgg/quoteConversion/customerFlow/networkOutlet）透传，quoteConversion 因列支持表无 is_nev 走路由契约 fail-closed → 整页 400（前科：quoteConversionParams.ts 头注释）。
   - **`server/src/sql/shared/policy-scope-conditions.ts` 加 lowRisk 分支**（prefix 版谓词；该组装器服务 claims-detail/heatmap/loss-ratio-attribution 族，缺分支=静默失效）。
-  - **networkOutlet 域不放行**：其三列虽在支持表内但 SQL 组装器无 lowRisk 谓词分支，登记后放行=静默失效（fail-open）——通过能力位显式置 false 收窄（见下），组装器适配留作后续需求。
+  - **networkOutlet 域放行（能力位 true）**：该域无独立谓词组装器——谓词全部来自通用编译链（sanitize 纯委托 filterByDomainColumns → compileFilterParams 遍历 FILTER_DIMENSIONS → whereClause 直拼），lowRisk 通用条目自动覆盖；三列（customer_category/is_nev/insurance_type）实存（二轮复审 N1 勘正：首轮「组装器无分支须显式不放行」表述与代码事实不符）。
   - **能力矩阵加 lowRisk 独立 boolean 能力位**（F2）：前后端两份镜像（`src/shared/config/filter-dimension-capability.ts` + `server/src/config/filter-dimension-capability.ts`）同改＋`scripts/governance/dimension-list-ratchet.baseline.json` 更新（filter-capability-mirror.mjs 锁两份一致）。逐域定值：**cross_sell_agg=false**（其 `insuranceType:true` 是 compulsory/commercial_premium>0 等价口径、无 insurance_type 原列，「可推导」不成立）；networkOutlet=false；其余域按列实存定。
   - `route-param-contracts.ts` / `query-routes-metadata.ts` 契约注册跟随既有模式。
 - 前端：
