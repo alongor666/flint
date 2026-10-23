@@ -64,6 +64,11 @@ UI哪些页面哪些指标固定编码用签单口径、哪些默认签单口径
 - 转正映射建议（owner 2026-10-23「按照你的建议办」采纳）: 1 issue 拆 3 PR——①更名＋低风险互斥段（互斥组机制＋注册表复用战略段 SSOT＋完整段语义 Q3=A）②燃料维多选（前后端数组化＋快照归一）③向导单选维多选化（风险维等小项）；>2 选项原则作为筛选器交互上位规则随口径原则 v2 一起登记业务规则字典。待「开工 011」令即按 build 协议执行。
 - 验收: `bun run typecheck`＋前后端段对账测试＋口径胶囊旧快照归一测试（fuelCategory 数组化迁移）绿。
 
+## 探索 #4（2026-10-23 · 开工增量重探）
+
+- 锚漂移: 918e6d75b → b0706e1cf（3 提交：#2478 verify os-p2 / #2465 VCR 台账 / #2504 ADR 追记），全在 operating-loop/VCR/verify 域。
+- 零波及两法同证: ①`git diff --stat` 27 文件全列无 011 文件面；②`git diff --name-only | grep -iE 'filter|vehicle|quick|fuel|guide-question|strategy-segment'` 零命中（exit=1）。探索 #1–#3 结论全部有效，锚平移 b0706e1cf。
+
 ## 开工记录
 
 （未开工）
