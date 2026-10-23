@@ -118,4 +118,8 @@
 
 ## 开工记录
 
-（未开工）
+- **2026-10-23 开工**（build 协议 9 步推进中，issue [#2509](https://github.com/alongor666/chexian-api/issues/2509) epic，PR 拆四支）：
+  - 锚对齐 @ b0706e1cf→8341078bc（漂移两提交均 agent/verify 域不相交，免增量重探）。
+  - 闸① 规划评审（DSH·GLM5.3 strong 两轮）：首轮 REQUEST_CHANGES 8 findings（F1 重置入口/时间片回退漏面、F2 /specialty 动态挂 full 漏登、F3 report 翻转归属冲突→**裁挪 PR4**、F4 sticky ref 生命周期、F5 计数链五点、F6 未就绪基线、F7 行号、F8 回归清单），修订后复审 APPROVE（R1-R3 三个 P3 随实施顺手修）。规划正本=目标仓 docs/plans/2026-10-23-口径默认分布-PR1-per-preset默认口径-规划.md。
+  - **PR1 已建 [#2514](https://github.com/alongor666/chexian-api/pull/2514)**（i/2509，per-preset 第三态＋全站默认分布＋案 B sticky ref＋热力图跟随＋文案＋字典 #44/#20 勘正）：typecheck/test 全量/governance 三闸绿；独立对抗评审（DSH fresh-context）REQUEST_CHANGES（P1×2=P1 businessCount 误迁恒 +1、P1 误夹带 5 个本机遗留旧规划文档 792 行）→ 修复（f295117b5）→ 闸②主会话复评通过；F4 sticky 规整写入跳边角登记 PR 评论待 owner 裁定。
+  - PR2（网点经营可切）/PR3（金融同业可切）/PR4（计划达成双口径+report 翻转，004 合流）待做。
