@@ -12,4 +12,4 @@
 | [008](cards/008-prod-web-release-notes.md) | shipped | chexian-api | 开工（2026-10-18）：生产网页更新发布——每日管线+前端三件，走标准流程双闸 | 2026-10-18 |
 | [009](cards/009-premium-caliber-naming.md) | building | chexian-api | PR-1 #2219+PR-2a #2236 已上线；收口 #2258 待 auto；PR-2b-1 KPI 墙口径重构（合流 001）+2b-2 跟随位动态待做 | 2026-10-18 |
 | [010](cards/010-renewal-coverage-migration-matrix.md) | shipped | chexian-api | 2026-10-19 开工即交付：四轮评审+全闸过，迁移矩阵+保额变化 xlsx 已出（Air 与 mini 的 010-output），流失是降档 6~10 倍 | 2026-10-19 |
-| [011](cards/011-vehicle-filter-rename-customer-group.md) | clarifying | chexian-api | 车型筛选更名「客群」＋增「低风险」（AUQ 两问待答）；附签单口径 UI 分布核对 | 2026-10-23 |
+| [011](cards/011-vehicle-filter-rename-customer-group.md) | discussed | chexian-api | 客群更名+低风险=战略1+2 互斥段（已裁）+燃料油气并选+>2 选项一律多选原则；转正 1 issue 3 PR | 2026-10-23 |
