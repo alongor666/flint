@@ -137,7 +137,7 @@ UI哪些页面哪些指标固定编码用签单口径、哪些默认签单口径
 
 ## 开工记录
 
-- **owner 双重禁令（2026-10-24）**：①禁止 auto merge；②**禁止 AI 合并**——本仓 AI 只做「PR 合并前的一切准备工作」（评审/返修/闸②/CI 绿/up-to-date），**merge 动作由 owner 亲自执行**。此前 #2515/#2537 经 auto-merge/守护合并（禁令前动作，如实记录）；此后 #2535/#2539 等一律保持就绪态待 owner 合并。已杀守护脚本、撤全部 auto-merge。
+- **owner 双重禁令（2026-10-24）**：①禁止 auto merge；②禁止 AI 合并——已落协议正本（`docs/build.md` 新第 9 步「合并权在 owner」＋`repos.md` chexian-api 注意项），AI 只做到可合并就绪、merge 由 owner 亲自执行。此前 #2515/#2537 经 auto-merge/守护合并（禁令前动作，如实记录）；此后 #2535/#2539 等一律保持就绪态待 owner 合并（守护脚本已杀、auto 已全撤）。
 - 2026-10-23 开工（build 协议）：issue #2508 建立并认领（branch i/2508），锚 b0706e1cf。
 - **PR① #2515 已开（更名＋低风险）**：闸①规划两轮评审（首轮 11 findings→v2→二轮 APPROVE）→实施→两路独立对抗评审（DSH·GLM5.3 第一路 REQUEST_CHANGES 0P0P1；ZCode 子代理第二路 **1×P1**＝projectEffectiveFilters 漏 lowRisk 剥离致续保页 400——第一路漏检，两路交叉价值实证）→返修 8 项（P1 双层剥离+DROPPED_KEYS、更名漏改 4 处、URL 回放互斥归一、常量收口）→闸②主会话行级亲验过→push 251082dd4。CI 走查闸补「走查-可查」label＋评审锚＋走查路径；E2E shard 一次 runner 瞬态 cancelled 已 rerun。
 - **PR② 已 commit 未 push（燃料多选）**：wt-2508-fuel 分支 i/2508-fuel（stacked on PR①）。谓词单源 config/fuel-category-where（三处旧三分支收敛、单成员 SQL 逐字节保真）；前端全链数组化（ARRAY URL 通道迁移/快照归一/两姊妹函数幂等剥离）；守恒断言受控更新全绿；governance 123/123；本地全量 vitest 绿；毛改 570 行（>500，PR 描述需体量三行）。待 PR① 合并后 rebase→push→开 PR→评审。

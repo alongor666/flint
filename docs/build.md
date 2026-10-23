@@ -10,6 +10,7 @@ owner 说「开工 NNN」，AI 拿卡进目标仓。以下为**每次开工必�
 6. 按规划实施，**该建 PR 必建 PR**（目标仓 PR-first 纪律不豁免、不代造例外——**限代码/协议/配置变更；数据产物走数据链与生成侧质量闸，见根全局纪律「PR-first 的正当域」**），推送前过其治理闸（如 chexian-api `bun run governance`）；
 7. 独立对抗评审出 P0/P1 清单，实施者修复；
 8. **闸② 修复复评**：主会话亲自评审修复（不让原评审者自证），不通过回 7 再修，通过才允许合并；
-9. 合并后卡 → shipped，「开工记录」写 issue/PR 链接与结果，flint commit；周发布说明（若有）当周收录。
+9. **合并权在 owner**（owner 2026-10-24 裁定）：闸②通过后 AI 停手——把 PR 做到「可合并就绪」（CI 全绿、BEHIND 时 rebase/update-branch 到 up-to-date、正文评审锚/走查 label/断言行齐备）即交付；**禁开启 auto merge、禁执行任何合并动作**，merge 由 owner 亲自执行；
+10. owner 合并后卡 → shipped，「开工记录」写 issue/PR 链接与结果，flint commit；周发布说明（若有）当周收录。
 
 目标仓路由与各自注意项见 `repos.md`；目标仓协议冲突时以目标仓为准。
