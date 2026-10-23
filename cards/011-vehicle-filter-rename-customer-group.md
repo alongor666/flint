@@ -1,6 +1,6 @@
 # 011 · 车型筛选更名「客群」＋增「低风险」（附签单口径 UI 分布核对）
 
-- 状态: scouted
+- 状态: building
 - 目标仓: chexian-api（先探可定——「车型」筛选即该仓全站筛选器的 vehicle_quick_filter，前端 `src/features/filters/` + 服务端注册表 `server/src/config/vehicle-quick-segments.ts`）
 - 类型: 功能（呈现词更名）＋ 功能（快捷段扩容，依赖口径裁定）
 - 录入: 2026-10-23
