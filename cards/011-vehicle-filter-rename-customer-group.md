@@ -20,7 +20,7 @@ UI哪些页面哪些指标固定编码用签单口径、哪些默认签单口径
 
 ### 待 owner 裁定（AUQ）
 
-- Q1 「低风险」的定义？ → 待答。选项: A（推荐）车险风险等级 A/B 档（insurance_grade，PolicyFact 已有列，与筛选向导既有「风险」维同源）/ B 连续无赔款（NCD 优待口径）/ C 其他定义（owner 描述）
+- Q1 「低风险」的定义？ → 待答。选项: A（推荐，探索 #2 修正）战略 1+2 段并集——与行业对标页「低风险（1+2）」同口径同义（山西监管认定的低风险板块，排除新能源商业险按段展开），SSOT=`config/strategy-segments.ts` expandsTo，PolicyFact 侧战略驾驶舱既有机制现成复用 / B 车险风险等级 A/B 档（insurance_grade，与筛选向导既有「风险」维同源）/ C 连续无赔款（NCD 优待口径）/ D 其他定义
 - Q2 「低风险」与车型段的叠加语义？ → 待答。选项: A（推荐）独立横切开关、与车型 AND 叠加（低风险非客类分组，OR 并列会破坏③④行互斥组语义且并集口径反直觉）/ B 作为车型段第 19 个 chip OR 并列（与现有段并集）
 
 ## 讨论
@@ -38,6 +38,17 @@ UI哪些页面哪些指标固定编码用签单口径、哪些默认签单口径
   - 口径分布核对（第一问答案，2026-10-23 HEAD 快照）：固定签单＝网点经营页（唯一 lockedDateCriteria:'policy_date' preset）、KPI 大盘墙卡六列＋签单保费卡（恒签单 YTD，不随口径选择器）、计划达成（后端恒签单）、金融同业全族＋机构版（恒锚最新签单日）、日报（计划达成＋对标考核口径）、行业对标考核口径；默认签单可切＝home/dashboard/org-custom（full preset）、业绩分析、保费增长、保费报表、图表台账、战略驾驶舱（cost tab 锁起保例外）；另挂 full 但时间实际锁定＝overview-v2/费用发展（恒保单年度批次）、系数监控（后端不消费通用筛选器）。对照：锁起保＝成本分析/赔案明细/客户流向/战略 cost tab；第三口径＝续保追踪（到期日）/报价转化（报价时间）/队伍标保（承保确认）/维修/摩托计算器。
 - 转正映射建议: 1 issue 2 PR（更名纯呈现词一 PR；「低风险」段一 PR，依赖 Q1/Q2 裁定后定形态）。
 - 验收: `bun run typecheck` ＋ 前后端段对账测试（vehicle-quick-segment-frontend-parity）绿；更名 PR 加全站「车型」字样 grep 清零佐证。
+
+## 探索 #2（2026-10-23 · 行业对标「低风险」机制，owner 问句触发）
+
+- 探查锚: chexian-api @ 918e6d75b（同日）
+- 背景: owner 拼音问句「行业对标的低风险，应编码签单正确吗」——确认行业对标页既有「低风险（1+2）」范围的口径编码。
+- 结论: **正确，且是数据粒度硬约束下的唯一可行口径**：
+  - 低风险 = `lowRiskPredicate`（`server/src/sql/industry-benchmark-pivot.ts:722`）：战略 1+2 段（STRATEGY_SEGMENTS group∈{1,2}）→ BENCHMARK_GROUPS 对标分组 → 行业车种，逐段 `(vehicle IN … AND energy = … AND insurance = …)` 取 OR——需要 vehicle/energy/insurance 三维列。
+  - 三列只有表12（BI 行业快照）有：t12Ctes 恒取 `caliber='投保'`（:461，即签单考核口径）；起保口径走表3（IndustryMonthlyHistoryFact），粒度省×险种×主体，SQL 里 vehicle/energy 恒 `CAST(NULL …)`（:583-584）——低风险谓词在表3 行恒不命中、全被滤除。
+  - 故「低风险」事实上只能编码在签单（投保）口径上；前端口径切换提示同证（签单=「行业快报投保口径，不借起保月源补历史」；起保=「全部取月报表3，只到省×险种，非考核口径」，IndustryPivot.tsx:543）。
+- 边界注记: 「起保口径＋低风险」组合现无显式拦截（路由不 400、前端 Tabs 无 disabled、hook 无过滤）——后端结果恒空集（fail-visible 空而非报错）。若 owner 要求该组合显式拒/禁，可作小改项登记。
+- 对 Q1 的修正: owner 问句方向指向行业对标既定的「低风险＝战略1+2」定义——AUQ Q1 推荐项已改为「战略 1+2 段并集」（与行业对标同口径，SSOT 复用 strategy-segments.ts）。
 
 ## 开工记录
 
