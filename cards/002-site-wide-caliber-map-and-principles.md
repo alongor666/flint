@@ -1,6 +1,6 @@
 # 002 · 全站口径一览与分派原则（成本类起保、业绩签单）
 
-- 状态: discussed
+- 状态: scouted
 - 目标仓: chexian-api（原则落地与口径修订均在目标仓；本卡梳理产出存 flint）
 - 类型: 数据口径 / 研究
 - 录入: 2026-10-15
@@ -102,7 +102,7 @@
 
 **架构前提（实施第一刀）**：preset 现只有「全局默认签单（buildResetFilters data.ts:293 单值）＋锁死 lockedDateCriteria」两态——默认起保的页（dashboard/home/chart-ledger/计划达成）与默认签单的页（performance/growth/reports/strategyCockpit）并存，需新增 **per-preset 默认口径（defaultDateCriteria 第三态：默认不锁）**，全局单值默认退役为回退值。
 
-**转正映射建议**：①per-preset 默认口径机制＋全站默认分布落地（含 001 合流；过时文案两处顺手修）②热力图下钻格跟随口径（performanceHeatmapSelection.ts:139 小改）③网点经营页可切④金融同业可切⑤计划达成双口径（004 合流）；另口径原则 v2 正本登记进业务规则字典。
+**转正映射建议（owner 2026-10-23 采纳）**：①per-preset 默认口径机制＋全站默认分布落地（含 001 合流；过时文案两处顺手修）②热力图下钻格跟随口径（performanceHeatmapSelection.ts:139 小改）③网点经营页可切④金融同业可切⑤计划达成双口径（004 合流）；另口径原则 v2 正本登记进业务规则字典。待「开工 002」令即按 build 协议执行。
 
 ## 探索 #1（2026-10-15）
 
