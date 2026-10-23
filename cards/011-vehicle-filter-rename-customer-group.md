@@ -140,7 +140,7 @@ UI哪些页面哪些指标固定编码用签单口径、哪些默认签单口径
 - 2026-10-23 开工（build 协议）：issue #2508 建立并认领（branch i/2508），锚 b0706e1cf。
 - **PR① 实施偏差记录（2026-10-23，供 PR②/③ 借鉴）**：
   - 规划 F7「维度清单棘轮更新 baseline」走不通——`dimension-list-ratchet` 是对 merge-base 基准的真「只减不增」，重写 baseline 仍红（「上限只能调低」）。规则 A：对象字面量含 ≥3 维度词即判清单；**派生值（.map/.filter/正则提取）不算**。改法：`LOW_RISK_WHERE_COLUMNS` 从战略段 whereExpr 正则派生（`/\b[a-z_]+(?=\s*=)/g`），sanitizer 走专门分支不进 `FIELD_COLUMNS`——与 `VEHICLE_QUICK_SEGMENT_COLUMNS` 先例同构。**PR② 数组化 fuelCategory 时 sanitizer 的 `FUEL_CATEGORY_COLUMNS` 若需改形态同样受此闸辖，先看是否派生。**
-  - 漏列消费点 1 处：`src/features/guide/useFeedbackContext.ts` structuredFilters 标签映射（遍历 BOOLEAN_DIMENSION_KEYS 需每键有 label，pre-push 全量 vitest 拦下）——新增全局态键时此表必补；PR② 若改键形态同查。
+  - 漏列消费点 3 处（全由闸拦下，规划「新键接线清单」缺这三项——PR② 改键形态同查）：①`src/features/guide/useFeedbackContext.ts` structuredFilters 标签映射（遍历 BOOLEAN_DIMENSION_KEYS 需每键有 label，pre-push 全量 vitest 拦）；②`server/src/utils/policy-scope-params.ts` POLICY_SCOPE_PARAM_MAP（claims 族解析 SSOT，契约 CLAIMS_DETAIL_FILTER_KEYS/heatmap extraKeys 均由它派生——发展面板透传白名单 ⊆ 契约断言拦）；③`server/src/config/query-routes-metadata.ts` CLAIMS_POLICY_SCOPE_PARAMS 登记（route-catalog 是 PAT/CLI/MCP 唯一发现渠道，governance RouteCatalog 对账拦）。
   - 实施用独立 worktree `chexian-api-wt-2508`（主检出被并行会话 #2509 占用）。
 - **owner 纠偏（2026-10-23 开工中）**：更名范围＝**仅筛选器内的「车型」维度名**（维度 label、摘要/胶囊片名、向导维名等直接指涉该维的呈现词）；全站其余「车型」字样一律不动——vehicle_model 厂牌/型号语境（如「车型明细字段」）、报价转化/维修等业务域自有「车型」概念、后端注册表内部描述均保留。验收佐证改为「筛选器维度语境清零、其余语境不动」（替代探索#1 的全站 grep 清零表述）。
 
