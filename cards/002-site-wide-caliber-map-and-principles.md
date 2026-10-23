@@ -28,8 +28,38 @@
 ## 讨论
 
 - 终局结论（2026-10-15 owner 双裁定）：两条原则对照现状**全部符合，本卡无实施项**。001 卡独立维持（KPI 看板默认起保，非「业绩页」指称）；业绩页维持默认签单可切。
+- ~~终局结论~~ **被 2026-10-23 原则修订取代（见下「原则修订 v2」）**——原 Q2「业绩页默认签单」不再成立。
 - 可选转正项（owner 未要求）：将两条原则作为上位规则登记进 chexian-api 业务规则字典（与 2026-09-04 成本页锁起保裁定同库），供后续新页面口径设计引用——需要时说一声即可开卡转正。
 - 边缘口径（非签单/起保二分）不属于两原则管辖但入表披露：到期日（续保族）、报价时间（报价转化）、承保确认时间（队伍标保）、满期时间分摊（KPI 满期八列/成本满期赔付率）、保单年度批次（费用发展/赔付率发展）、起期锚（收入价质监控）。
+
+## 原则修订 v2（2026-10-23 owner 裁定，取代上方 2026-10-15 结论）
+
+**owner 原话**：
+
+> 硬编码签单口径应该只能是一个，那就是签单保费。在其他情况下，都应该允许筛选口径，而且首先应该默认成为起保口径。业绩热力图这个页面是默认签单口径，但也可以改成起保口径。在签单口径时，保费就等于签单保费；当起保口径时，保费就等于保费收入。
+
+**三条新原则**：
+
+1. 硬编码签单口径的唯一例外＝「签单保费」指标；其余一切场景必须允许口径筛选。
+2. 可切页面的默认口径＝起保（推翻 2026-10-15 Q2「业绩页默认签单」）。
+3. 命名映射：签单口径下「保费」＝签单保费、起保口径下「保费」＝保费收入（已由 009 卡 #2213 落地：`DATE_CRITERIA_PREMIUM_METRIC_LABELS`）。
+
+**差距清单（探索 #2 核对，2026-10-23 @ 918e6d75b）**：
+
+已符合：KPI 墙「签单保费」卡（唯一例外位，恒 policy_date 独立锚）；KPI 六列与业绩页全族（主面板/热力图/透视/汇总含达成率）锚列随 dateField（`performance-heatmap.ts:767` `CAST(p.${dateField} AS DATE) AS pd`；kpi.ts dateField 已流入）；指标命名 SSOT 已上线。
+
+需改造（按影响排序）：
+
+1. **全局默认口径翻转为起保**：`src/shared/types/data.ts:293` buildResetFilters `date_criteria: 'policy_date'` → 'insurance_start_date'。影响全部可切 preset（full/performance/growth/report/chartLedger/strategyCockpit），同时落地 001（KPI 默认起保）与 004（计划达成默认起保）方向。连带：`dateCriteriaPremiumMetricLabel` 回退值注释（现回退签单保费对齐旧基线）。
+2. **业绩热力图下钻格强制签单**：`performanceHeatmapSelection.ts:139` `dateField: 'policy_date'` 硬编码（#1225 技术债，整格周期替换期间时一并强制口径）——改为跟随全局口径，保留期间替换。
+3. **网点经营页全页锁签单**：filters.ts networkOutlet `lockedDateCriteria:'policy_date'` + SQL 硬编码签单分桶（network-outlet.ts:94）——NetworkOutletFact 是 PolicyFact 视图、insurance_start_date 列在位（:186-187），技术可切，改造分桶列随口径。
+4. **金融同业全族+机构版恒签单窗口**：financial-channel.ts:603 abcWhere `policy_date BETWEEN`；机构版三窗恒签单（传 startDate 即 400）——底表 PolicyFact 有起保列，窗口过滤列可随口径（latest=MAX(policy_date) 数据新鲜度锚与口径过滤列是两个维度，可分离）。
+5. **计划达成/报告中心恒签单**：/plan-achievement+achievement_cache 单口径——004 卡已主张双口径改造，本原则强化其转正。
+6. **系数监控、日报 benchmark/planAchievement 段恒签单锚**——随各自域改造评估。
+
+过时文案（顺手修）：PerformanceAnalysisPanel.tsx:1120/1292「达成率口径：累计签单保费÷年计划」——实际分子已随口径（起保口径下=保费收入 YTD），文案误导。
+
+**开放点（实施时定或再裁）**：行业对标是否保持例外（表12 签单考核口径默认；表3 起保仅省×险种粒度——10-22 owner 已确认低风险恒签单正确，倾向保持）；计划达成时间进度锚（最新签单日）在起保口径下的锚列；金融同业起保口径下窗口上界锚。
 
 ## 探索 #1（2026-10-15）
 
