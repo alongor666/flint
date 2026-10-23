@@ -138,6 +138,8 @@ UI哪些页面哪些指标固定编码用签单口径、哪些默认签单口径
 ## 开工记录
 
 - 2026-10-23 开工（build 协议）：issue #2508 建立并认领（branch i/2508），锚 b0706e1cf。
+- **PR① #2515 已开（更名＋低风险）**：闸①规划两轮评审（首轮 11 findings→v2→二轮 APPROVE）→实施→两路独立对抗评审（DSH·GLM5.3 第一路 REQUEST_CHANGES 0P0P1；ZCode 子代理第二路 **1×P1**＝projectEffectiveFilters 漏 lowRisk 剥离致续保页 400——第一路漏检，两路交叉价值实证）→返修 8 项（P1 双层剥离+DROPPED_KEYS、更名漏改 4 处、URL 回放互斥归一、常量收口）→闸②主会话行级亲验过→push 251082dd4。CI 走查闸补「走查-可查」label＋评审锚＋走查路径；E2E shard 一次 runner 瞬态 cancelled 已 rerun。
+- **PR② 已 commit 未 push（燃料多选）**：wt-2508-fuel 分支 i/2508-fuel（stacked on PR①）。谓词单源 config/fuel-category-where（三处旧三分支收敛、单成员 SQL 逐字节保真）；前端全链数组化（ARRAY URL 通道迁移/快照归一/两姊妹函数幂等剥离）；守恒断言受控更新全绿；governance 123/123；本地全量 vitest 绿；毛改 570 行（>500，PR 描述需体量三行）。待 PR① 合并后 rebase→push→开 PR→评审。
 - **PR① 实施偏差记录（2026-10-23，供 PR②/③ 借鉴）**：
   - 规划 F7「维度清单棘轮更新 baseline」走不通——`dimension-list-ratchet` 是对 merge-base 基准的真「只减不增」，重写 baseline 仍红（「上限只能调低」）。规则 A：对象字面量含 ≥3 维度词即判清单；**派生值（.map/.filter/正则提取）不算**。改法：`LOW_RISK_WHERE_COLUMNS` 从战略段 whereExpr 正则派生（`/\b[a-z_]+(?=\s*=)/g`），sanitizer 走专门分支不进 `FIELD_COLUMNS`——与 `VEHICLE_QUICK_SEGMENT_COLUMNS` 先例同构。**PR② 数组化 fuelCategory 时 sanitizer 的 `FUEL_CATEGORY_COLUMNS` 若需改形态同样受此闸辖，先看是否派生。**
   - 漏列消费点 3 处（全由闸拦下，规划「新键接线清单」缺这三项——PR② 改键形态同查）：①`src/features/guide/useFeedbackContext.ts` structuredFilters 标签映射（遍历 BOOLEAN_DIMENSION_KEYS 需每键有 label，pre-push 全量 vitest 拦）；②`server/src/utils/policy-scope-params.ts` POLICY_SCOPE_PARAM_MAP（claims 族解析 SSOT，契约 CLAIMS_DETAIL_FILTER_KEYS/heatmap extraKeys 均由它派生——发展面板透传白名单 ⊆ 契约断言拦）；③`server/src/config/query-routes-metadata.ts` CLAIMS_POLICY_SCOPE_PARAMS 登记（route-catalog 是 PAT/CLI/MCP 唯一发现渠道，governance RouteCatalog 对账拦）。
