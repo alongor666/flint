@@ -34,3 +34,10 @@
 2. **默认落点**：`getDefaultRoute()` 返回值改为 `/dashboard/overview-v2`。**这是对 CX-ADR-14e573（2026-09-15「全员固定落经营总览›首页」）的替换裁定**，探索时须按目标仓 ADR 纪律补登新裁定/废止旧条，不能只改常量。overview-v2 权限与 /dashboard 同源，落点守卫无需新增分支。
 
 有现成回归锁须同步改：`src/components/layout/__tests__/sidebar-navigation-collapsed.test.tsx`（展开表丢失更新 / 落地到首页）、`tests/default-landing-navigation.test.tsx`（源码结构锁）。待「探索 014」时核 `getDefaultRoute` 全部调用方、角色分支、以及 ADR 登记位置。
+
+### 影响评估补记（2026-10-24 owner 问「坏影响与变化」时探明）
+
+- **前后端镜像改动面（初评遗漏）**：`getDefaultRoute()` 为恒值实现（organizations.ts:779-781 直接返回 `DEFAULT_LANDING_ROUTE='/home'`:387），但该常量与后端 `server/src/config/preset-users.ts` 的 `DEFAULT_LANDING_ROUTE` 同值镜像，`/me` 仍回传 defaultRoute 字段（前端不消费、契约仍在），两侧各挂单测锁字面量（前端 `organizations.test.ts`/后端 `preset-users.test.ts`）——改落点=2 源码+2 单测+ADR 登记共 5 处。
+- **权限被拒角色落地撞墙（探索期待办）**：overview-v2 守卫挂父路径 /dashboard 拒绝清单（deniedModules 精确匹配）；恒值落点下被拒角色根地址落地即被 RouteAccessGuard 拦，现状 /home 无此面。实施时须守卫侧回退或 getDefaultRoute 内保留能力判断，且不违反 CX-ADR-14e573「判据 100% 委托 getDefaultRoute」精神。
+- **副作用面**：①008 卡「首开=铃铛红点+首页摘要卡」的摘要卡曝光随默认落点离开首页而失去主路径（只剩铃铛）；②首页经营体检从每日必经变冷门页；③跨组高频切换用户每次多一击；④旧用户 localStorage 多元素展开集首读收敛为一组（一次性感知）；⑤overview-v2 为 #2274 半成品态（八卡七缺项），默认落点=每天首屏直视缺项占位；⑥生产闸 E2E 实测过「落地到首页 /home」，须同步改。
+- NavSearch 无 expandedGroups 直接联动（grep 零命中），跳转走路由+strongAnchor（L440 收起组含当前页强锚）机制，手风琴天然适配。
