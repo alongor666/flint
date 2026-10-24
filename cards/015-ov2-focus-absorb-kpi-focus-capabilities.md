@@ -26,6 +26,6 @@ KPI 聚焦能力清单七块（迁移标的物）：指标头（主值+灯+计�
 
 - 探查锚: chexian-api @ origin/main `8341078bc`
 - 防撞车: 开放 PR 池无聚焦迁移主题；owner 此前已另持两张基建工单（聚焦卡复用辅助栏能力面 / 聚焦视图复用 dashboard 聚焦基座）——本卡是其上位需求，转正时建议并轨：基建刀先行、本卡配置刀随后
-- 实施要点: 组件源 `src/features/dashboard/kpiFocus/`（KpiFocusTool/kpiFocusMetricConfig 配置驱动三轴/FocusAxesCharts/FocusTimelineChart/useKpiFocusData 等，配置 23 卡）；目标面 `src/features/operating-overview-v2/components/FocusAuxiliary.tsx`（已有概览/趋势/轻诊断三视图+影响度工作区+预警登记）；轴数据源承接：八卡 cost 序列与 claimFactorsTrend 已有月起保口径序列，客群轴起保口径 pivot 原子需新增
+- 实施要点: 组件源 `src/features/dashboard/kpiFocus/`（KpiFocusTool/kpiFocusMetricConfig 配置驱动三轴/FocusAxesCharts/FocusTimelineChart/useKpiFocusData 等；23 卡全有聚焦=core 12 三轴族 #1991+业务结构 11 族 #2049——owner 2026-10-24 纠正：此前误读 #1991 头注「结构族维持占位」旧态为现状）；目标面 `src/features/operating-overview-v2/components/FocusAuxiliary.tsx`（已有概览/趋势/轻诊断三视图+影响度工作区+预警登记）；轴数据源承接：八卡 cost 序列与 claimFactorsTrend 已有月起保口径序列，客群轴起保口径 pivot 原子需新增
 - 转正映射建议: 1 issue（挂目标仓 #2274）分两刀——基建刀（聚焦组件抽 shared+八卡配置驱动骨架）/配置刀（7 卡逐张能力对齐+轴数据源换口径）
 - 验收: 两页聚焦能力对照清单逐项核对；起保口径轴数值与八卡主值同源对拍（同窗同数）
