@@ -29,3 +29,58 @@ KPI 聚焦能力清单七块（迁移标的物）：指标头（主值+灯+计�
 - 实施要点: 组件源 `src/features/dashboard/kpiFocus/`（KpiFocusTool/kpiFocusMetricConfig 配置驱动三轴/FocusAxesCharts/FocusTimelineChart/useKpiFocusData 等；23 卡全有聚焦=core 12 三轴族 #1991+业务结构 11 族 #2049——owner 2026-10-24 纠正：此前误读 #1991 头注「结构族维持占位」旧态为现状）；目标面 `src/features/operating-overview-v2/components/FocusAuxiliary.tsx`（已有概览/趋势/轻诊断三视图+影响度工作区+预警登记）；轴数据源承接：八卡 cost 序列与 claimFactorsTrend 已有月起保口径序列，客群轴起保口径 pivot 原子需新增
 - 转正映射建议: 1 issue（挂目标仓 #2274）分两刀——基建刀（聚焦组件抽 shared+八卡配置驱动骨架）/配置刀（7 卡逐张能力对齐+轴数据源换口径）
 - 验收: 两页聚焦能力对照清单逐项核对；起保口径轴数值与八卡主值同源对拍（同窗同数）
+
+## 探索 #2（2026-10-24，行号级深化）
+
+- 探查锚: chexian-api @ origin/main `0847fb9e9`（2026-10-24；本地主检出在旧分支 behind 57，全程读 origin/main）
+
+### 防撞车（勘正探索 #1「开放 PR 池无聚焦迁移主题」——该结论已过时）
+
+- 【事实】**PR #2513 开放在池**（feat(overview-v2): 聚焦设施复用辅助栏能力面，Refs #2274）：ready、MERGEABLE、双轮独立评审 APPROVE，改 `FocusAuxiliary.tsx` +37/-5（narrowPresentation="modal"＋suspended 挂起＋layout 初始自动展开门）——即探索 #1 所称 owner「基建工单」之一的落成物，待 owner 合并（owner 2026-10-24 裁定禁 AI 合并）。其正文互斥条款：与「聚焦卡复用 dashboard 基础设施」工单互斥串行，后者以 #2513 合并后 main 为基线。
+- 【事实·零命中三法交叉验证】「聚焦卡复用 dashboard 聚索基座」工单在目标仓 issue 池不存在：标题搜「聚焦卡复用 dashboard」「聚焦基座」「能力面」＋ #2274 评论全文 grep「dashboard 基础设施」均零命中——它只被 #2513 互斥条款引用，尚未立 issue。
+- 转正排序据此定死：**基建刀一=#2513（在池）→ 基建刀二=KpiFocus 组件抽 shared（需立 issue）→ 本卡配置刀（7 卡逐张）**。
+
+### 配置驱动正本与组件群（迁移标的物，均为 origin/main 行号）
+
+- 配置形态: `src/features/dashboard/kpiFocus/kpiFocusMetricConfig.ts`——`FocusMetricConfig` 12 字段（headerField/headerUnit/headerIsRatio/headerIsPercent/derive/pivotScale/headerSummary/timeline/orgAxis/categoryAxis/pivotMetric/structure），`FOCUS_METRIC_CONFIG` 23 卡全覆盖（core 12 三轴族＋focus 11 结构族 #2049）
+- 消费链: `KpiFocusTool.tsx:52` 起 `MetricFocusView`——useKpiFocusData（指标头+时间轴）→ useFocusStructureData（结构族）→ useKpiFocusOrgData/useKpiFocusPivotOrgData（单位轴）/useKpiFocusCategoryData（客群轴）＋ useFocusScopeParams（#2040 筛选继承，读 dashboard 全局筛选上下文）
+- 取数链（**全部签单口径**——换口径的根源）: useKpiFocusData.ts 头注四趟（/kpi 无日期参数恒 YTD 签单、/trend 两趟、/health-check 体检灯）；`kpiFocusAxesData.ts:51`（plan-achievement）、`:128-129,:188`（getPivot 两趟，**未传 dateField→缺省签单**）
+- 目标面: `src/features/operating-overview-v2/components/FocusAuxiliary.tsx`（587 行）——现状三视图 summary（FocusSummary＋InputEvidence/CardFaceEvidence 证据区）/trend（FocusTrend＋claimFactorsTrend）/diagnosis（FocusDiagnosis）＋AttentionList 预警登记；无三轴、无域映射区
+
+### 八卡 01-07 × KPI 聚焦形态映射（含口径处置）
+
+八卡 id 正本：`server/src/routes/query/operating-overview.ts:320-321`（7 基础卡序）＋ `:781`（efficiency 组＝第八卡 earned_margin_amount）。
+
+| 八卡 | id | KPI 形态源卡 | 轴口径处置 |
+|---|---|---|---|
+| 01 签单保费 | signed_premium | vehicle_premium（premium 三轴+plan 摘要） | **原样复用签单口径**——口径原则 v2 唯一硬编码签单例外＝签单保费本身，轴不换口径 |
+| 02 保费收入 | premium_income | 同 vehicle_premium 形态 | 起保窗（起保口径＝保费收入，命名裁定见 flint 009）：pivot 透传 dateField |
+| 03 收入进度 | income_progress | vehicle_achievement_rate（orgAxis=plan） | 起保分子（计划按起保制定，owner 口径裁定 2026-10-15）；plan-achievement 分子现状以 flint 003（待 PR-B）落地态为准 |
+| 04 收入同比 | income_growth | vehicle_growth_rate（双 pivot 轴） | 起保窗 pivot 两趟（当年 vs 上年同窗） |
+| 05 变动成本率 | variable_cost_ratio | 同名卡 | Q4 裁定周演进不迁→时间轴用八卡已有 card.trend 月序列；成本族不做客群轴（工单原口径沿用） |
+| 06 保单年赔付率 | policy_year_loss_ratio | earned_claim_ratio | 同 05 |
+| 07 获取成本率 | acquisition_cost_ratio | expense_ratio | 同 05 |
+| 08 满期边际贡献额 | earned_margin_amount | 无源 | 排除（Q1 裁定） |
+
+### 轴数据源承接（核心工程难点，比探索 #1 收窄）
+
+- 【事实】**起保窗 pivot 服务端已支持**: `server/src/routes/query/pivot.ts:153`（消费 req.query.dateField）、`:195`（anchor 优先于显式 dateField）——客群/单位轴换口径＝前端透传 dateField=insurance_start_date＋锚窗，**非新接口**
+- 时间轴: 八卡 card.trend 已是服务端月值（cardFaceModel.ts:41「金额必须已是服务端月值」）；KPI 的 /trend 签单序列不搬。⚠ pivot.ts:195 anchor 优先——total_premium 等指标若注册表有锚字段，显式 dateField 可能被覆盖，须逐 pivotMetric 核对锚语义（实施第一步，本次未逐指标验证）
+- 指标头/摘要: 用八卡响应（card＋cardFace readings）现成数据，不搬 /kpi 四趟；体检灯不迁（Q3），八卡档位 primaryTier 已有
+- 筛选继承: ov2 已具备同构输入——OperatingOverviewV2Page.tsx:8-11（PageFilterPanel/useGlobalFilters）、useOperatingOverview.ts:20-22（buildFilterParams 剔日期三件套＝与 #2040「时间三键剥除」同构）、server :762 消费 commonFilterSchema
+
+### 风险
+
+1. **scope 通道不同源**: KPI 聚焦 useFocusScopeParams 读 dashboard 筛选上下文，ov2 走 buildFilterParams——组件抽 shared 时 scope 注入必须参数化，否则八卡聚焦轴误读 dashboard 筛选或丢 ov2 筛选
+2. pivot 指标锚覆盖（见上，实施第一步核对）
+3. plan-achievement 分子口径依赖 flint 003 落地
+4. #2513 未合并→配置刀基线漂移（开工前 fetch 对齐）
+5. 05-07 月序列覆盖度: 八卡 card.trend 对成本三卡是否有月点需实施时核对（缺则时间轴诚实降级，沿用 FOCUS_NO_AXIS_NOTE 模式）
+
+### 验收命令
+
+`bun run typecheck`；`bun run test --run src/features/operating-overview-v2`（新增聚焦轴用例）；`bun run test --run src/features/dashboard/kpiFocus`（抽 shared 回归）；`bun run governance`。对照验收：01 签单轴与 KPI 聚焦同卡同数；02-07 起保轴与八卡 card.trend/主值同锚同窗对拍。
+
+### 转正映射（更新）
+
+1 issue 挂 #2274、三刀序：基建刀一 #2513（在池待合并）→ 基建刀二（立 issue：组件抽 shared＋scope 参数化）→ 配置刀（本卡）。基建刀二改动面若小可与配置刀并一 PR，按目标仓体量契约裁量。
