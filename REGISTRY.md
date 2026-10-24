@@ -14,3 +14,4 @@
 | [010](cards/010-renewal-coverage-migration-matrix.md) | shipped | chexian-api | 2026-10-19 开工即交付：四轮评审+全闸过，迁移矩阵+保额变化 xlsx 已出（Air 与 mini 的 010-output），流失是降档 6~10 倍 | 2026-10-19 |
 | [011](cards/011-vehicle-filter-rename-customer-group.md) | scouted | chexian-api | 全裁定+建议已采纳（10-23）：1 issue 3 PR（更名+互斥段／燃料多选／向导多选化）待「开工 011」 | 2026-10-23 |
 | [012](cards/012-qv-upload-checklist-policy-support.md) | discussed | quote-vision | 上传页显式指引（无勾选·门控显式化·三者保额一致必选）+风险/系数页类型拆分+同业保单（提取 UX 先行）；已裁定待「探索 012」 | 2026-10-24 |
+| [013](cards/013-qv-compare-page-3-section-redesign.md) | clarifying | quote-vision | 比价表三段式重设计（保费四板块/保额/车辆信息·去重·删验算·高价值保留）——草图 v1 已出待 owner 反馈 | 2026-10-24 |
