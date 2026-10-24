@@ -35,6 +35,29 @@
 
 有现成回归锁须同步改：`src/components/layout/__tests__/sidebar-navigation-collapsed.test.tsx`（展开表丢失更新 / 落地到首页）、`tests/default-landing-navigation.test.tsx`（源码结构锁）。待「探索 014」时核 `getDefaultRoute` 全部调用方、角色分支、以及 ADR 登记位置。
 
+### 第二轮裁定（2026-10-24 owner）
+
+- **落点切换推迟**：半成品不当门面——等 overview-v2 成熟再切；首页经营体检**打算融合进** overview-v2（融合属新范围，成熟门槛之一，待明确后独立处理）。手风琴裁定未被推翻、维持原议。
+- 更新触达降权不是顾虑（正合 owner 意向，见 015 卡）；403 风险 owner 要求量化角色清单（下方已探明）。
+
+### 成熟度评估（2026-10-24 探查，main 快照）
+
+- **数据面已远超 MCP 注册表旧描述**（`server/src/config/operating-overview.ts:143-150` 现行矩阵）：八卡主值 **7 卡可算**（签单保费/保费收入/收入进度/收入同比/变动成本率/获取成本率/保单年赔付率），仅「历年制赔付率」主值缺 G3+G5；收入族比较/实际变化已通（#2387 D1 当前数据重算口径）；成本族比较经账面基期通道已通（#2435，2026-10-22），G3 只剩成本族「较上月末」列；改善影响度全族挂 G4 但已接线（#2389 D2，有实例出数无实例留空）。
+- **功能面成型**：报告导出（#2299 C2）、八卡趋势图补全（#2403）、结论体/预警登记/聚焦重开等 15 个测试文件；组件含 ImpactWorkspace/CardFace/ConclusionBody/ReportExportBar。
+- **未成熟项**：①历年制赔付率卡——G3（真实历史时点快照）+G5（总公司原件对账）依赖数据发布方/业务侧，非代码可解，短期无解；②首页体检融合——owner 新范围，未开工；③#2392 八卡推送通道——方案 10-23 刚出未实施（外围，不阻塞门面）。
+- **判定**：接近成熟未到。切换门槛建议＝体检融合完成＋历年制卡定处置（隐藏或缺项展示）。
+
+### 403 拒绝面（探明）
+
+- deniedModules 负面清单仅三页（apps-hub/access-control/user-management，`preset-users.ts:136-144`），与 /dashboard 无关；真正拦截来自 allowedRoutes 白名单。
+- **唯一被拒角色 = org_user（三级机构账号）**：默认白名单 `ORG_USER_DEFAULT_ALLOWED_ROUTES`（前端 organizations.ts + 后端 ORG_ROLE_ALLOWED_ROUTES 镜像）含 /home 不含 /dashboard。其余角色全通：branch_admin/sx_manager/双电销/双金融同业=豁免或无白名单条目放行；sx_yeguan 白名单显式含 /dashboard。
+- 将来切落点的正解：getDefaultRoute 内加能力判断（有 /dashboard 权限落 overview-v2，org_user 回落融合后的体检页）——与「判据 100% 委托 getDefaultRoute」精神一致。**体检融合与 org_user 白名单是同题**：融合后要么给 org_user 开 /dashboard（连带放开整个 KPI 看板族，权限面扩大），要么 overview-v2 挂独立守卫路径，融合设计时必裁。
+
+### 跨组切换兼顾（探明）
+
+- 现成零成本覆盖：NavSearch（与展开状态零耦合，搜页名直达，本身就是跨组最快路径）+ strongAnchor（收起组含当前页强锚回跳）+ 折叠 rail 态（64px 图标条常驻，collapsed=侧栏整体隐藏，PR-2a 语义；未实证有无悬浮子菜单，grep 无 flyout）。
+- 可选增强（探索期细化）：rail 组图标 hover 悬浮子菜单（VSCode activity bar 式一击直达任意页）；不推荐「双击/长按例外多开」（破坏手风琴纯度，回退半步）。
+
 ### 影响评估补记（2026-10-24 owner 问「坏影响与变化」时探明）
 
 - **前后端镜像改动面（初评遗漏）**：`getDefaultRoute()` 为恒值实现（organizations.ts:779-781 直接返回 `DEFAULT_LANDING_ROUTE='/home'`:387），但该常量与后端 `server/src/config/preset-users.ts` 的 `DEFAULT_LANDING_ROUTE` 同值镜像，`/me` 仍回传 defaultRoute 字段（前端不消费、契约仍在），两侧各挂单测锁字面量（前端 `organizations.test.ts`/后端 `preset-users.test.ts`）——改落点=2 源码+2 单测+ADR 登记共 5 处。
