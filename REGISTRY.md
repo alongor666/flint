@@ -14,6 +14,6 @@
 | [010](cards/010-renewal-coverage-migration-matrix.md) | shipped | chexian-api | 2026-10-19 开工即交付：四轮评审+全闸过，迁移矩阵+保额变化 xlsx 已出（Air 与 mini 的 010-output），流失是降档 6~10 倍 | 2026-10-19 |
 | [011](cards/011-vehicle-filter-rename-customer-group.md) | scouted | chexian-api | 全裁定+建议已采纳（10-23）：1 issue 3 PR（更名+互斥段／燃料多选／向导多选化）待「开工 011」 | 2026-10-23 |
 | [012](cards/012-qv-upload-checklist-policy-support.md) | discussed | quote-vision | 上传页显式指引（无勾选·门控显式化·三者保额一致必选）+风险/系数页类型拆分+同业保单（提取 UX 先行）；已裁定待「探索 012」 | 2026-10-24 |
-| [013](cards/013-qv-compare-page-3-section-redesign.md) | clarifying | quote-vision | 比价表三段式重设计——三拍板全采（列头聚焦/小计=原单合计/差价格内小字）+16 项能力保全清单；草图 v2 全能力版待 owner 验收 | 2026-10-24 |
+| [013](cards/013-qv-compare-page-3-section-redesign.md) | discussed | quote-vision | 比价表三段式——结构/折叠/四字段全裁定+探索 #1 完（四字段提取扩键实证：R3 图注册日期/被保险人/保障期限均可见）；待讨论点：投保人vs被保险人名目、保障期限拆分 | 2026-10-24 |
 | [014](cards/014-sidebar-accordion-default-landing-v2.md) | discussed | chexian-api | 侧边栏手风琴（同时只展开一组·记忆保留）+默认落点改经营分析新版 overview-v2（替换 CX-ADR-14e573）；两裁定已下待「探索 014」 | 2026-10-24 |
 | [015](cards/015-ov2-focus-absorb-kpi-focus-capabilities.md) | discussed | chexian-api | 八卡聚焦吸收 KPI 聚焦能力清单（AUQ 四裁定：集合 B/扩八卡配置驱动/灯不进/周演进不做）；核心难点=轴数据源换起保口径；待「探索 015」 | 2026-10-24 |
