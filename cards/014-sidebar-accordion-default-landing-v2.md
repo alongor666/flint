@@ -15,7 +15,7 @@
 
 ## 先探结论（零成本通道）
 
-- 目标仓判定 chexian-api：「经营分析新版」= `/dashboard/overview-v2`（App.tsx:474，#2274，权限随 /dashboard）；quote-vision 无此页面。
+- 目标仓判定 chexian-api：「经营分析新版」canonical 路径 = **`/overview-v2`**（`routeRegistry.ts:211`，label「经营分析（新版）」，经营总览域 order 19；⚠ 初版卡误写 /dashboard/overview-v2，已勘误——dashboard 只出现在权限判定语境，见 403 段）；quote-vision 无此页面。
 - 现状一（展开记忆）：`SidebarNavigation.tsx:110` localStorage 键 `sidebar-expanded-groups` 存「展开集」（数组、可多组同开），持久化唯一落点 L250-268（卡 2026-09-13-claude-c2d134）；旧 key `sidebar-collapsed-groups`（存收起集）有迁移清理（L113/L241）。即 owner 说的「会记住用户的情况」。
 - 现状二（默认落点）：App.tsx:380-388 `HomeIndexRedirect`，现行裁定 CX-ADR-14e573（2026-09-15）：全员固定落「经营总览 › 首页」，判据 100% 委托 `getDefaultRoute()`；HashRouter 下仅根地址/新标签触发，站内刷新不回首页。
 - 现状三（落地联动）：C1 落地标记（`landing-state.ts`）会让 SidebarLayout 在落地时做一次导航复位（展开侧栏 + 展开当前页所属分组），App.tsx:383-385——手风琴改造须与该机制协同（落地展开当前组时收起其余组）。
@@ -31,7 +31,7 @@
 裁定后的需求定稿（两项，同一 PR 可承载）：
 
 1. **手风琴**：`SidebarNavigation.tsx` 的 `expandedGroups` 由多值集合退化为「至多一组」——点开一组即收起其余；localStorage 键 `sidebar-expanded-groups` 沿用、值恒 ≤1 元素（旧多元素值首次读取时取当前页所属组或首元素收敛，不另起 key、不再加一轮迁移清理）。C1 落地复位（展开当前页所属组）天然满足手风琴，只需确认复位路径走同一 updater。
-2. **默认落点**：`getDefaultRoute()` 返回值改为 `/dashboard/overview-v2`。**这是对 CX-ADR-14e573（2026-09-15「全员固定落经营总览›首页」）的替换裁定**，探索时须按目标仓 ADR 纪律补登新裁定/废止旧条，不能只改常量。overview-v2 权限与 /dashboard 同源，落点守卫无需新增分支。
+2. **默认落点**：`getDefaultRoute()` 返回值改为 `/overview-v2`（canonical 根级路径，App.tsx 子路由 path="overview-v2" 平铺于 layout 路由下，非 /dashboard 子路径）。**这是对 CX-ADR-14e573（2026-09-15「全员固定落经营总览›首页」）的替换裁定**，探索时须按目标仓 ADR 纪律补登新裁定/废止旧条，不能只改常量。权限判定见下「403 拒绝面」——页面守卫经权限父映射借 /dashboard 的权限位，落点守卫无需新增分支。
 
 有现成回归锁须同步改：`src/components/layout/__tests__/sidebar-navigation-collapsed.test.tsx`（展开表丢失更新 / 落地到首页）、`tests/default-landing-navigation.test.tsx`（源码结构锁）。待「探索 014」时核 `getDefaultRoute` 全部调用方、角色分支、以及 ADR 登记位置。
 
@@ -47,11 +47,12 @@
 - **未成熟项**：①历年制赔付率卡——G3（真实历史时点快照）+G5（总公司原件对账）依赖数据发布方/业务侧，非代码可解，短期无解；②首页体检融合——owner 新范围，未开工；③#2392 八卡推送通道——方案 10-23 刚出未实施（外围，不阻塞门面）。
 - **判定**：接近成熟未到。切换门槛建议＝体检融合完成＋历年制卡定处置（隐藏或缺项展示）。
 
-### 403 拒绝面（探明）
+### 403 拒绝面（探明；2026-10-24 owner 问「说什么 dashboard」后补全机制）
 
+- **「dashboard」只在权限判定语境出现，页面地址与它无关**：新版经营分析页 canonical 路径 `/overview-v2`；**owner 2026-10-19 裁定 access=same_as_dashboard**（`routeRegistry.ts:208-210` 注释原文）——不开独立权限位，`canAccessRoute` 经 `ROUTE_PERMISSION_PARENT` 把 overview-v2 映射到 `/dashboard`（KPI 看板）的权限位判定；App.tsx 守卫因此写 `routePath="/dashboard"`（拒绝清单精确匹配，须写父路径才不会被绕过）。导航里两页同在经营总览域相邻（order 19/20）。
 - deniedModules 负面清单仅三页（apps-hub/access-control/user-management，`preset-users.ts:136-144`），与 /dashboard 无关；真正拦截来自 allowedRoutes 白名单。
-- **唯一被拒角色 = org_user（三级机构账号）**：默认白名单 `ORG_USER_DEFAULT_ALLOWED_ROUTES`（前端 organizations.ts + 后端 ORG_ROLE_ALLOWED_ROUTES 镜像）含 /home 不含 /dashboard。其余角色全通：branch_admin/sx_manager/双电销/双金融同业=豁免或无白名单条目放行；sx_yeguan 白名单显式含 /dashboard。
-- 将来切落点的正解：getDefaultRoute 内加能力判断（有 /dashboard 权限落 overview-v2，org_user 回落融合后的体检页）——与「判据 100% 委托 getDefaultRoute」精神一致。**体检融合与 org_user 白名单是同题**：融合后要么给 org_user 开 /dashboard（连带放开整个 KPI 看板族，权限面扩大），要么 overview-v2 挂独立守卫路径，融合设计时必裁。
+- **唯一被拒角色 = org_user（三级机构账号）**：默认白名单 `ORG_USER_DEFAULT_ALLOWED_ROUTES`（前端 organizations.ts + 后端 ORG_ROLE_ALLOWED_ROUTES 镜像）含 /home 不含 /dashboard，也不含 /overview-v2 → 经权限父映射被拒。**即：三级机构账号今天本来就打不开新版经营分析页**，这是 10-19 裁定的既有现状，不是切落点引入的新问题；切落点只是让他们打开系统第一眼撞上它。其余角色全通：branch_admin/sx_manager/双电销/双金融同业=豁免或无白名单条目放行；sx_yeguan 白名单显式含 /dashboard。
+- 将来切落点的正解：getDefaultRoute 内加能力判断（有 /dashboard 权限位落 /overview-v2，org_user 回落融合后的体检页）——与「判据 100% 委托 getDefaultRoute」精神一致。**体检融合与 org_user 可见性是同题**：融合后若要 org_user 看新版经营分析页，等于改 10-19 的 same_as_dashboard 裁定——要么给 org_user 开 /dashboard（连带放开 KPI 看板族），要么给 overview-v2 开独立权限位（permissionConfigurable 现为 false），融合设计时必裁。
 
 ### 跨组切换兼顾（探明）
 
