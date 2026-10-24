@@ -15,4 +15,4 @@
 | [011](cards/011-vehicle-filter-rename-customer-group.md) | scouted | chexian-api | 全裁定+建议已采纳（10-23）：1 issue 3 PR（更名+互斥段／燃料多选／向导多选化）待「开工 011」 | 2026-10-23 |
 | [012](cards/012-qv-upload-checklist-policy-support.md) | discussed | quote-vision | 上传页显式指引（无勾选·门控显式化·三者保额一致必选）+风险/系数页类型拆分+同业保单（提取 UX 先行）；已裁定待「探索 012」 | 2026-10-24 |
 | [013](cards/013-qv-compare-page-3-section-redesign.md) | clarifying | quote-vision | 比价表三段式重设计——三拍板全采（列头聚焦/小计=原单合计/差价格内小字）+16 项能力保全清单；草图 v2 全能力版待 owner 验收 | 2026-10-24 |
-| [014](cards/014-sidebar-accordion-default-landing-v2.md) | clarifying | chexian-api | 侧边栏一级目录手风琴（同时只展开一组）+默认落点改经营分析新版 overview-v2 | 2026-10-24 |
+| [014](cards/014-sidebar-accordion-default-landing-v2.md) | discussed | chexian-api | 侧边栏手风琴（同时只展开一组·记忆保留）+默认落点改经营分析新版 overview-v2（替换 CX-ADR-14e573）；两裁定已下待「探索 014」 | 2026-10-24 |
