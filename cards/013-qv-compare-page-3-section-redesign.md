@@ -1,6 +1,6 @@
 # 013 · quote 仓比价表页面三段式重设计
 
-- 状态: discussed
+- 状态: scouted
 - 目标仓: quote-vision（apps/qv-standalone 对比页 `src/pages/Compare.tsx` + `server/batch.ts` buildCompare）
 - 类型: 功能（页面结构重构）
 - 录入: 2026-10-24
@@ -71,6 +71,14 @@
   5. 提示词 SSOT 文件 `docs/prompts/车险报价提取提示词-v2.3.md` 滞后于生产内嵌版——扩键 PR 顺带对齐版本档案。
 - 开放讨论点 → **owner 已裁定（2026-10-24「按您建议」三项全采）**：①投保人/被保险人——提取键收「投保人或被保险人」栏原文、展示名「投保人/被保险人」；②「保障期限」起止合一栏——拆起/止两键、格式照录、服务端归一；③初登日期兼做车龄推导位（车龄＝数据日−注册日期派生，落库列或展示时计算由 scout 定）。
 - 验收: `QV_FIXTURES_DIR=fixtures/r3 npx tsx apps/qv-standalone/scripts/regression.ts diff`（三跑，v2.8 差异列表 owner 判读）＋ `node scripts/e2e-verify.mjs` PASS 报告入 PR。
+
+## 探索 #2（2026-10-25，owner 指令「拿最新代码重新探索」）
+
+- 探查锚: quote-vision @ origin/main `8c071c5`（2026-10-25 fetch；main 自 10-24 后零新提交）
+- 【事实】代码零漂移：探索 #1 全部行号锚在最新 main 逐行核对一致（`QuoteUpload.tsx:245/259/281`、`batch.ts:353/603-658`）。
+- 【事实】防撞车更正（gh issue list 空输出第二次实证不可靠，--json 复跑）：3 开放 issue，其中 **#41 与本卡直接相关**——compare v2 hn 兜底语义劈叉（PR #40 复审 N-3：视图 lastNonEmpty([...coeffs, hn]) 把华安报价页从末位兜底变最高优先，与主表 COALESCE「后传非空赢」劈叉；当前链路不触发，触发面=未来报价页采系数字段）＋附属挂账 N-4（grade_form 兜底被删）/N-5（单列视图 key 方案）/N-7（单列视图隐藏 unknown 段）/N-8（兜底 2 字未断言）。**013 重构即 #41 的自然收口点**：N-5/N-7→「仅华安降级形态」重做时解决；N-3/N-8→段一系数/小计重构时统一取值序（建议：hn 兜底仅 coeffs 全空时并入）；N-4→段三 grade_form 落地。转正 PR 关联 #41（Closes）。
+- 【事实】e2e ⑨c 断言面（`apps/qv-standalone/scripts/e2e-verify.mjs:295-315`）：现断言 `hasVerify && hasCross`（勾稽/可比核对**存在**才过）——013 删验算段后须反转（断言 verify 段不存在）＋新增四板块分组/段二 ⚠ 形态/折叠默认态断言；limitGuard 断言随段二数据形态改。
+- 开放 PR 仍 #43/#44（B5 文档归档，无关）。
 
 ## 澄清（AUQ）
 
