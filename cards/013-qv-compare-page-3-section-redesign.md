@@ -1,6 +1,6 @@
 # 013 · quote 仓比价表页面三段式重设计
 
-- 状态: scouted
+- 状态: building
 - 目标仓: quote-vision（apps/qv-standalone 对比页 `src/pages/Compare.tsx` + `server/batch.ts` buildCompare）
 - 类型: 功能（页面结构重构）
 - 录入: 2026-10-24
@@ -109,3 +109,10 @@
 - 系数条形图（owner 2026-10-23 加的板块一）owner 未提删除，草案保留在段一前。
 - 实施侧既知约束：worktree 铁律；e2e ⑨c compare 断言须随结构改；`CompareRow.section` 枚举重构（verify/attribution 段废除）动 `server/batch.ts:353` 起 buildCompare 全段。
 - 转正映射建议：待草图定稿后定，预计 1 issue + 1 PR（服务端 rows 装配+前端渲染同 PR，e2e 随附）。
+
+## 开工（2026-10-25，owner「开工 013」）
+
+- 对齐锚 origin/main 8c071c5（与探索 #2 一致，零漂移）；分支 feat/compare-3-section，单 PR（quote-vision #46，关联 issue #45，Closes #41）
+- 实施全按卡裁定：v2.8 四字段（模板+规则 10 照录+规则 7 禁入防双轨，服务端日期归一落库）；buildCompare 三段式（验算 4 行删除/段一四板块小计+分项/段二保额行级 warn/段三车辆十一行含四新行+车龄推导）；能力 #1-#15 逐项落实（#16 两两聚焦待拍板未实施）；#41 收口（hn 取值序 coeffs 优先全空并入+grade_form 同款兜底）
+- 验证：type:check+build 双过；本地烟测（无同业 10 断言+带同业全形态）；fixtures 回归 baseline-v28（v2.7 纯净 3 跑）vs after-v28，FAIL 4 张逐张定性（p1 波动带内/p5 预期新增/p6·p7 伴随无害或增益，陪跑差异待 owner 判读）；e2e 23/23 PASS（⑨c 断言反转+⑨d 四字段落库）
+- 独立对抗评审进行中，通过后正文补锚；合并永久留 owner
