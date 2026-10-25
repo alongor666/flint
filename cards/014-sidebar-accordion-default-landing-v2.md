@@ -83,6 +83,25 @@
 - 转正映射建议: 近期 1 issue 1 PR（仅手风琴——Closes #N）；落点段留卡内待成熟，届时小 PR 单独走（同一 issue 追加或新开，以届时 #2274 族排期为准）。
 - 验收: 手风琴 PR——`bun run test --run src/components/layout/__tests__/sidebar-navigation-collapsed.test.tsx`、`bun run typecheck`、生产闸 E2E（侧栏相关用例）；交互走查三断言（点新组旧组收起/刷新恢复唯一展开/旧值收敛）。
 
+## 探索 #2（2026-10-25 · 开工粒度补全）
+
+- 探查锚: chexian-api origin/main @ e86f4e9d（同探索 #1 基线）。目标：把探索 #1 的手风琴段方案补到可直接开工粒度——源码关键段、测试锁断言形态、e2e 锚点、落点门槛在途查证。
+- **改动面封闭性**【事实】：全部展开路径仅两个 setState 入口——组点击唯一消费点 `onClick={() => toggleGroup(group.domain)}`（SidebarNavigation.tsx:445，全文件唯一 toggleGroup 调用）+ C1 落地复位 effect（:273-313）；无第三路径。手风琴改造收敛在这两个 updater 表达式 + 读入函数三处。
+- **实施精化**：
+  - 读入收敛：`readExpandedGroupsPref`（:121-125）现为「数组 ∧ every 已知域 id 则原样返回，否则归空」——手风琴下改为校验通过后 `slice(0, 1)` 取首元素。不取「当前页所属组优先」：该纯函数无 location 上下文，且落地复位经 sessionStorage 幂等消费、刷新不重发（App.tsx:383-385），用户一次点击即纠正，简单方案够。
+  - toggleGroup（:319-325）：`prev.includes(domain) ? [] : [domain]`——保留函数式更新（「丢失更新」机制锁形态不变）。
+  - C1 复位（:308 附近）：`prev.includes(domain) ? prev : [...prev, domain]` → `prev.length === 1 && prev[0] === domain ? prev : [domain]`——返回原引用时持久化 effect（:250-268 引用比较幂等）天然不写盘，机制零改。
+  - 注释同步反转：C1 注释「只**加**当前域，不动其余分组：落地的目的是让人看见自己在哪，不是把侧栏恢复出厂」（:283-284 附近）——手风琴下「其余不动」前提失效（不存在其余展开项），注释随断言一并改写。
+- **测试锁断言反转清单**【事实，用例名出自 `git show origin/main:src/components/layout/__tests__/sidebar-navigation-collapsed.test.tsx`】：
+  - :275「展开集记忆：toggle 写新 key…重挂载恢复」→ 扩手风琴语义（点 B 组后 storage 值只剩 B）；
+  - :302「脏值守卫」不变（every 校验在前、slice 收敛在后，未知 id 仍归空）；
+  - :433「落地到 /performance-analysis：growth 组展开并写进偏好，**其余分组保持原记忆**」与 :472「落地到首页 /home：经营总览组展开，**其余不动**」→ **断言反转**为其余收起；
+  - :491「当前域已在展开集内：幂等」→ 改「prev 已是 [domain] 单元素时幂等不写偏好」；
+  - 新增两用例：点开 B 组断言 A 组收起、旧多元素 storage 首读收敛取首元素。
+- **e2e 锚**【事实】：`tests/e2e/14-sidebar-collapse.spec.ts` 三用例——:19「桌面默认展开 184px…分组展开集与折叠偏好跨刷新持久」（持久断言适配单元素）、:113「落地展开当前域、其余全收起 + 展开集记忆：域行即开关，跨导航与刷新保持」（加手风琴断言：手动展开第二组时第一组收起）；:68 抽屉视口与手风琴无关。
+- **落点门槛在途查证**【事实，双法】：`gh issue list`（正则 体检|融合|overview|经营分析）+ `gh search issues "体检融合"`——**体检融合未立项**（母 issue #2274 开着、无体检融合子项）；#2466 是 overview trendNote 披露矛盾修复（相关但非融合）。落点段成熟门槛等的第一块砖尚不存在，届时须先立项再动落点。
+- 转正映射/验收：同探索 #1（手风琴 1 issue 1 PR；测试清单如上，验收加 e2e 14 手风琴断言）。
+
 ## 开工记录
 
 （未开工；落点段另有挂起前提：overview-v2 成熟=体检融合完成+历年制卡处置）
