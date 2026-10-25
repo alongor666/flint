@@ -81,3 +81,9 @@ owner 指示将该会话中的华安保单信息并入本卡。该会话主体�
 - 同业多保司：现状上限 4 家（`QuoteUpload.tsx:245`），owner 未提改上限，默认不动。
 - 实施侧既知约束（探索期展开）：worktree 铁律=凡改动先 git worktree add、主检出只读；触 apps/qv-standalone 的 PR 必跑 e2e-verify 并附 PASS 报告（CI 闸 4）。
 - 转正映射建议：待探索后定，预计 1 issue + 2-3 PR（①类型拆分后端+对比表+e2e；②上传页清单 UX+保单输入形态；提取 v2.8 视实测另立）。
+
+## 开工记录
+
+- 2026-10-25 开工（并行两线，线 2=PR-②）。issue **#48**；worktree `~/workspace/qv-wt-012ux` 分支 `feat/upload-checklist` @ origin/main 8c071c5。PR-① 类型拆分垫 #47 合并后。
+- 闸① R1：**REQUEST_CHANGES P1×3/P2×6/P3×3**——清单状态机缺 failed 态与并发聚合、三项镜像在清单无承载位、PII 词单挡不住保单姓名密度（值形态兜底缺）。规划 v2 全处置（`a337dd7`：五态状态机+优先级；镜像注入既有条目；纯函数 computeBatchChecks+服务端对账脚本（行为锚）；PII 键名归一等值+值形态兜底+日志无值；读取面 Records 徽标+Compare 列头交接）。R1 verdict 归档。R2 复审进行中。
+- owner 待办（R1 F3 披露）：姓名类键（投保人/被保险人/车主/联系人/地址）是否增补 PII 词单——扩不扩归 owner。

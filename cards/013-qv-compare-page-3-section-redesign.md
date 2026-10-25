@@ -117,3 +117,9 @@
 - 验证：type:check+build 双过；本地烟测（无同业 10 断言+带同业全形态）；fixtures 回归 baseline-v28（v2.7 纯净 3 跑）vs after-v28，FAIL 4 张逐张定性（p1 波动带内/p5 预期新增/p6·p7 伴随无害或增益，陪跑差异待 owner 判读）；e2e 23/23 PASS（⑨c 断言反转+⑨d 四字段落库）
 - 独立对抗评审：NO-GO（P0 系数兜底文本路径白屏+区间闸绕过、P1 PII「刘＊」出边界、P1 e2e 兜底分支零覆盖、P2×2、P3×6）→ 当日全处置（commit 6a97126/42ccad4/a6ebd37），e2e 24/24 PASS、CI 全绿；评审过程自曝 P8 ⑤ 事故（脱敏脚本 open-w 自毁清空文件）已入登记表
 - 待 owner：UI 预览表态（预览截图已出：条形图差值尾注/段一四板块/段二 ⚠/段三四字段全落地）→ 合并授权（永久留 owner）
+
+## 开工记录
+
+- 2026-10-25 开工（并行两线，owner「并行开工」）。issue **#47**；worktree `~/workspace/qv-wt-013` 分支 `feat/compare-3sections` @ origin/main 8c071c5。
+- 闸① R1（DSH·GLM5.3 headless，ha-windows tailnet 直连）：**REQUEST_CHANGES P1×4/P2×5/P3×4**——真问题：交强小计两轨口径差（落库列按 coverage_type 派生 vs 字典按 name）、段三 7 行与段二保额重复、e2e ⑨c 断言与无 items fixture 矛盾、系数数据通道在新枚举无定义。规划 v2 全处置（`6e08063`：交强小计=字典分项相加+脚注；段三 5 行+2 行迁段二；meta.coefs 通道；数据断言挪 verify-compare-ux；flag 逐格；披露承诺）。R1 verdict 归档 docs/reports/。R2 复审进行中。
+- 通道教训：dsh 0.1.1-rc.2 无 `--reasoning`；长任务文本作参数会跑偏（只回工具意图），须一句话让其自读任务文件；E 盘被 DSH 文件沙箱拒写，verdict 落 C:\Users\<user>\。

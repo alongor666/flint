@@ -1,6 +1,6 @@
 # 014 · 侧边栏手风琴 + 默认落点改经营分析新版
 
-- 状态: scouted
+- 状态: building
 - 目标仓: chexian-api（先探已定：导航展开记忆在 `src/components/layout/SidebarNavigation.tsx`，默认落点在 `src/app/App.tsx` HomeIndexRedirect → `getDefaultRoute()`（`src/shared/config/organizations.ts`））
 - 类型: 优化（导航交互 + 默认路由）
 - 录入: 2026-10-24
