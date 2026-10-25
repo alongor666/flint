@@ -87,3 +87,4 @@ owner 指示将该会话中的华安保单信息并入本卡。该会话主体�
 - 2026-10-25 开工（并行两线，线 2=PR-②）。issue **#48**；worktree `~/workspace/qv-wt-012ux` 分支 `feat/upload-checklist` @ origin/main 8c071c5。PR-① 类型拆分垫 #47 合并后。
 - 闸① R1：**REQUEST_CHANGES P1×3/P2×6/P3×3**——清单状态机缺 failed 态与并发聚合、三项镜像在清单无承载位、PII 词单挡不住保单姓名密度（值形态兜底缺）。规划 v2 全处置（`a337dd7`：五态状态机+优先级；镜像注入既有条目；纯函数 computeBatchChecks+服务端对账脚本（行为锚）；PII 键名归一等值+值形态兜底+日志无值；读取面 Records 徽标+Compare 列头交接）。R1 verdict 归档。R2 复审进行中。
 - owner 待办（R1 F3 披露）：姓名类键（投保人/被保险人/车主/联系人/地址）是否增补 PII 词单——扩不扩归 owner。
+- 闸① R2 仅 R2-1 P1（值形态组合条款不可实现）→ v3 `3832476` 删条款+两正向断言 → **R3 APPROVE**（R3-1 P3 评审机文件未同步，本地已闭合）。**实施 agent 已派（后台）**，规划 v3 为唯一依据。

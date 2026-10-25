@@ -104,4 +104,13 @@
 
 ## 开工记录
 
-（未开工；落点段另有挂起前提：overview-v2 成熟=体检融合完成+历年制卡处置）
+**2026-10-25 手风琴段开工**（owner「开工 014」）：
+
+- flint：卡 → building；对锚 origin/main e86f4e9d→0e6a0c366（侧栏改动面零漂移，无需增量重探）。
+- 目标仓：issue [#2572](https://github.com/alongor666/chexian-api/issues/2572)（type/feature+area/frontend，只载手风琴段）；worktree `~/workspace/chexian-api-wt-2572` 分支 `i/2572`；行动规划 `docs/plans/2026-10-25-侧栏手风琴-实施规划.md`。
+- 闸① DSH·GLM5.3 三轮：v1 REQUEST_CHANGES（2×P1——机制锁 :705 立意不成立+风险声明失实；5×P2）→ v2 REQUEST_CHANGES（1×P1——防退化红线推演为假，机制面保护不可恢复消失；2×P2——惰性收敛原串反向断言+组内链接断言）→ v3 **APPROVE**（残留 V1-V3 实施期全吸收）。
+- 实施：SidebarNavigation 三处（slice(0,1)/[]·[domain]/单元素幂等）+ SidebarLayout C1 注释 + 测试（:275 整写/:447 反转/:486/:505 措辞/新增惰性收敛锁/:705 行为锁重写）+ e2e 14/18；单测 34/34 绿、typecheck+governance 过。
+- 独立对抗评审（新评审者）：**APPROVE**（0×P0/0×P1/2×P2 注释精度——已修：回归锁指针用例新名/惰性收敛触发条件补落地复位/e2e 18 号头注释）；其另跑全 layout 测试 122/122 绿。
+- 闸② 主会话亲自复评：源码 diff 逐行核过（三处与裁定一致、注释准确、断言严格）；发现 diff 冒出 AGENTS.md/CopilotPage/e2e 22/37 四文件——核实为 main 前进（#2507/#2573 合并）非夹带，已 rebase 至 1c9e202c0（复跑 34/34 绿，diff 收敛回 6 文件）。
+- PR [#2574](https://github.com/alongor666/chexian-api/pull/2574)（Closes #2572，走查-可查标签+断言行+评审锚齐备）——**待 owner 亲自合并**（合并权在 owner，禁 auto merge）。
+- 落点段仍挂起（成熟门槛：体检融合完成+历年制卡处置，体检融合未立项）。
