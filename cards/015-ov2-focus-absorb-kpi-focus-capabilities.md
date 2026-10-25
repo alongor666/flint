@@ -141,3 +141,10 @@ drillPath 钻入某机构后单位轴只剩一柱——自动切下一维或隐�
 ### 转正映射（终版）
 
 1 issue 挂 #2274，**一刀**（基建刀二＋配置刀并 PR）。裁定已齐，随时可转正；03 单位轴以降级态上，003 落地后小刀补。
+
+## 开工记录（2026-10-25，building）
+
+- 目标仓 issue **#2568**（挂 #2274）；PR **#2576**（i/2568 @ 4b3cd1022，毛行 ~850>500 说明档三行已附）
+- 流程：闸① 规划对抗评审三轮（DSH strong=glm-5.3；R1 REQUEST_CHANGES 12 findings→v2 数据源重设计「同端点 dimension 变体」消解 pivot 公式不同源；R2 REQUEST_CHANGES N1/N2（P1）→v3；R3 **APPROVE**）；实施 S1-S7（S1 抽 shared/focus 合规必需——L2 横向全禁 CX-ADR-cebbe5；S6 组件级 11 用例）；独立评审 REQUEST_CHANGES 2×P1+2×P2+4×P3 全修复（**P1-1 深挖出存量回归：#1991 漏配 pivotScale 使 KPI 三卡客群轴元值错标万 1 万倍→另开 #2577**）；闸② 主会话复评通过
+- 插曲：main 红诊断 #2569（静默降级钉子 1296 落地即过时=合并竞态）→ #2566 自愈 → NO CHANGE NEEDED 关闭
+- 交付态：可合并就绪待 owner 合并（禁 auto merge/禁 AI 合并）；规划正本 docs/plans/2026-10-25-ov2-focus-axes-plan.md（v3+偏离登记）随 PR 入库
