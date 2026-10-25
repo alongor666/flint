@@ -1,6 +1,6 @@
 # 012 · quote 仓上传页代办清单指引 + 同业保单输入
 
-- 状态: scouted
+- 状态: building
 - 目标仓: quote-vision（apps/qv-standalone 生产应用）——依据：owner 点名「quote 仓」，上传页/比价页/华安四页面形态与该仓逐项对应
 - 类型: 功能（上传页 UX 指引重构 + 同业侧新增保单输入形态）
 - 录入: 2026-10-24
