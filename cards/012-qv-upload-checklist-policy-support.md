@@ -57,6 +57,11 @@ owner 指示将该会话中的华安保单信息并入本卡。该会话主体�
 - 验收: `npx tsc --noEmit` + `npx tsx scripts/verify-compare-ux.ts`（扩 risk/coeff case）+ `node scripts/e2e-verify.mjs`（⑨ items 改 huanan_risk+huanan_coeff 各一，⑨b/⑨c 预期值不变；PASS 报告入 docs/reports/ 引用 PR 正文——CI 闸 4）+ `npx vite build`；提示词变更走 regression.ts diff 三跑 owner 判读。
 - 开放点 → **owner AUQ 裁定（2026-10-25，四题全采推荐）**：①拆分后门控＝**风险页≥1 且系数页≥1 各自必传、取值维持并集**；②存量 huanan_coeff＝**双查兼容**（视为「未细分」合法态，不迁移）；③同业保单＝**peer_quote 子形态 doc_kind**（不动枚举）；④提取 v2.8＝**并入 013 单 PR**（四扩键+保单版式适配+PII 禁收条款同一提示词变更，归 013 issue，回归一轮）。⑤清单/体检条组件形态留草图轮（owner 原裁定）。
 
+## 并行度推演（2026-10-25，owner 问询·只探索莫行动）
+
+- 冲突矩阵要点：唯一硬冲突＝012 PR-① 与 013 同函数 buildCompare（coeffs 构成 :560/lastNonEmpty :579-582 vs 全重构）；PR-② 与 013 近零交集（QuoteUpload+batch.ts:80-260 前段）；e2e 同 staging 实例 :3998 两线须错峰。
+- 结论＝**半并行可行且推荐**：线 1＝013（重构时 coeffs 构成区按「拆分友好」预留接口）→ v2.8 提示词 PR 串行其后；线 2＝012 PR-②（清单/doc_kind/PII 双闸；风险页/系数页清单两行在拆分落地前先合并态显示）；**012 PR-① 垫 013 合并后**（窄改半天量级）。合并序恒 013→PR-①（owner 手合）。全并行不推荐（PR-① 补丁语义重做+重复评审）。
+
 ## 对齐轮（2026-10-25，owner「可多轮，对齐信息与需求理解」）
 
 - 复述根本目标（owner 可一眼纠偏）：业务员传一台车的全部页面时，上传页从一行小字升级为置顶显式清单（新人不看文档知道传哪几页）；风险页/系数页拆独立类型；同业**保单**（客户已成交实底）进比价输入——上传通道价值＝提取入比价表。
