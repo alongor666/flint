@@ -1,6 +1,6 @@
 # 014 · 侧边栏手风琴 + 默认落点改经营分析新版
 
-- 状态: discussed
+- 状态: scouted
 - 目标仓: chexian-api（先探已定：导航展开记忆在 `src/components/layout/SidebarNavigation.tsx`，默认落点在 `src/app/App.tsx` HomeIndexRedirect → `getDefaultRoute()`（`src/shared/config/organizations.ts`））
 - 类型: 优化（导航交互 + 默认路由）
 - 录入: 2026-10-24
@@ -65,3 +65,24 @@
 - **权限被拒角色落地撞墙（探索期待办）**：overview-v2 守卫挂父路径 /dashboard 拒绝清单（deniedModules 精确匹配）；恒值落点下被拒角色根地址落地即被 RouteAccessGuard 拦，现状 /home 无此面。实施时须守卫侧回退或 getDefaultRoute 内保留能力判断，且不违反 CX-ADR-14e573「判据 100% 委托 getDefaultRoute」精神。
 - **副作用面**：①008 卡「首开=铃铛红点+首页摘要卡」的摘要卡曝光随默认落点离开首页而失去主路径（只剩铃铛）；②首页经营体检从每日必经变冷门页；③跨组高频切换用户每次多一击；④旧用户 localStorage 多元素展开集首读收敛为一组（一次性感知）；⑤overview-v2 为 #2274 半成品态（八卡七缺项），默认落点=每天首屏直视缺项占位；⑥生产闸 E2E 实测过「落地到首页 /home」，须同步改。
 - NavSearch 无 expandedGroups 直接联动（grep 零命中），跳转走路由+strongAnchor（L440 收起组含当前页强锚）机制，手风琴天然适配。
+
+## 探索 #1（2026-10-25）
+
+- 探查锚: chexian-api **origin/main @ e86f4e9d6**（2026-10-25）。本地主检出停在 `docs/ov2-digest-ecr-fix` 分支（落后 origin/main 117 commit，merge-base 0becfd8b0）且带脏文件——本探索全程经 `git show origin/main:<path>` / `git diff HEAD..origin/main` 远端引用只读，未动主检出；初版探查（10-24，基于该本地分支）结论经逐文件比对刷新如下。
+- **重探比对**：【事实】`git diff HEAD..origin/main --stat` 关键文件——SidebarNavigation.tsx 与 preset-users.ts **零变更**（展开记忆机制、DEFAULT_LANDING_ROUTE='/home'、org_user 白名单、前后端镜像结论全部维持）；App.tsx 仅注释更新；organizations.ts +78（权限机制演进与 #2524 SE 权，见下）；routeRegistry.ts 注释更新；operating-overview.ts +51（G 矩阵未动——**成熟度结论维持七卡主值可算**；新增为山西试点档位差异化 `OVERVIEW_TIER_BANDS_BY_BRANCH`·SX 变动成本率 80/85/90，owner 10-24 快反群裁决，页面在活跃开发中）。
+- **权限机制演进（issue #1627 收口，对 014 影响）**：【事实】canAccessRoute 通用 startsWith 前缀放行已废——白名单子路径仅 `ROUTE_DYNAMIC_CHILDREN` 显式登记放行（唯一成员 `/operating-cases/:caseId`，CASE- 形状判别，三重条件 fail-closed）；`ROUTE_PERMISSION_PARENT` 扩为三条：'/overview-v2'→'/dashboard'（唯一后端镜像条目）+ '/dashboard/weekly'、'/dashboard/daily'（前端收口配套）。负面清单比对改双形（归位前∪归位后，防御性收紧）。【断言】org_user 403 面（唯一被拒角色）结论不变；未来落点 PR 若要放行 org_user，正道是动 ROUTE_PERMISSION_PARENT/白名单（须 owner 裁定），不是路径设计；手风琴改造不涉权限面。
+- 防撞车（两法同证）:【事实】开放 PR 7 个（`gh pr list --state open`）无一涉侧栏/手风琴/落地/导航；issue 关键词过滤（`gh issue list` 正则 `侧栏|侧边|手风琴|accordion|落地页|默认页|landing|导航|sidebar`）与 `gh search issues "手风琴 OR 侧边栏展开 OR 默认落地"` **双查零命中**；SidebarNavigation.tsx 提交史（origin/main 近 8 笔）无在途相关改造。无撞车。
+- 实施要点（**手风琴段**，近期可转正）:
+  - `src/components/layout/SidebarNavigation.tsx`——expandedGroups state（:239）、toggleGroup（:319-325，改 `prev.includes(domain) ? [] : [domain]`，保留函数式更新防丢失更新）、持久化唯一落点（:250-268 effect 不动，值自然退化为 ≤1 元素）、storage key `sidebar-expanded-groups`（:110）沿用不加迁移轮；旧多元素值在 readExpandedGroupsPref 首读收敛（当前页所属组优先，否则首元素）。
+  - C1 落地复位（:273-313 expandCurrentGroupRequestId 机制）走同一 setState 路径天然手风琴，落地「展开当前组」改 `[当前组]` 单元素即可。
+  - 测试：`src/components/layout/__tests__/sidebar-navigation-collapsed.test.tsx` 两把锁（「展开表丢失更新」「落地到首页 /home」）扩手风琴断言——展开 A 组再点 B 组断言 A 收起、刷新恢复唯一展开组、旧多元素 storage 收敛。
+- 实施要点（**落点段**，挂起至成熟门槛——体检融合完成+历年制卡处置）:
+  - 前后端镜像 5 处：organizations.ts:387 DEFAULT_LANDING_ROUTE + organizations.test.ts、preset-users.ts 同名常量 + preset-users.test.ts、docs/decisions/ 新 CX-ADR（6 位十六进制新号，废止 CX-ADR-14e573 注记）。
+  - getDefaultRoute（organizations.ts:779-781 恒值无参纯函数）加能力判断需改签名或调用方判（HomeIndexRedirect 处传 permission，App.tsx:380-388）；org_user 回落融合后体检页。
+  - 回归锁 tests/default-landing-navigation.test.tsx + 生产闸 E2E 同步改。
+- 转正映射建议: 近期 1 issue 1 PR（仅手风琴——Closes #N）；落点段留卡内待成熟，届时小 PR 单独走（同一 issue 追加或新开，以届时 #2274 族排期为准）。
+- 验收: 手风琴 PR——`bun run test --run src/components/layout/__tests__/sidebar-navigation-collapsed.test.tsx`、`bun run typecheck`、生产闸 E2E（侧栏相关用例）；交互走查三断言（点新组旧组收起/刷新恢复唯一展开/旧值收敛）。
+
+## 开工记录
+
+（未开工；落点段另有挂起前提：overview-v2 成熟=体检融合完成+历年制卡处置）
