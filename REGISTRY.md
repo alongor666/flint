@@ -14,7 +14,7 @@
 | [010](cards/010-renewal-coverage-migration-matrix.md) | shipped | chexian-api | 2026-10-19 开工即交付：四轮评审+全闸过，迁移矩阵+保额变化 xlsx 已出（Air 与 mini 的 010-output），流失是降档 6~10 倍 | 2026-10-19 |
 | [011](cards/011-vehicle-filter-rename-customer-group.md) | scouted | chexian-api | 全裁定+建议已采纳（10-23）：1 issue 3 PR（更名+互斥段／燃料多选／向导多选化）待「开工 011」 | 2026-10-23 |
 | [012](cards/012-qv-upload-checklist-policy-support.md) | scouted | quote-vision | 上传页全裁定+探索 #1 完+四开放点 AUQ 全裁（各自必传并集取值/双查/doc_kind 子形态/v2.8 并 013 PR）；随时可转正，组件形态草图轮 | 2026-10-24 |
-| [013](cards/013-qv-compare-page-3-section-redesign.md) | building | quote-vision | 开工（2026-10-25「开工 013」）：实施+回归/e2e 全过待独立评审；v2.8 四字段+三段式重构+挂账收口，PR 合并留 owner | 2026-10-24 |
+| [013](cards/013-qv-compare-page-3-section-redesign.md) | building | quote-vision | 开工（10-25）：PR #46 独立评审 NO-GO（P0 系数兜底白屏等）→ 全处置、CI 绿、e2e 24/24；待 owner UI 预览表态+合并授权 | 2026-10-24 |
 | [014](cards/014-sidebar-accordion-default-landing-v2.md) | scouted | chexian-api | 探索 #1/#2 完（main@e86f4e9d：机制结论维持+#1627 权限收口+防撞车零命中+开工粒度清单——两 setState 入口封闭/测试断言反转清单/e2e 锚）；手风琴段可转正 1 issue 1 PR，落点段挂起（体检融合未立项） | 2026-10-24 |
 | [015](cards/015-ov2-focus-absorb-kpi-focus-capabilities.md) | scouted | chexian-api | 探索 #1-#3 完＋七裁定齐（main@e86f4e9d：#2513 已合并、迁移面收窄为两轴+标注增强、一刀挂 #2274；Q5 同伴卡+板块页链接／Q6 并入趋势页签／Q7 03 单位轴先降级）；**随时可转正** | 2026-10-25 |
 | [016](cards/016-updates-entry-demotion.md) | clarifying | chexian-api | 前日更新/历史更新入口降权（主要用户是数据分析者，更新日志非核心）；形态 AUQ 两问待答 | 2026-10-24 |
