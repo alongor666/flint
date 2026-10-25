@@ -13,7 +13,7 @@
 | [009](cards/009-premium-caliber-naming.md) | building | chexian-api | PR-1 #2219+PR-2a #2236 已上线；收口 #2258 待 auto；PR-2b-1 KPI 墙口径重构（合流 001）+2b-2 跟随位动态待做 | 2026-10-18 |
 | [010](cards/010-renewal-coverage-migration-matrix.md) | shipped | chexian-api | 2026-10-19 开工即交付：四轮评审+全闸过，迁移矩阵+保额变化 xlsx 已出（Air 与 mini 的 010-output），流失是降档 6~10 倍 | 2026-10-19 |
 | [011](cards/011-vehicle-filter-rename-customer-group.md) | scouted | chexian-api | 全裁定+建议已采纳（10-23）：1 issue 3 PR（更名+互斥段／燃料多选／向导多选化）待「开工 011」 | 2026-10-23 |
-| [012](cards/012-qv-upload-checklist-policy-support.md) | discussed | quote-vision | 上传页显式指引（无勾选·门控显式化·三者保额一致必选）+风险/系数页类型拆分+同业保单（提取 UX 先行）；已裁定待「探索 012」 | 2026-10-24 |
+| [012](cards/012-qv-upload-checklist-policy-support.md) | scouted | quote-vision | 上传页全裁定+探索 #1 完（AGENTS 派工：类型拆分纯入库概念零提示词成本/PII 双闸缺口实证/两 PR 映射）；五开放点待 owner | 2026-10-24 |
 | [013](cards/013-qv-compare-page-3-section-redesign.md) | scouted | quote-vision | 比价表三段式全裁定+探索×2 完（10-25 复探：main 零漂移、关联挂账 issue #41 收口点、e2e ⑨c 断言反转清单）；随时可转正 | 2026-10-24 |
 | [014](cards/014-sidebar-accordion-default-landing-v2.md) | scouted | chexian-api | 探索 #1/#2 完（main@e86f4e9d：机制结论维持+#1627 权限收口+防撞车零命中+开工粒度清单——两 setState 入口封闭/测试断言反转清单/e2e 锚）；手风琴段可转正 1 issue 1 PR，落点段挂起（体检融合未立项） | 2026-10-24 |
 | [015](cards/015-ov2-focus-absorb-kpi-focus-capabilities.md) | scouted | chexian-api | 探索 #1-#3 完＋七裁定齐（main@e86f4e9d：#2513 已合并、迁移面收窄为两轴+标注增强、一刀挂 #2274；Q5 同伴卡+板块页链接／Q6 并入趋势页签／Q7 03 单位轴先降级）；**随时可转正** | 2026-10-25 |

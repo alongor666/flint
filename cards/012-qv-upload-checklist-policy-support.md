@@ -1,6 +1,6 @@
 # 012 · quote 仓上传页代办清单指引 + 同业保单输入
 
-- 状态: discussed
+- 状态: scouted
 - 目标仓: quote-vision（apps/qv-standalone 生产应用）——依据：owner 点名「quote 仓」，上传页/比价页/华安四页面形态与该仓逐项对应
 - 类型: 功能（上传页 UX 指引重构 + 同业侧新增保单输入形态）
 - 录入: 2026-10-24
@@ -34,6 +34,28 @@ owner 指示将该会话中的华安保单信息并入本卡。该会话主体�
 - **字段映射 SSOT 已存在**：upro 字段字典 §4「与 quote-vision 提取链的字段映射（OCR 自动适配）」——上传链（OCR 提取）与 API 链（upro）两路数据的字段对齐通道。上传页新增保单输入形态后，提取字段落位须走此映射，防两路 schema 漂移。
 - **华安侧数据双源现状**：华安自己的报价/成交数据已在 upro API 链内（十月分析：华安自主系数 0.757 排 11/15、win 0.5%、太原过户段 10 月覆盖率 0→30% 小样本）；上传页华安页面是 OCR 链——两路并存，保单形态设计时须明确 docKind 与 upro priceStatus 的映射关系（映射口径，不复制值域——提取侧无 priceStatus，由版式判定）。
 - 对 Q1/Q2 裁定无影响（保单仍属同业侧、UX 先行不变）；探索期新增待办：保单 docKind 与 priceStatus 映射、字典 §4 扩保单版式条目。
+
+## 探索 #1（2026-10-25，AGENTS 派工）
+
+- 探查锚: origin/main @ `8c071c5`（2026-10-25 fetch）；读取经 worktree qv-merge（feat/compare-limit-guard @ `cae10a6`，树与 main 一致行号逐项核对）；主检出仅用于 git/gh 命令。
+- **锚勘误**（本卡前文引用 vs 实测）：`batch.ts:23`→实际 **:24**；`src/api.ts:187`→实际 **:215**；QuoteUpload.tsx:281/:259-268/:240-251 核对一致。
+- 防撞车: 开放 PR #43/#44（B5 docs，无关）；开放 issue #41（与 013 已关联；与 012 类型拆分同函数 batch.ts:560/:579-582——PR-① 窄改不动 hn 兜底序，正文声明「#41 不在本 PR 处置」防撞）/ #16 / #15（无关）。
+- 【事实】**类型拆分是纯入库/UX 概念**：/api/extract（index.ts:187-212）→ extractQuote（vision.ts:95-98）无 pageType 入参，SCHEMA_TEXT 单一提示词通吃版式（规则 9 自带版式判定）——提示词无需分版式。
+- 【事实】huanan_coeff 消费点全景（5 文件）：server/batch.ts :24 枚举、:87-88 过滤、:91-97 批校验、:117-127 hnCoef 并集+回退报价页+0.3-1.5 区间闸（PR#36 修复面）、:154-161 落库路由（upsertCoeffToHuanan 锚 quote_date_key）、:194/:215 record_type 'score'、:560/:579-582 buildCompare lastNonEmpty、:767 排除；前端 api.ts:215、QuoteUpload.tsx :16 徽标、:48 toDraft、:103-110 cardIssues（hasCoInBatch）、:232-236 coeffCards、:246、:326 确认卡；e2e-verify.mjs:243-244/:278-315；verify-compare-ux.ts 七处；db.ts:23 page_type 自由 TEXT 无 CHECK。
+- 【事实】**PII 缺口（保单支持硬前提）**：v2.3 SSOT 档案（docs/prompts/...v2.3.md:99）有「不提取证件号码、联系电话」条款但**生产 SCHEMA_TEXT 从未携带**（grep 双法验证）；规则 7 extra_fields 无 PII 排除条款，保单号可落 extra_fields 且**全量无过滤**上报 unknown_fields（batch.ts:162-172）——须双闸：①规则 7 禁收名目（保单号/投保单号/证件号/手机号）②unknown_fields 上报处丢弃列（UPro 裁定 #14 修订版四号）。vision.ts:12 头注释仍标 v2.6（文档滞后）。
+- 【事实】前端体检缺三项服务端校验镜像：险别主险结构一致（batch.ts:113-116）、系数区间 0.3-1.5（:117-127，前端仅显值）、车牌批内一致（:128-138）；QuoteUpload.tsx:95/:240 注释锚滞后（「90-125」实际延至 :138）。
+- 【事实】UPro priceStatus 只作 docKind 映射口径（400=已出单），不作判定（字典 :79 四轮裁定 totalPremium>0）；字典 §4/§4.1 映射表 :196-229（含 first_register_date/car_age T2 式 ALTER 先例）。
+- 【断言】v2.7 对保单版式输出：保单号→extra_fields（PII 面）；起止期名目漂移（013 卡 R3 实证同向）；实际保费「保费合计」名目对 commercial_total_premium 无显式归属规则（规则 4 仅显式归属 third_party_limit）稳定性存疑——Q2 实测验证项。
+- 实施要点：
+  1. 枚举：`huanan_risk`（新增，风险等级页）+ `huanan_coeff` 保留给系数页——只增新值；两新类型均落 record_type 'score'（:194/:215 三元式改集合判断）。
+  2. 存量兼容：**双查** `page_type IN ('huanan_coeff','huanan_risk')`（存量 huanan_coeff 视为「未细分」合法态）——不建议迁移归一（历史混传批无法从数据区分两页，启发式错分风险实存，e2e ⑨ fixture 系数页即带 grade）。
+  3. 门控建议：**各自必传闸（风险页≥1 且系数页≥1）＋取值维持并集**——指引「必」与服务端门控不劈叉；并集取值是 PR#36 实锤教训（风险页无系数是常态）。
+  4. docKind：**peer_quote 子形态**（BatchItemInput/Draft 加 `doc_kind:'quote'|'policy'`，db T2 式幂等 ALTER）——不动 PageType 枚举，保单与报价单同校验链（batch.ts:91-138 语义一致）；映射 'policy'↔priceStatus 400 登记字典 §4。
+  5. 显式指引：h1（:256）后选图框（:278）前插入；单一 checks 数据源供置顶清单（常显）与吸顶体检条两处消费防劈叉；补三项门控镜像（注释贴服务端行号，PR#29 先例）+刷新锚 91-138。
+  6. v2.8 归属：**012 保单缺口与 013 四扩键合并同一提示词 PR**（防两版 v2.8 漂移），归属 013 issue；012 保单实测缺口并入或另立 v2.9 待 owner。
+- 转正映射: 012 与 013 各自 issue；012 两 PR——PR-① 类型拆分（后端+db 双查+前端徽标/toDraft/cardIssues/体检条+e2e/verify-compare-ux 扩展，窄改不动 hn 兜底序）＋PR-② 上传页清单 UX+doc_kind+PII 双闸+字典 §4 扩条目。顺序风险：013 重构 buildCompare 与 012 PR-① 同函数，后合并方 rebase。
+- 验收: `npx tsc --noEmit` + `npx tsx scripts/verify-compare-ux.ts`（扩 risk/coeff case）+ `node scripts/e2e-verify.mjs`（⑨ items 改 huanan_risk+huanan_coeff 各一，⑨b/⑨c 预期值不变；PASS 报告入 docs/reports/ 引用 PR 正文——CI 闸 4）+ `npx vite build`；提示词变更走 regression.ts diff 三跑 owner 判读。
+- 开放点（待 owner）：①门控=各自必传（建议）vs 并集 ②存量=双查（建议）vs 迁移 ③docKind=子形态（建议）vs 独立类型 ④v2.8=并 013 单 PR（建议）vs 各自版本 ⑤清单/体检条组件形态（草图轮收敛）。
 
 ## 讨论
 
