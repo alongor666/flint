@@ -55,7 +55,7 @@ owner 指示将该会话中的华安保单信息并入本卡。该会话主体�
   6. v2.8 归属：**012 保单缺口与 013 四扩键合并同一提示词 PR**（防两版 v2.8 漂移），归属 013 issue；012 保单实测缺口并入或另立 v2.9 待 owner。
 - 转正映射: 012 与 013 各自 issue；012 两 PR——PR-① 类型拆分（后端+db 双查+前端徽标/toDraft/cardIssues/体检条+e2e/verify-compare-ux 扩展，窄改不动 hn 兜底序）＋PR-② 上传页清单 UX+doc_kind+PII 双闸+字典 §4 扩条目。顺序风险：013 重构 buildCompare 与 012 PR-① 同函数，后合并方 rebase。
 - 验收: `npx tsc --noEmit` + `npx tsx scripts/verify-compare-ux.ts`（扩 risk/coeff case）+ `node scripts/e2e-verify.mjs`（⑨ items 改 huanan_risk+huanan_coeff 各一，⑨b/⑨c 预期值不变；PASS 报告入 docs/reports/ 引用 PR 正文——CI 闸 4）+ `npx vite build`；提示词变更走 regression.ts diff 三跑 owner 判读。
-- 开放点（待 owner）：①门控=各自必传（建议）vs 并集 ②存量=双查（建议）vs 迁移 ③docKind=子形态（建议）vs 独立类型 ④v2.8=并 013 单 PR（建议）vs 各自版本 ⑤清单/体检条组件形态（草图轮收敛）。
+- 开放点 → **owner AUQ 裁定（2026-10-25，四题全采推荐）**：①拆分后门控＝**风险页≥1 且系数页≥1 各自必传、取值维持并集**；②存量 huanan_coeff＝**双查兼容**（视为「未细分」合法态，不迁移）；③同业保单＝**peer_quote 子形态 doc_kind**（不动枚举）；④提取 v2.8＝**并入 013 单 PR**（四扩键+保单版式适配+PII 禁收条款同一提示词变更，归 013 issue，回归一轮）。⑤清单/体检条组件形态留草图轮（owner 原裁定）。
 
 ## 讨论
 
