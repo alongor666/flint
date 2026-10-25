@@ -125,3 +125,4 @@
 - 通道教训：dsh 0.1.1-rc.2 无 `--reasoning`；长任务文本作参数会跑偏（只回工具意图），须一句话让其自读任务文件；E 盘被 DSH 文件沙箱拒写，verdict 落 C:\Users\<user>\。
 - 闸① **R2 APPROVE**（13/13 处置，新 P3×5 N1-N5 已钉入 v2.1 `0596fd5`，承接 insurers.docKind 产出）。**实施 agent 已派（后台）**，规划 v2.1 为唯一依据；e2e 主会话错峰跑。
 - 实施完成（agent，8 commits）：verify-compare-ux 49/0、tsc/build 绿、Playwright 三态真跑（PNG 移出分支待 owner 闸 3 裁定）。e2e **PASS 23/23**（`e2e-2026102515251.md`）。裁定 #16 登记。**PR #49 已开**（Closes #47 #41）；CI 仅评审锚红（预期）。DSH PR 对抗评审进行中。
+- **终态（2026-10-25）：可合并就绪交付 owner 手合**——PR #49（Closes #47 #41）CI 全绿（评审锚 #issuecomment-6400175954/四闸过）、mergeState=CLEAN。评审 R1（DSH P0=0/P1=0 P2×3 P3×7）处置 commit 84a5c45：F1 小计 parseAmount 真修+变异验证钉、F4 守恒断言升级 50/0、P3 全清；e2e 修复后复跑 PASS（e2e-2026102516153）。**owner 事项**：①合并（建议先 #49 后 #50，后者随后 BEHIND 时 merge main 重跑 CI——db.ts/api.ts 邻接追加小冲突按规划 F6 解）；②三张截图 IMAGE_ALLOWLIST 裁定。
