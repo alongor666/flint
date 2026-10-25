@@ -16,5 +16,5 @@
 | [012](cards/012-qv-upload-checklist-policy-support.md) | discussed | quote-vision | 上传页显式指引（无勾选·门控显式化·三者保额一致必选）+风险/系数页类型拆分+同业保单（提取 UX 先行）；已裁定待「探索 012」 | 2026-10-24 |
 | [013](cards/013-qv-compare-page-3-section-redesign.md) | scouted | quote-vision | 比价表三段式全裁定+探索×2 完（10-25 复探：main 零漂移、关联挂账 issue #41 收口点、e2e ⑨c 断言反转清单）；随时可转正 | 2026-10-24 |
 | [014](cards/014-sidebar-accordion-default-landing-v2.md) | scouted | chexian-api | 探索 #1 完（main@e86f4e9d：机制结论全维持+#1627 权限收口刷新+防撞车双查零命中）；手风琴段可转正 1 issue 1 PR，落点段挂起至成熟 | 2026-10-24 |
-| [015](cards/015-ov2-focus-absorb-kpi-focus-capabilities.md) | discussed | chexian-api | 八卡聚焦吸收 KPI 聚焦能力清单（AUQ 四裁定：集合 B/扩八卡配置驱动/灯不进/周演进不做）；探索 #1/#2 齐——防撞车勘正（PR #2513 在池）、映射+口径处置表、风险与验收；待转正 | 2026-10-24 |
+| [015](cards/015-ov2-focus-absorb-kpi-focus-capabilities.md) | scouted | chexian-api | 探索 #1-#3 完（main@e86f4e9d：#2513 已合并、七块 delta 收窄为两轴+标注增强、基建刀二并配置刀一 PR、03 单位轴硬约束于 003）；转正时待 owner 二选：Q5 域映射形态／Q6 三轴 IA | 2026-10-25 |
 | [016](cards/016-updates-entry-demotion.md) | clarifying | chexian-api | 前日更新/历史更新入口降权（主要用户是数据分析者，更新日志非核心）；形态 AUQ 两问待答 | 2026-10-24 |

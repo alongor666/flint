@@ -1,6 +1,6 @@
 # 015 · 八卡聚焦吸收 KPI 看板聚焦能力清单
 
-- 状态: discussed
+- 状态: scouted
 - 目标仓: chexian-api
 - 类型: 功能
 - 录入: 2026-10-24
@@ -84,3 +84,56 @@ KPI 聚焦能力清单七块（迁移标的物）：指标头（主值+灯+计�
 ### 转正映射（更新）
 
 1 issue 挂 #2274、三刀序：基建刀一 #2513（在池待合并）→ 基建刀二（立 issue：组件抽 shared＋scope 参数化）→ 配置刀（本卡）。基建刀二改动面若小可与配置刀并一 PR，按目标仓体量契约裁量。
+
+## 探索 #3（2026-10-25，拉新基线＋空缺收口）
+
+- 探查锚: chexian-api @ origin/main `e86f4e9d6`（2026-10-25）
+
+### 基线变化（自 `0847fb9e9`，与本卡相关）
+
+- 【事实】**#2513 已合并**（084b9a30d）→ 基建刀一落地，探索 #2 风险 4 消除。FocusAuxiliary.tsx 现 619 行：组件 :48 起、suspended 推导 :51-53、useWorkbenchAuxiliary :61、selectionKey 门控 :63-66
+- 【事实】#2459 已合并，只改 analysisBriefConfig.ts＋测试，不触聚焦面；#2514（flint 002 口径原则 v2 全站默认分布）已合并，不触 kpiFocus/ov2（0 命中），对本卡中性——02-07 起保窗与之同向
+- #2490 ResizeObserver 中央桩可注入回报宽度——配置刀窄/宽两态测试可直接用；#2434 行号漂移闸只扫契约文档＋脚本头注，不管 issue/PR 正文——配置刀代码头注勿写行号引用
+- kpiFocus 源码与 pivot.ts 两锚间零变化，探索 #2 行号稳定；operating-overview.ts/card-face.ts 小改，下列行号已刷新
+
+### 核查事实（修正探索 #2）
+
+- 【事实】**05-07 月序列存在**：主路径「各月末以当前数据重算」（operating-overview.ts:985/:1029/:1092；card-face.ts:303 消费 card.trend——05/06/03 现役＋07/04/08 #2397 补全），仅成本立方缺失时退 buildCurrentOverviewCard 末点-only（:1080-1081/:1117）。方法学与 KPI 周演进同构（截面重算），只是月边界——**Q4「月粒度够」前提成立**；探索 #2 风险 5 降为「聚焦轴跟随服务端既有退化，不另造」
+- 【断言·未核】v2 计划正本在 owner 另机路径，本机不可读——其是否已有聚焦面规划段，owner 自查
+
+### 七块能力逐块 delta（探索 #2 该做未做，现补）
+
+| 能力块 | ov2 现状 | 处置 |
+|---|---|---|
+| 指标头 | FocusSummary＋20 枚 cardFace readings 已有 | 已存在，不迁 |
+| 时间轴 | FocusTrend 月序列已有（card.trend） | 已存在；增强＝达成率线/同比虚线/部分月透明三标注（仅 01/02） |
+| 业务单位轴 | 无 | **迁**（01/03 走 plan；02/04/05/06/07 走 pivot） |
+| 客群轴 | 无 | **迁**（01-04；05-07 成本族不做，工单原口径） |
+| 结构族视图 | — | 不迁（裁定） |
+| 域映射下钻区 | 无；ov2 有 OVERVIEW_GROUPS（:781）与影响度/维度工作区 | **待裁 Q5** |
+| 筛选继承 | 已同构（PageFilterPanel／buildFilterParams 剔时间三键） | 已存在；配置刀确保轴 hook 消费同一 scope |
+
+→ 真正迁移面＝两块轴＋一块标注增强＋一块待裁。探索 #2「七块迁移」框架夸大。
+
+### 抽 shared 清单（基建刀二实际范围）
+
+- 要动: FocusAxesCharts（FocusOrgChart/FocusCategoryChart/FocusPivotAxis）＋ useKpiFocusCategoryData/useKpiFocusPivotOrgData（scope 与 dateField 参数化）＋ useKpiFocusOrgData（plan）
+- 不动: KpiFocusDomainMap／FocusExtraTimelines／FocusWeeklyTimeline／FocusStructureView／useKpiFocusData；FocusTimelineChart 也不动（KPI 行形 FocusMonthPoint 与八卡 FacePoint 异构，标注增强在 ov2 侧 buildFocusTrendOption 内做）
+- → 基建刀二远小于名字，**与配置刀并一 PR**（探索 #2「按体量裁量」收口）
+
+### 硬约束勘正
+
+**03 收入进度单位轴**：flint 003 起保分子未落地前，/plan-achievement 给的是签单口径机构达成率，与 03 主值（起保）同屏双口径。要么排 003 PR-B 后，要么 03 单位轴先诚实降级（FOCUS_NO_AXIS_NOTE 模式）。探索 #2「以 003 落地态为准」太软。
+
+### 待裁（owner）
+
+- **Q5 域映射下钻区八卡形态**: A 组内同伴卡（OVERVIEW_GROUPS）＋板块页链接（最小，推荐）／ B 不要（ov2 影响度/维度工作区已是下钻）／ C 另议
+- **Q6 单位轴＋客群轴信息架构**: A 并入趋势页签下方（#2513 已为高趋势页签选窄屏模态，顺势；推荐）／ B 开第四页签「维度」／ C 草图再定
+
+### 登记项（配置刀）
+
+drillPath 钻入某机构后单位轴只剩一柱——自动切下一维或隐藏需定规则；infoText 每卡自写（起保口径名「保费收入」按 009，趋势口径消费服务端 trendNote）；pivot.ts:195 锚覆盖逐指标核；计划单位轴「仅单选生效」例外随迁；08 卡聚焦面保持现状、与 01-07 形态不一致（owner 知悉）；每卡聚焦新增约 4 趟请求。
+
+### 转正映射（终版）
+
+1 issue 挂 #2274，**一刀**（基建刀二＋配置刀并 PR）。Q5/Q6 裁完即可转正；03 单位轴若等不到 003 先以降级态上。
