@@ -22,6 +22,7 @@
 - **公开仓红线**：卡内禁录生产地址/凭据/token/内部敏感数据/目标仓代码大段原文（引路径+行号，片段 ≤10 行）；业务数字最小化。
 - **会漂数字指针**：卡数、行数等会漂的计数一律写「以 REGISTRY.md 为准」，禁硬编码。
 - **AI 直推 main 特许**：卡片登记与协议/文档维护由 AI 直推 main（本仓内容为文档非代码，公开 git 历史即审计）——此为对目标仓 PR-first 纪律的显式豁免声明；目标仓实施一律走其 PR 协议。
+- **会话隔离铁律（owner 2026-10-26 裁定）**：并行会话各开 `git worktree`，主检出只读（仅 `git pull` 同步，禁在主检出编辑/提交/stash/checkout/reset）。序列：`git fetch origin && git worktree add ../flint-wt-<标识> -b wt/<标识> origin/main` → 在 worktree 内编辑、`git add <点名文件>`（禁 `-A`/`-a`，防卷走他会在写内容）、commit → `git push origin HEAD:main`（非快进被拒＝他人先推，`git pull --rebase` 后重推）→ 收尾 `git worktree remove ../flint-wt-<标识> && git branch -D wt/<标识>`。直推 main 特许不变——只是提交地点从主检出移到 worktree，落点仍是远端 main。来由：git 并发协调器只管分检出，不管同目录（同 HEAD/索引/工作树）；2026-10-26 019/018 两探索会话在同一检出交错提交（reflog 可证），文件恰未交集才未互卷。
 - **目标仓优先**：与目标仓协议冲突以目标仓为准；目标仓业务规则不入本仓，只放指针。
 - **PR-first 的正当域（owner 2026-10-19 裁定）**：PR-first 只管代码/协议/配置/文档逻辑变更；**数据发布不走 PR-first**——数据产物（生成/回填/每日流）的治理在生成侧质量闸（规则引擎＋对账＋抽检）与数据链纪律，不经 PR、不 commit main。为数据开 PR＋说明档是为代码设计的治理错配到数据上（flint 卡 008 收口裁决）。
 
