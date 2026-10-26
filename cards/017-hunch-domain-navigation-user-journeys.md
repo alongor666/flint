@@ -1,10 +1,10 @@
 # 017 · 观赔独立一级导航与全角色使用流程梳理
 
-- 状态: building
+- 状态: shipped
 - 目标仓: chexian-api（owner 明示；本地路由见 repos.md）
 - 类型: 优化（导航信息架构与用户流程规划）
 - 录入: 2026-10-26
-- 当前有效规划: 文末「完整实施规划 v2」；此前探索、v1 及排除项均为历史快照。2026-10-26 owner 已下令开工，实施按文末开工记录与目标仓行动规划推进。
+- 当前记录: 文末「完整实施规划 v2」及开工/合并记录；此前探索、v1 及排除项均为历史快照。2026-10-26 owner 已下令开工，PR #2602 已由owner合并，生产验收另核。
 
 ## 原文
 
@@ -569,7 +569,7 @@ owner 已选 **G1=A、G2=A、G3=A**；此次只回填裁定与规划影响，继
 
 ### 开工进展与规划闸（2026-10-26）
 
-- 工作项：[chexian-api issue #2598](https://github.com/alongor666/chexian-api/issues/2598)；实现 [PR #2602](https://github.com/alongor666/chexian-api/pull/2602)。目标分支 i/2598，首个实现提交 04ddd01215d8b937985ca840d4e0ad8e5e612122。当前仍 building；不标 shipped、不合并。
+- 工作项：[chexian-api issue #2598](https://github.com/alongor666/chexian-api/issues/2598)；实现 [PR #2602](https://github.com/alongor666/chexian-api/pull/2602)。目标分支 i/2598，首个实现提交 04ddd01215d8b937985ca840d4e0ad8e5e612122。AI交付时仍 building；当时未合并，后续合并状态见下。
 - 闸①：DSH strong / GLM5.3 / reasoning=max 实际规划评审 APPROVE，P0/P1/P2=0。P3两项已落实：增量对锚限定目标写集；补管理员广播与历史线索通知并存计数不变回归。最高档来自现有独立profile，未改全局。
 - 已完成导航与 G1—G8 代码及定向验收；后端208用例、前端185用例（主会话先184，补焦点用例后独立185）、三工程类型检查通过。关键新增回归先证旧行为失败再修复。
 - 两路独立代码评审均 APPROVE；offset非有限值、网络重取丢稿、无idx导航取消、重复确认、焦点刷新及文案问题已修并独立复核；根会话已亲自复读对应修复。
@@ -577,4 +577,5 @@ owner 已选 **G1=A、G2=A、G3=A**；此次只回填裁定与规划影响，继
 - 正式验证与独评证据随目标 PR 留痕；规划历史中的 NOT RUN 为当时状态，开工验证以本记录与目标PR为准。
 - CI返修：补页面索引与中央API契约测试、发布失败错误面；独立确认新增一级域开关使四项首屏元素各增一，按实测同步基线；全量单元暴露的日期静态规则、路由计数、审计候选量级三处均已修复，守护判据与扫描范围不变。最后一轮修正定向4文件63用例、治理106/106及三工程typecheck通过。
 - 整合独评含最终增量 APPROVE，P0—P3=0；[最终增量评审记录](https://github.com/alongor666/chexian-api/pull/2602#issuecomment-6413142507)。主会话已亲自复读对应修复。最终实现锚 dfda235a2e174aae5e65eab9dc1bdbf8a0342b66，CI以该提交的运行结果为准。
-- 交付核实：上述最终提交的 [Production Gate 40303072082](https://github.com/alongor666/chexian-api/actions/runs/40303072082) 全绿，含Code Contracts、三工程类型/构建/集成/Python检查、全量单元及两组完整浏览器测试；密钥扫描与GitGuardian均通过。PR状态OPEN、MERGEABLE、CLEAN，autoMergeRequest为空；目标工作树干净。闸②通过，交付为**可合并就绪，等待owner合并**；未合并、未部署，不据CI通过宣称生产验收。
+- 交付时核实：上述最终提交的 [Production Gate 40303072082](https://github.com/alongor666/chexian-api/actions/runs/40303072082) 全绿，含Code Contracts、三工程类型/构建/集成/Python检查、全量单元及两组完整浏览器测试；密钥扫描与GitGuardian均通过。当时PR状态OPEN、MERGEABLE、CLEAN，autoMergeRequest为空；目标工作树干净。闸②通过，AI交付止于可合并就绪，不执行合并或生产操作。
+- 合并核实：GitHub记录owner `alongor666` 于2026-10-26 18:06:10（北京时间）合并PR #2602，合并提交 `198e818a73bca45d72bcab05b28ec3d9c27b1698`；fetch后origin/main包含该提交，issue #2598已自动关闭。依开工协议卡转shipped；这里只确认代码合并，未执行生产部署验收，不将合并前CI视为生产已生效。
