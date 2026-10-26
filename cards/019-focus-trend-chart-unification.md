@@ -54,6 +54,14 @@ owner 2026-10-26（chexian-api 协调会话，对「工单 B（聚焦视图复�
 
 方向确认可行、无撞车；选型证据收敛于 SVG 为基（KPI 域禁令+死态同栈+四件已 SVG）；真分叉收窄为「③ pivot TrendChart 是否并入聚焦归一」与「ov2 侧 tooltip/主题能力以何种形态补齐」两处，转正 AUQ 呈 owner。前置 #2595 未合并（分支零提交），本卡维持择机 P3、待其合并后以新 main 复核基线再转正。
 
+### 追加讨论（2026-10-26）：`renderer:'svg'` 候选的信任评估【静态核实】
+
+owner 追问「echarts svg renderer 是否更佳选择、值得信任吗」。核实 `node_modules/echarts-for-react/lib/core.js`：
+
+- 【事实】`initEchartsInstance` 为 async（`__awaiter` 包装），`componentDidUpdate` 存在 `dispose()→renderNewEcharts()` 重建路径——封装层有时序竞态面；容器 resize 监听走 `size-sensor` 库（哨兵元素 hack，非 ResizeObserver）。
+- 【事实】死态两条竞争病理：H1 渲染器层 canvas 补建缺陷（svg renderer 可救）；H2 封装层 async init × dispose 交错 × size-sensor 0 容器失灵（svg renderer 同死——0×0 画布无人触发重画，换渲染器只换受害者）。头注「zrender 永不补建 canvas」是症状观察非根因隔离；结合四轮修复失败与封装层竞态面，H2 先验更高。
+- 【断言·代码推理】`renderer:'svg'` 定位为「30 分钟三臂实验可裁决的假设」而非可信方案：臂1 canvas 复现 / 臂2 svg（H1 检验）/ 臂3 svg+外层 ResizeObserver 手动 resize（H2 检验）。臂2 活→H1 成立候选转正；臂2 死臂3 活→根因在监听层，正解是 EChartContainer 包 ResizeObserver（修好后 KPI 域禁令原始理由消失）；臂3 也死→SVG 自绘彻底封案。验证通过也仅在 019 重写承载窗口有采用时机，KPI 域已稳定三件 SVG 无回迁理由（撤销域禁令是治理成本，收益仅富 tooltip）。
+
 ## 开工记录
 
 （无）
