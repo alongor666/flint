@@ -566,3 +566,15 @@ owner 已选 **G1=A、G2=A、G3=A**；此次只回填裁定与规划影响，继
 - owner 指令：『开工』，接续 017 完整实施规划 v2（G1—G8）。允许目标仓独立分支实施、验证、提交并创建 PR；交付止于可合并就绪，合并仍由 owner 执行。
 - 增量对锚：目标仓 origin/main @ `53bcb145ebd61910652965f303e15d530c0edb32`；相对规划锚 fd5e841，目标写集仅 routeRegistry 注释变化，无行为漂移；开放 PR 路径检索未见同写集。
 - 开工协议双闸继续适用：先补 DSH·GLM5.3 reasoning=max 行动规划评审，批准后写码；实施后独立对抗评审及主会话修复复评。旧探索中的『暂不实施』为当时授权历史，不撤销本次开工指令。
+
+### 开工进展与规划闸（2026-10-26）
+
+- 工作项：[chexian-api issue #2598](https://github.com/alongor666/chexian-api/issues/2598)；实现 [PR #2602](https://github.com/alongor666/chexian-api/pull/2602)。目标分支 i/2598，首个实现提交 04ddd01215d8b937985ca840d4e0ad8e5e612122。当前仍 building；不标 shipped、不合并。
+- 闸①：DSH strong / GLM5.3 / reasoning=max 实际规划评审 APPROVE，P0/P1/P2=0。P3两项已落实：增量对锚限定目标写集；补管理员广播与历史线索通知并存计数不变回归。最高档来自现有独立profile，未改全局。
+- 已完成导航与 G1—G8 代码及定向验收；后端208用例、前端185用例（主会话先184，补焦点用例后独立185）、三工程类型检查通过。关键新增回归先证旧行为失败再修复。
+- 两路独立代码评审均 APPROVE；offset非有限值、网络重取丢稿、无idx导航取消、重复确认、焦点刷新及文案问题已修并独立复核；根会话已亲自复读对应修复。
+- 浏览器使用隔离开发服务、合成数据和一次性凭据，侧栏3项、业务链2项、观赔路由6项与矩阵结构1项分次定向通过。中途用例中的fixture格式/聚焦事件及等待load问题已修并定向复跑；不把中间失败日志声明为整批全绿。
+- 正式验证与独评证据随目标 PR 留痕；规划历史中的 NOT RUN 为当时状态，开工验证以本记录与目标PR为准。
+- CI返修：补页面索引与中央API契约测试、发布失败错误面；独立确认新增一级域开关使四项首屏元素各增一，按实测同步基线；全量单元暴露的日期静态规则、路由计数、审计候选量级三处均已修复，守护判据与扫描范围不变。最后一轮修正定向4文件63用例、治理106/106及三工程typecheck通过。
+- 整合独评含最终增量 APPROVE，P0—P3=0；[最终增量评审记录](https://github.com/alongor666/chexian-api/pull/2602#issuecomment-6413142507)。主会话已亲自复读对应修复。最终实现锚 dfda235a2e174aae5e65eab9dc1bdbf8a0342b66，CI以该提交的运行结果为准。
+- 交付核实：上述最终提交的 [Production Gate 40303072082](https://github.com/alongor666/chexian-api/actions/runs/40303072082) 全绿，含Code Contracts、三工程类型/构建/集成/Python检查、全量单元及两组完整浏览器测试；密钥扫描与GitGuardian均通过。PR状态OPEN、MERGEABLE、CLEAN，autoMergeRequest为空；目标工作树干净。闸②通过，交付为**可合并就绪，等待owner合并**；未合并、未部署，不据CI通过宣称生产验收。
