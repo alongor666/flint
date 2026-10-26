@@ -148,3 +148,4 @@ drillPath 钻入某机构后单位轴只剩一柱——自动切下一维或隐�
 - 流程：闸① 规划对抗评审三轮（DSH strong=glm-5.3；R1 REQUEST_CHANGES 12 findings→v2 数据源重设计「同端点 dimension 变体」消解 pivot 公式不同源；R2 REQUEST_CHANGES N1/N2（P1）→v3；R3 **APPROVE**）；实施 S1-S7（S1 抽 shared/focus 合规必需——L2 横向全禁 CX-ADR-cebbe5；S6 组件级 11 用例）；独立评审 REQUEST_CHANGES 2×P1+2×P2+4×P3 全修复（**P1-1 深挖出存量回归：#1991 漏配 pivotScale 使 KPI 三卡客群轴元值错标万 1 万倍→另开 #2577**）；闸② 主会话复评通过
 - 插曲：main 红诊断 #2569（静默降级钉子 1296 落地即过时=合并竞态）→ #2566 自愈 → NO CHANGE NEEDED 关闭
 - 交付态：可合并就绪待 owner 合并（禁 auto merge/禁 AI 合并）；规划正本 docs/plans/2026-10-25-ov2-focus-axes-plan.md（v3+偏离登记）随 PR 入库
+- 附产收口（2026-10-26）：**#2577 由 PR #2591 修复并已上生产**（owner 03:22Z 合并→03:35Z deploy success）——三卡客群轴+earned_premium 单位轴存量错标+growth_rate 新引入风险一刀痊愈（评审 F1 揪出单位轴交叉消费 pivotScale 的换算缺口，修法=hook 层行值 ÷10000 与标签同源）
