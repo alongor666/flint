@@ -1,6 +1,6 @@
 # 011 · 车型筛选更名「客群」＋增「低风险」（附签单口径 UI 分布核对）
 
-- 状态: building
+- 状态: shipped
 - 目标仓: chexian-api（先探可定——「车型」筛选即该仓全站筛选器的 vehicle_quick_filter，前端 `src/features/filters/` + 服务端注册表 `server/src/config/vehicle-quick-segments.ts`）
 - 类型: 功能（呈现词更名）＋ 功能（快捷段扩容，依赖口径裁定）
 - 录入: 2026-10-23
@@ -143,7 +143,8 @@ UI哪些页面哪些指标固定编码用签单口径、哪些默认签单口径
 - **PR② #2537 已合并（燃料多选；squash 9a834d5eb，2026-10-23）**：谓词单源 config/fuel-category-where（三处旧三分支收敛、单成员 SQL 逐字节保真）；前端全链数组化（ARRAY URL 通道迁移/快照归一/两姊妹函数幂等剥离）；两路评审 APPROVE（第一路 3×P3 不阻塞——注释失准×2 可随手修；**F2 待 owner 拍板**：`fuelCategory=,` 全空白成员串旧为整卡降级 `-`、新为「视为未筛」，口径「空选集=不限 vs 非法降级」）；守恒断言受控更新；毛改 570 行（>500，PR 描述含体量三行）。合并系禁令前 auto-merge。
 - **PR③ #2539 就绪待 owner 合并（向导 insuranceGrade `single→multi`＋业务规则字典新节「筛选器交互规则 v8.7」＋guide-questions.test 补 type 断言；Closes #2508）**：两路评审→返修（P1：原拟 v3.9 撞号顺延 v8.7）→闸②亲验过→CI 全绿。合并权在 owner（协议第 9 步）。
 - **旁支 #2535 就绪待 owner 合并（`数据管理/staging` 自引用 symlink→真目录；Closes #2534）**：ce93fe7e2/PR #2009 带入的 symlink 使四 runner ELOOP、E2E 必红。三层修复＝主检出改真目录＋四 runner 链到主检出（即时解堵）＋本 PR 修 main。pure-deletion 审批档闸：加 staging/README.md 一行使 diff 为 increment（PR 描述如实登记）。
-- **就绪态维护教训（2026-10-24）**：①main 高频前进 × ruleset `strict_required_status_checks=true`（须 up-to-date 才可合并）× CI 约一刻钟 ⇒ CLEAN 是瞬态；AI 做 rebase 推进但不无限追——owner 合并时若 behind 点「Update branch」等 CI 绿即合。②自建 runner E2E 红两类，判法＝main 同基座是否绿＋失败模式：(a) Upload Playwright report `ECONNRESET`——真瞬态，`gh run rerun --failed` 即解；(b) webServer 中途 `exit 143`（SIGTERM）致后续全例 `ERR_CONNECTION_REFUSED`——**非瞬态，是 CI 缺陷**：`start.mjs` 启动清理「前端端口起连续 4 个」会杀同机并发 job 的 vite（随机窗 50 宽 ⇒ 同机任一对约 14% 互杀，后到者杀先到者且双方日志无痕），已登记目标仓 **issue #2550**（三条修法方向，待其自身 PR）；rerun 可过但属碰运气。③PR 正文「评审：」锚用 bash printf 写入会混入变体选择符致 gate 正则不匹配，改 python 写入。
+- **就绪态维护教训（2026-10-24）**：①main 高频前进 × ruleset `strict_required_status_checks=true`（须 up-to-date 才可合并）× CI 约一刻钟 ⇒ CLEAN 是瞬态；AI 做 rebase 推进但不无限追——owner 合并时若 behind 点「Update branch」等 CI 绿即合。②自建 runner E2E 红两类，判法＝main 同基座是否绿＋失败模式：(a) Upload Playwright report `ECONNRESET`——真瞬态，`gh run rerun --failed` 即解；(b) webServer 中途 `exit 143`（SIGTERM）致后续全例 `ERR_CONNECTION_REFUSED`——**非瞬态，是 CI 缺陷**：`start.mjs` 启动清理「前端端口起连续 4 个」会杀同机并发 job 的 vite（随机窗 50 宽 ⇒ 同机任一对约 14% 互杀，后到者杀先到者且双方日志无痕），已登记目标仓 **issue #2550**（三条修法方向，待其自身 PR）；rerun 可过但属碰运气。
+- **终态（2026-10-26 shipped）**：owner 亲自合并 #2535（10-24）、#2539（10-25，合并时 v8.7 再撞 #2482 顺延 **v8.8**，字典内已登记）——owner 合并权全程在位，禁令后零 AI 合并。origin/main 已核实四件交付（客群 label/低风险谓词/燃料数组化/向导 multi＋规则节）。**issue #2508 手动收口**：#2539 正文误写 `Refs`（规划为 `Closes`）未自动关，已补评论关闭（疏漏如实登记）。遗留（非阻塞，不卡 shipped）：#2537 评审 F2 空成员串口径待 owner 拍板；CI 缺陷 #2550 待其自身 PR。③PR 正文「评审：」锚用 bash printf 写入会混入变体选择符致 gate 正则不匹配，改 python 写入。
 - **PR① 实施偏差记录（2026-10-23，供 PR②/③ 借鉴）**：
   - 规划 F7「维度清单棘轮更新 baseline」走不通——`dimension-list-ratchet` 是对 merge-base 基准的真「只减不增」，重写 baseline 仍红（「上限只能调低」）。规则 A：对象字面量含 ≥3 维度词即判清单；**派生值（.map/.filter/正则提取）不算**。改法：`LOW_RISK_WHERE_COLUMNS` 从战略段 whereExpr 正则派生（`/\b[a-z_]+(?=\s*=)/g`），sanitizer 走专门分支不进 `FIELD_COLUMNS`——与 `VEHICLE_QUICK_SEGMENT_COLUMNS` 先例同构。**PR② 数组化 fuelCategory 时 sanitizer 的 `FUEL_CATEGORY_COLUMNS` 若需改形态同样受此闸辖，先看是否派生。**
   - 漏列消费点 3 处（全由闸拦下，规划「新键接线清单」缺这三项——PR② 改键形态同查）：①`src/features/guide/useFeedbackContext.ts` structuredFilters 标签映射（遍历 BOOLEAN_DIMENSION_KEYS 需每键有 label，pre-push 全量 vitest 拦）；②`server/src/utils/policy-scope-params.ts` POLICY_SCOPE_PARAM_MAP（claims 族解析 SSOT，契约 CLAIMS_DETAIL_FILTER_KEYS/heatmap extraKeys 均由它派生——发展面板透传白名单 ⊆ 契约断言拦）；③`server/src/config/query-routes-metadata.ts` CLAIMS_POLICY_SCOPE_PARAMS 登记（route-catalog 是 PAT/CLI/MCP 唯一发现渠道，governance RouteCatalog 对账拦）。
