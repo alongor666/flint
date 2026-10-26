@@ -20,4 +20,4 @@
 | [016](cards/016-updates-entry-demotion.md) | clarifying | chexian-api | 前日更新/历史更新入口降权（主要用户是数据分析者，更新日志非核心）；形态 AUQ 两问待答 | 2026-10-24 |
 | [017](cards/017-hunch-domain-navigation-user-journeys.md) | building | chexian-api | 已下令开工：导航及 G1—G8；补 DSH 规划闸后在目标仓隔离实施，交付 PR 待 owner 合并 | 2026-10-26 |
 | [018](cards/018-prod-jwt-secret-weak-value-hardening.md) | discussed | chexian-api | 生产 JWT 密钥弱值治理——收敛三件套（换强值/令牌寿命调优/启动闸）；每天轮换与 PAT 派生已论证否决 | 2026-10-26 |
-| [019](cards/019-focus-trend-chart-unification.md) | discussed | chexian-api | 聚焦趋势图三套实现归一（ov2 echarts 私有／KPI SVG 私有／pivot TrendChart）；源于工单 B 重裁（撤 B 原则并入 #2595）；串行于 #2595 后择机 P3 | 2026-10-26 |
+| [019](cards/019-focus-trend-chart-unification.md) | explored | chexian-api | 聚焦趋势图三套实现归一（ov2 echarts 私有／KPI SVG 私有／pivot TrendChart）；源于工单 B 重裁（撤 B 原则并入 #2595）；探索#1 完成选型收敛 SVG 为基，真分叉两处待转正 AUQ；串行于 #2595 后择机 P3 | 2026-10-26 |
