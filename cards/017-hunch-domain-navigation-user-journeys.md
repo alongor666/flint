@@ -1,9 +1,10 @@
 # 017 · 观赔独立一级导航与全角色使用流程梳理
 
-- 状态: scouted
+- 状态: building
 - 目标仓: chexian-api（owner 明示；本地路由见 repos.md）
 - 类型: 优化（导航信息架构与用户流程规划）
 - 录入: 2026-10-26
+- 当前有效规划: 文末「完整实施规划 v2」；此前探索、v1 及排除项均为历史快照。2026-10-26 owner 已下令开工，实施按文末开工记录与目标仓行动规划推进。
 
 ## 原文
 
@@ -410,3 +411,158 @@ owner 已选 **G1=A、G2=A、G3=A**；此次只回填裁定与规划影响，继
 - 【建议排序】先 G4/G8，解决上手指引与完成语义；再 G7/G5，连通查阅与返回；最后 G6，集中核对角色、草稿与历史行为。
 - 【建议组织】作为后续“观赔体验收口”阶段继续规划，按真实依赖确定交付切片，不机械一项一个 PR。G7 涉及 PR-B 抽出的线索工作区时，以新组件为修改点，不回头重写旧 ClueTab。
 - 本段为建议，尚未并入实施规划 v1 的已定写集与验收范围；G1/G2/G3 及关联身份的既有裁定保持有效，继续暂不实施。
+
+## 完整实施规划 v2（2026-10-26 · 导航与 G1—G8）
+
+### 0. 目标、授权、版本与事实依据
+
+- owner 原话：**「按你的建议把 G4—G8 也纳入 017，细化改动文件、依赖和验收用例，整合成完整实施规划，再做独立评审，暂不实施。」**本节为唯一当前规划，取代 v1 的 G4—G8 排除范围及旧交付切片；不抹除历史观察。
+- 目标：在 chexian-api 内形成独立“观赔”一级导航，六类用户能完成观察、线索阅读/处置与分析查阅；覆盖 G1—G8，维持既有业务状态机和数据范围。
+- 授权仅为 flint 规划修订和独立评审；本轮不写目标仓代码、不建分支/issue/PR、不提交、推送、合并或访问生产。未来实施仍按目标仓自身协议；卡保持 `scouted`。
+- 新探查锚：`origin/main @ fd5e8416743a232e6bc3508bf3515c0807556115`（`git fetch origin main`）。与前锚 `62845768f...` 比对根协议、PR 协议、hunch 前后端、责任人、导航/显隐相关路径无变化，旧源码锚可复用。本轮新增阅读均来自新主干，未切换工作树。
+- 防撞车：连接器开放 hunch PR/标题观赔 issue 查询无命中；第二通道 `gh pr list --state open --limit 200 --json number,title,files` 完整返回集合按 hunch/responsibility/routeRegistry/routeVisibility 检索无匹配；沿用前轮 issue 全集标题复核作为同日历史线索，**未据此声称无其他未推送工作**。开工时重查主干与在途写集。
+- 【事实·静态核实】页面/权限/通知证据 E1-E10 见探索 #1；任务与案例本地状态、返回入口见 `src/features/hunch/HunchTasksPage.tsx:48-85,269`、`HunchLibraryPage.tsx:73-104,275-304,379,478`。
+- 【事实·静态核实】`server/src/hunch-flow/hunch-flow-service.ts:1112-1146,1231-1250` 不仅详情 `myRole` 取首个匹配，工作台待发布计数也只看首个视角；G6 必须连同计数修复，不能仅加切换按钮。任务责任人以任务行快照/改派为准；线索阅读按澄清 #3 当前注册映射，两者不能混用。
+- 【事实·静态核实】`routes/hunch-flow.ts:396-421` 的案例库响应 total 目前是已截断数组长度，`hunch-flow-store.ts:711-770` 只有 LIMIT，没有 OFFSET；G5 若纳入案例分页，必须补真实总数及 offset，而非仅增加页码控件。
+- 【事实·静态核实】已读 `src/shared/utils/pageUrlState.ts:53-109,111-178`、`growthUrlState.ts:86-150`。复用已有编解码/回放报告/写入基座；一次手势只 patch 一次。URL 治理指针为 `docs/decisions/20260930-url-state-contract.md` 与 `20261003-analysis-dimension-registry.md`；不将前者尚未裁定的条目当强制规范。
+- 【事实·静态核实】`git grep finalReviewers|danan-final-reviewer|final-reviewers` 排除测试后，命中共享角色数据/API、适配器传递、管理页和类型；在已查任务状态/发布流程未见终审授权消费。另直接复核 `publishObservation`、`getTaskDetail`、`getWorkbench` 的执行体确认没有终审门。本版只修 UI 误导，不删除共享角色/API/schema/历史数据。
+- 方法：仅静态核实与代码推理；未运行角色会话、测试或性能验证，下面所有代码变更和验收均为未来任务。完整源码只在目标仓查阅，公开卡不复制代码/客户数据。
+
+### 1. 已定范围与最小设计
+
+- 既有 G1=A、G2=A、G3=A 和关联身份跟随当前 A/B 的裁定继续有效。非管理员经理不获配置权；提报者/当前关联 A/B 可读，处置由当前经理或有权管理员完成；登录异常提报保留，人工登记仍为管理员；通用日历与其他域权限不变。
+- G4：更正现行并行观察指引/AI 空态，管理员主页面只呈现现行经理职责；历史终审配置只读标示“不参与当前流程”，不再提示必配或双签、不在该 UI 提供增删操作；后端兼容接口和数据保留，不能据本规划清库或删除模块。
+- G5：任务、案例和新线索列表的可回放状态入地址，返回恢复；补真实分页。G6：已合法配置的本人多视角可切换、重发回填、历史只读及待发布计数一致；不新授兼任或改派权。
+- G7：线索案件号进入案例库时参数生效，未入库/无匹配明确提示，不扩大在途任务下钻。G8：按实际应到/已到与结束成因展示，完成/入库规则不变。
+- 不改方案评估：只改文案不能修 G5-G7 的链路和数据合同；另建新工作流、角色系统、URL 内核或案例仓均无必要。新增组件仅为现有 UI 跨入口复用；新增纯函数仅承载已有范围判定或本域 URL 配置。
+
+### 2. 页面、流程与返回路径
+
+| 页面/入口 | 完整目标行为 | 权限/状态来源 |
+|-----------|--------------|---------------|
+| 一级观赔 | 原页面迁入；顺序建议为工作台、线索、案例库、规律分析、看板、配置，位于经营闭环之后，复用已有图标和手风琴 | 注册表单源；不改默认首页 |
+| `/hunch/tasks` | 本人/全部页签、状态/成因/类别/机构/超窗/检索、分页可回放；筛选变更重置 offset；超窗卡一次更新所有相关键 | URL 唯一生效状态，全部页签由当前经理/管理员范围校验；无权回放规整并提示 |
+| `/hunch/tasks/:taskId` | 案件信息、每个本人视角草稿、发布/重发、三视角状态、按视角的观察历史；从列表进入时携规范列表上下文 | task actions 和任务行快照决定视角；不从当前全局责任人映射重新授任务权 |
+| `/hunch/clues`、`/:clueId` | 业务列表与独立详情；阅读者看相关，经理/有权管理员看管理范围；按服务端能力提供处置和管理员人工登记 | 线索关系 ACL；URL 保存状态/来源/分页；详情返回同一有权列表 |
+| `/hunch/admin` | 同范围守卫；经理设置、映射、窗口/日历、同步/改派、线索兼容页签；现行说明与历史说明分明 | 不向普通经理开放；线索页签嵌入同一业务工作区，不复制 UI |
+| 规律分析 | 保留异常提报，成功显示“查看线索”；线索链接准确、知会不伪装为待办 | 创建响应 id；不新增提报授权档，不自动离开当前分析页 |
+| `/hunch/library`、`/:taskId` | 筛选、案件号、分页可回放；从线索带入 claimNo 并显示实际条件；案例详情/关联案例继续携列表上下文 | 既有案例库读权限；入库快照与在途任务权限不混同 |
+| 看板/聚合 | 完成、入库、超时/手动关单文案准确；只改标签及必要展示派生 | 既有聚合/结束成因，不重新计算业务指标 |
+
+#### URL 合同（G5/G7，共同用于新旧列表）
+
+- **拟新增** `src/features/hunch/hunchUrlState.ts` 为 `createPageUrlState` 的薄配置：任务键 `ht_tab/state/doneVia/category/org/overdue/q/limit/offset`；案例键 `hl_category/org/storedFrom/storedTo/cause/lossType/findingCode/limit/offset` 与已公开的 `claimNo`；线索键 `hc_status/source/limit/offset`。这里斜线表示同前缀的一组键，不是字面 URL 名。
+- 旧 `claimNo` 作为案例查询正式键兼容，避免把已有线索链接作废；不得把 ht_org/hl_org 与全局 org 键合并成第二套跨页同步。全局范围键保留原值，业务请求只接收本页面解码后的既有维度参数，不借机改变 hunch 与全局筛选的现行关系。
+- UI 从 `resolveWithReport` 派生；无效枚举、坏日期/反向区间、非法分页、重复单值及越权页签显式报告，规整用 replace；离散用户选择/应用搜索用 push。搜索输入仅临时草稿，应用后成为请求条件；一次手势把筛选与 offset 重置合为一个 patch，避免 Router 同 tick 覆盖。
+- 固定默认值为原页面默认；limit 沿用现有接口默认/上限，不另造阈值。分页入地址后后退可撤销，刷新/分享可重放；本版不创建本地“最后访问页”记忆。
+- 任务分页的既有线缆不改名：`ht_limit → SDK/REST pageSize → service.limit`（`hunch-flow-api.ts:628,638`、`routes/hunch-flow.ts:307`）。任务页面现行 hook 显式传 pageSize=100，接口未传值才缺省50；URL默认按页面原生效值100，不能误当50。案例和线索仍走各自 limit/offset；新增API-wire断言分别锁三条映射，不将任务REST改为limit。
+- 列表进详情增加 `returnTo`，只由当前列表路由与规范查询构造；详情返回/关联案例继续带同一经过校验的来源。只接受同类列表的准确站内路径（tasks→tasks、library→library、clues→clues），拒绝协议、域名、双斜杠、跨域页面、嵌套 returnTo。仅对外部直达/坏来源回默认列表，不用裸 `navigate(-1)` 猜上下文。
+- 案例参数要传到 `listLibrary → GET /library → store`，不能只显示在输入框。现有 claimNo 为子串 LIKE 语义，本版不偷偷改成精确检索；未命中只说“暂无匹配的入库案例”，没有接口证据时不推定该案件不存在或一定未入库。
+- 案例分页扩 `listCaseLibrary` 的 offset，并抽共用过滤子句提供独立 count；保留现有数组返回签名与默认 limit，相关案例消费者不被改坏。列表 REST 仍为 `{total,items}`，total 改为完整过滤命中数；聚合图若仍为全库聚合，必须显式标“全库”，不能伪装成当前分页筛选结果。
+
+### 3. 权限、写入和多视角观察
+
+| 能力 | 服务端真实判定 | 前端消费/负例 |
+|------|----------------|----------------|
+| 管理员范围 | 抽已有 canAdminScope 至纯 `server/src/config/hunch-access.ts`，service 保留兼容导出；任务流与观赔专属映射/经理配置写共用 | 前端镜像纯判定供 routeVisibility、配置页和全部任务页签；不以当前选省或请求体授管理权 |
+| 线索列表/详情 | 当前经理或有权管理员管理范围；否则 created_by 或当前活动 A/B 关联，空映射不匹配 | 列表 COUNT/SELECT 同一参数化 ACL 后再分页；详情再次检查，无权403、无记录404；C/旧收件快照不自动获权 |
+| 线索处置 | 当前经理或有权管理员；沿用既有状态迁移、原因校验、并发更新与事件记录 | GET 返回 actions，UI不伪造；阅读者直接 POST 403，写时重验角色 |
+| 提报/配置 | 异常提报保持登录+服务端重算；人工登记限有权管理员；观赔映射 PUT/POST/DELETE 和经理设置补范围闸 | PAT/只读凭据拒写；共享 GET 和通用日历权限不改；G4历史接口保留但不在UI指导使用 |
+| 本人观察视角 | 详情新增 `actions.myRoles`（任务行中本人且应到的角色）和 `actions.publishableRoles`，当前 open 才可发布；保留 myRole 兼容但新 UI 不依赖首角色 | 非管理者只能在服务端返回的本人角色间切换；经理/管理员代发沿用原授权，不因控件调整被放宽或收紧 |
+| 观察历史 | 复用已有 `observationHistory` 或专用 `/observations` 读端的相同 task ACL，不新增更宽接口 | 按角色、版本、实际操作者和发布时间显示“当前有效/历史”；仅阅读，无回滚发布、审核或删除功能 |
+
+- 所有角色相关 DTO、任务详情、发布返回与前端类型同步；选中视角和提交载荷一致，不能让“正在编辑 B”仍发 role=A。提交后使详情/列表/工作台汇总失效；权限错误不清空其他角色稿。
+- 草稿只保存在当前任务页面的内存，按 `taskId + role` 分桶；不写 URL、localStorage 或后台草稿表。首次进入每个视角从该视角最近已发布观察初始化（码、结论、建议全量）；无历史才用既有经过模板。
+- 查询后台刷新只更新未编辑桶，不覆盖 dirty 稿；切换角色保留各桶，任务 id/登录身份变化清空前一任务/身份的桶。离开未保存页时给出明确提示；不引入新自动保存服务。最后一次应到发布使任务结束后，仍展示未提交稿但禁再提交，给出明确结束反馈。
+- G6 待发布计数按“该用户任一应到本人视角尚未发布”的任务数计，不按角色数量重复加任务。同人 A/B：仅发 A 后仍有该任务待办，发 B 后才从待发布任务数扣除；myOpen 等原任务数含义不变。
+- `publishObservation` 继续以任务行/改派身份、状态、码值校验，而非 clues 当前映射；写入事务中的身份与状态均需重读核验，防并发改派后旧账号仍提交。本人未分配角色、伪造角色及已结束任务分别拒绝；不新增任意兼任配置。
+- 本轮不改变“重发取最后、应到齐才聚合、超时/手动关单不入库”的业务判定；正本仍指向目标仓两态流程文档，不复制重造状态机。
+- 身份相关 GET 私有不共享缓存；线索和任务详情缓存带身份/当前角色范围。角色切换、退出及本客户端映射/经理变更清理或失效相关数据；服务端每次写入重验。其他会话重获焦点刷新，不宣称客户端已渲染信息可被即时撤回。
+
+### 4. 通知、历史数据与准确文案
+
+- 新通知追加可空 clue_id，保留 task_id；响应派生白名单 task/clue/clue-list/无目标。经理收待办，创建者和当前 A/B 收知会，兼任去重且待办优先；经理缺位保存线索并用现有管理员广播提醒，无自动分派/期限/业务授权扩展。
+- 旧 clue 通知无编号时不猜标题、不解析 dedup：通用历史提示→有权列表。新 clue 通知每次读取重验当前 ACL，失权只返回通用提示及列表目标，不继续返回证据摘要；点击与加载间失权由详情403处理。任务/系统原路径、本人已读隔离及广播范围保持。
+- 迁移仅 append-only 增通知 clue_id/必要索引/校验；历史默认NULL，线索关系不回填快照；号位开工查主干/在途后取。线索落库、事件、投递使用同库事务，幂等键唯一；不允许通知失败后静默宣称投递完成。
+- G4 系统速查按“本人/全部任务、并行观察、发布/重发、经理处置”对齐；AI统一称“观察参考”，无结果时按“生成中/暂不可用”准确呈现，不引导执行已退役复核。管理页“角色与终审”改为实际经理设置及历史只读说明。
+- G8 `all_published` 展示名统一为“应到观察已齐”，前后端标签镜像同步。任务进度用现有 requiredRoles/publishedRoles 的实际集合；案例标题“应到观察已齐 · 已入库”，发现码列称“已发布观察并集”。若历史快照缺可靠应到字段，仅显示已入库与现有观察，不编造应到人数；不通过当前责任人映射重算历史任务。
+- 覆盖 TaskDetail、Library、LibraryAggregatePanel、Dashboard、hunchFlowLabels、服务端 DONE_VIA_LABELS 及实际消费这些标签的组件。新文案归现有词表/格式函数，不各页复制；schema枚举/存量事件正文不因改标签而重写。
+- **G8 同时覆盖未来通知生产者**：`server/src/hunch-flow/hunch-flow-service.ts:513` 当前直接拼“三人观察齐发布”，须改为消费服务端共用完成文案（如 DONE_VIA_LABELS 对应项），表述“应到观察已齐，自动聚合入库”。新任务通知不再暗示固定三人；仅修改未来生成逻辑，历史已存通知正文不回写。
+
+### 5. 改动文件与依赖（路径相对目标仓；新增均为拟议）
+
+| 组 | 具体文件 | 责任与依赖 |
+|----|----------|------------|
+| 导航/路由 | `src/shared/config/routeRegistry.ts`、`routeVisibility.ts`；`src/app/App.tsx`；`src/features/hunch/index.ts` | 独立域、新线索列表/详情，个人页面准入，旧路径保留；依赖管理范围纯判定 |
+| 管理范围 | **新增** `server/src/config/hunch-access.ts`、`src/shared/config/hunch-access.ts`；`server/src/hunch-flow/hunch-flow-service.ts`、`routes/hunch-flow.ts`；`server/src/responsibility/routes/responsibility.ts` | 共用服务端范围真值及前端镜像；G3只修观赔专属映射/经理写；原判定导出兼容 |
+| 线索业务UI | **新增** `src/features/hunch/HunchCluesPage.tsx`、`components/HunchClueWorkspace.tsx`；`HunchAdminPage.tsx`、`HunchPatternPage.tsx` | 从现有ClueTab/ClueRow/ManualClueForm提取复用，非管理员业务入口；G7链接在该新组件接续 |
+| 数据/通知 | `server/src/hunch-flow/hunch-flow-store.ts`、`hunch-flow-schema.ts`、`hunch-flow-service.ts`、`routes/hunch-flow.ts`；`src/features/hunch/components/HunchNotificationCenter.tsx` | ACL先于计数分页、clue_id迁移、历史通知投影、处置与投递原子性；原业务库与状态机保留 |
+| API/缓存 | `src/shared/api/hunch-flow-api.ts`、`query-keys.ts`；`src/features/hunch/hooks/useHunchFlow.ts`、`useHunchAdmin.ts` | 线索scope/actions、myRoles/publishableRoles、详情hook、所有列表offset、身份缓存与各写后失效 |
+| URL/分页 G5/G7 | **新增** `src/features/hunch/hunchUrlState.ts`；`HunchTasksPage.tsx`、`HunchTaskDetailPage.tsx`、`HunchLibraryPage.tsx`、新线索页/工作区；store/routes/API如上 | 复用pageUrlState内核，列表状态/安全returnTo、claimNo兼容、库分页真实total。先后端合同，再接页码和返回；不手改filter-url-keys.generated |
+| 观察 G6 | `HunchTaskDetailPage.tsx`、`hunchFlowLabels.ts`、`hooks/useHunchFlow.ts`；service及API如上；**新增** `components/HunchObservationHistory.tsx`（仅承载已有历史展示） | 本人多角色能力、分桶草稿/最近稿初始化、版本展示、工作台计数；复用既有POST/历史载荷，独立历史组件避免继续膨胀任务页 |
+| 文案 G4/G8 | `src/features/guide/guideContent.ts`；`HunchAdminPage.tsx`、`HunchTaskDetailPage.tsx`、`HunchLibraryPage.tsx`、`HunchDashboardPage.tsx`、`components/AiReviewPanel.tsx`、`components/LibraryAggregatePanel.tsx`、`hunchFlowLabels.ts`；`server/src/hunch-flow/hunch-flow-types.ts`、`hunch-flow-service.ts:513` | 现行指引、AI空态、业务经理/历史配置只读展示、应到文案/词表及未来完成通知；不删除共享终审API/schema/存量数据，不回写旧通知 |
+| 索引/验收目录 | `src/features/INDEX.md`、`开发文档/00_index/CODE_INDEX.md`、`design-handoff/three-region-20261002/route-acceptance.json`、`tests/e2e/26-workbench-route-coverage.spec.ts` | 新路由/代码入口与实际覆盖；无新REST路径，无需另造API常量；只变动相关断言不降低路由覆盖 |
+
+- 文件前缀说明：表中未写前缀的页面/组件/hook均相对 `src/features/hunch/`，服务端store/schema/service相对 `server/src/hunch-flow/`。实施任务仍需使用完整目标仓路径，避免把同名文件写错仓。
+- 最小新增实体：两个范围纯模块、一个URL薄配置、业务页壳/共享线索工作区、只读历史组件；不新增任务/角色/案例存储、URL框架、通用权限平台或文档协议。新增前再 grep 复核是否已有等价实现；无证据不增文件。
+- 测试文件见下一节，优先扩现有文件，仅新增纯模块/新页面的必要行为测试。体量要求以已读取的目标仓现行根协议/PR协议为准，旧行数格式闸已退役，不凭通用技能恢复旧阈值。
+
+### 6. 依赖与交付切片
+
+| 切片 | 包含范围 | 依赖与可独立验证结果 |
+|------|----------|----------------------|
+| A 导航/管理边界与准确说明 | 导航、G3、G4、G8 | 先有范围/标签共用点，旧入口仍可用；暂不暴露未落地线索业务页。经理设置仍可用，历史配置只读而数据/API保留 |
+| B 线索完整闭环 | G1/G2＋通知迁移＋业务入口 | 依赖A；后端ACL/能力、迁移、通知、业务UI同批交付，不先移除管理闸而留下无行过滤窗口 |
+| C 查阅与返回 | G5/G7：所有列表URL、安全returnTo、案例真实分页/claimNo | 依赖B提取的线索工作区；后端分页合同先于前端接线，同批验完整返回链。A/B已调整的文件在新基线增量处理，不并行覆盖 |
+| D 观察填写与历史 | G6：多视角、最近稿、草稿隔离、历史、计数 | 依赖A标签及C详情导航壳稳定；不更换任务身份规则，角色能力/工作台计数与新UI同批交付 |
+
+- 这是依赖顺序建议，不要求机械每缺口一PR。转正时按目标仓issue树组织工作项；本轮不建任何工作项/分支，也不派发实施。UI/接口与权限等实质变更未来按目标仓做独立代码评审，当前仅评审规划。
+- 本轮独立规划评审任务写集为空；评审者只读本节与目标仓锚，不运行会改库/环境的程序，不递归派代理。根会话负责记录发现、修订与申请复评。
+
+### 7. 验收矩阵（以下均为未来用例，NOT RUN）
+
+| 编号/范围 | 操作与反例 | 必须得到的证据 | 主要测试文件 |
+|-----------|------------|----------------|--------------|
+| T1 导航/入口 | 展开新域、切域/刷新、旧路径、经理直达配置、范围外管理员 | 原组无重复，手风琴保持，旧地址有效；经理配置拒绝；前后端范围真值一致 | `routeRegistry.test.ts`、`routeVisibility.test.ts`、新增两端 `hunch-access.test.ts`、侧栏测试、E2E14/26 |
+| T2 G1/G2角色全链 | 普通用户提报→本人/当前A/B读取→经理跟进关闭；C非创建者/无关人读写；管理员人工登记；PAT写 | 有权200且非空证据；无权403且不含证据；无记录404；普通人工登记/处置拒绝，异常证据服务端重算；只读凭据拒写 | flow clue/route/branch-scope既有测试 |
+| T3 G1换人/通知/分页 | A/B换人停用、经理变化、缺维度、历史通知、空ACL、跨页夹无权行、身份缓存 | 新责任人接历史，旧人仅独立身份可读；摘要去敏与直达重验；items/total同ACL再分页；角色切换不闪现上个身份数据 | flow clue/route、通知组件、新线索页/API测试 |
+| T4 G3配置 | 范围内/外/全国管理员与经理对映射PUT/POST/DELETE、经理设置及相关读端 | 写端按已裁范围；POST别名与停用无绕过；共享读取/日历不受影响；普通经理不获配置权 | responsibility-route、前端Admin/visibility、两端范围判定测试 |
+| T5 通知/迁移兼容 | 新任务/线索/系统目标、无经理广播、兼任去重、旧线索空id；连续两次迁移 | 同事件不重复；缺位保存不丢单；目标类型正确无猜测；旧已读/证据/处置不变；迁移幂等；旧版本能忽略附加列 | flow clue/route/迁移测试、HunchNotificationCenter测试 |
+| T6 G4准确引导 | 普通观察者、经理、管理员分别阅读速查/AI空态/经理配置/历史区 | 无要求填报告、提交复核、双签或必配终审的误导；历史区明确只读不参与，经理配置写仍可用；旧兼容API/数据不被删除 | guideContent、AiReviewPanel、HunchAdminPage测试；浏览器人工核对 |
+| T7 G5真实回放 | 对任务/案例/线索选择多条件和非首页→详情→刷新→返回→前进后退；外部直达详情 | 页签、实际请求、筛选框、页码一致；默认不写；无权页签回落有提示；未知/重复/坏日期有报告，不出现URL/useState双源循环 | 新增 `hunchUrlState.test.ts`、三页面/详情组件测试、E2E23 |
+| T8 G5安全返回与分页 | returnTo外站/双斜杠/跨模块/嵌套/异常编码；案例多页、同条件count，最后页数据减少；三类列表分页线缆 | 只回允许列表，坏来源回默认；offset真实生效，total未截断；筛选变更重置页、页越界提示；任务ht_limit传pageSize且默认100、接口无参缺省50，案例/线索传limit；相关案例调用签名兼容 | URL薄配置测试、API-wire、flow route/store、Library测试 |
+| T9 G7案件号链 | 从新线索工作区案件号到库；单独旧claimNo链接；空/有特殊字符参数；无匹配 | 筛选与请求均收到同一解码值，LIKE语义不变；空参数不伪造筛选；未命中不悄悄显示全库或跳在途任务；继续进详情并返回保留条件 | HunchClues/Library测试、API-wire、flow route测试、E2E23 |
+| T10 G6兼任与计数 | 同账号在任务合法A/B，先只发A，再发B；非本人角色；经理代发 | 本人可切A/B而非C；载荷role准确；只发A仍有该任务待发布、发齐才扣1任务；代发仍记实际actor，权限未扩大 | flow route/two-state、TaskDetail/Tasks组件与labels测试 |
+| T11 G6重发/草稿/历史 | 最近稿有完整码/文/建议；分别改A/B，后台重取；切任务/身份；最后发布完成；并发改派 | 最近稿完整回填；角色稿不串、dirty不被刷新覆盖、切任务/身份无泄露；历史最新标记准确且只读；结束后不能再发；并发改派后旧身份不能写 | TaskDetail、拟新增历史组件测试、flow route/two-state与API-wire |
+| T12 G8显示与旧快照 | 应到1/2/3角色、发布子集及各自完成后新通知；all_published/timeout/manual；旧快照缺应到字段 | 页面和新通知均不固定写“三人”；进度/成因准确；已入库与关单不混淆，缺字段不编人数；存量通知正文不回写，状态/聚合/枚举无变化 | labels镜像测试、TaskDetail/Library/Dashboard/LibraryAggregatePanel、flow two-state/route通知落库断言 |
+| T13 跨范围回归 | 跑原任务ACL、只读令牌、责任人、页面、两态与迁移测试，包含错误/慢加载/键盘与窄屏 | 未受影响授权/任务语义保持；401/403/404/409/503区分；不靠跳过旧断言或空态截图声称业务链通过 | 已有相关测试＋隔离服务E2E/走查 |
+
+- 完整测试路径：前端观赔用 `src/features/hunch/__tests__/{HunchTasksPage,HunchTaskDetailPage,HunchLibraryPage,HunchAdminPage,HunchDashboardPage,HunchNotificationCenter,LibraryAggregatePanel,hunchFlowLabels}.test.*` 扩展现有文件；新增 `HunchCluesPage.test.tsx`、`HunchObservationHistory.test.tsx`、`hunchUrlState.test.ts`。guide用 `src/features/guide/__tests__/guideContent.test.ts`，wire用 `src/shared/api/__tests__/hunch-flow-api-wire.test.ts`。
+- 后端复用 `server/src/hunch-flow/__tests__/{hunch-flow-clue,hunch-flow-route,hunch-flow-branch-scope,hunch-flow-two-state,hunch-flow-aggregate,hunch-dashboard}.test.ts` 与 `server/src/responsibility/__tests__/responsibility-route.test.ts`；用现有 `server/src/test-support/inject-fetch.ts` 和隔离临时库，不开启生产写验证。
+- 定向命令：`bun run test --run src/features/hunch src/features/guide/__tests__/guideContent.test.ts src/shared/config/__tests__/routeRegistry.test.ts src/shared/config/__tests__/routeVisibility.test.ts src/shared/api/__tests__/hunch-flow-api-wire.test.ts`；`bun run test --run server/src/hunch-flow server/src/responsibility/__tests__/responsibility-route.test.ts`；新增范围纯判定用 `bun run test --run server/src/config/__tests__/hunch-access.test.ts src/shared/config/__tests__/hunch-access.test.ts`。`bun run typecheck` 覆盖DTO与消费者。
+- 浏览器：`bun run test:e2e -- tests/e2e/14-sidebar-collapse.spec.ts tests/e2e/23-workbench-business-flow.spec.ts tests/e2e/26-workbench-route-coverage.spec.ts`，23扩合成角色的实际线索/观察/返回链；不得只测页面可加载。真实用户走查前按目标仓协议备齐隔离服务、数据、登录和页面。
+- 每个新增回归先在旧行为上证明目标断言能失败，再改最小代码并复跑；不为实现布局写自证测试。当前没有运行上述测试，独立规划评审通过也不是测试通过或上线验收。
+
+### 8. 风险、回滚、失效与停止点
+
+- 主要风险：ACL与计数不一致、旧通知摘要泄露、共享范围分叉、returnTo越域、URL基座同tick丢patch、案例假总数、多角色错稿/误计数、UI把历史终审当现行要求。分别由T2-T12的反例验证。
+- 代码回滚按受影响切片处理；新增通知列/迁移记录保留，旧版本读取升级后fixture须通过，不用旧库整库覆盖。G5公开键需保持解析兼容；回退UI时不删历史数据或改业务状态，不能把已处置线索恢复为待处置。
+- 再加工条件：主干或在途写集影响身份结构、责任人映射、线索schema、URL内核、任务完成/发布、库查询或相关有效裁定时，重核受影响部分；无关主干推进不要求重做全部规划。
+- 目标仓真实配置、业务数据规模/性能、浏览器运行与CI仍UNKNOWN/NOT RUN。实现阶段以实际检查、独立代码评审、用户走查、合并和生产验证分别留证，规划审查不代替它们。
+- 当前停止点：完整规划已形成，下面记录独立评审。即使规划通过，仍仅为**规划可进入后续开工加工**；未获实施授权，不运行未来步骤。
+
+## 独立评审记录（017 完整实施规划 v2）
+
+- R1：独立子代理 `review_017_plan` 只读审查完整 v2；源码锚 `fd5e8416743a232e6bc3508bf3515c0807556115`，规划 SHA256 `16611b8b3765353642d52700eafaa0d6b3d9121d16285ac89b017303992ad5eb`。hash口径为去掉字面标题前缀“## 完整实施规划 v2”后的内容，至本评审记录标题之前，保留日期尾和换行。
+- R1 结论：**APPROVE（规划审查），P0=0、P1=0、P2=1**。独立核过权限与当前/快照身份区分、URL基座、案例分页、G4历史兼容、G6计数/草稿、依赖和简省性；只读核查，未运行测试或修改目标仓。
+- F1（P2，规划遗漏）：G8漏列 `hunch-flow-service.ts:513` 未来通知的固定“三人观察齐发布”。已补入§4、§5写集与T12：未来通知消费共用完成文案，覆盖1/2/3应到情形；存量通知不回写。**R2原评审者确认规划层清零，目标仓代码未修改**。
+- 同步澄清分页线缆：任务API现状正确，REST读取pageSize再转service.limit，不是现有缺陷；在§2/T8明确ht_limit的映射与页面100/接口缺省50的差异，避免未来误改。
+- R2：原独立评审者 `review_017_plan` 对修订后的完整v2复核，SHA256 **`ab3ceece88aa583b347ec96a2ed2ab29c30139d980d6a5682c45c1c18f20fedf`**，源码锚同上；结论 **APPROVE（规划复核），P0=0、P1=0、P2=0**。
+- R2确认：F1已覆盖未来通知生产者、写集及1/2/3应到通知落库用例，历史正文不改；分页映射/默认值区分准确；原裁定和A→B→C→D依赖一致，无新增发现。复评只读，未修改文件或运行测试。
+- 最终停止点：完整v2已通过独立规划评审，卡仍 `scouted`；源码修复、HTTP/迁移/浏览器/性能与CI均 **NOT RUN**，后续由获得实施授权的执行者补证并接受独立代码评审。规划通过不代表实施授权、合并或生产验收通过；本轮仅更新flint文档。
+
+## 开工记录（2026-10-26）
+
+- owner 指令：『开工』，接续 017 完整实施规划 v2（G1—G8）。允许目标仓独立分支实施、验证、提交并创建 PR；交付止于可合并就绪，合并仍由 owner 执行。
+- 增量对锚：目标仓 origin/main @ `53bcb145ebd61910652965f303e15d530c0edb32`；相对规划锚 fd5e841，目标写集仅 routeRegistry 注释变化，无行为漂移；开放 PR 路径检索未见同写集。
+- 开工协议双闸继续适用：先补 DSH·GLM5.3 reasoning=max 行动规划评审，批准后写码；实施后独立对抗评审及主会话修复复评。旧探索中的『暂不实施』为当时授权历史，不撤销本次开工指令。
