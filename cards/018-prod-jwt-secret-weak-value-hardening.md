@@ -1,6 +1,6 @@
 # 018 · 生产 JWT 签名密钥弱值治理（换强密钥＋启动闸强度升级）
 
-- 状态: scouted
+- 状态: building（2026-10-26 owner 下令开工；对锚 origin/main 198e818a7，较探索#3 锚 53bcb145e 漂移 12 提交全属 hunch 域与 merge，env.ts:43-45 / server/.env.example:6 / config 测试目录 / #1303 未合入四处关键事实零漂移，免重探）
 - 目标仓: chexian-api（先探可定：隐患全部事实在该仓生产环境与 `server/src/config/env.ts` 实证）
 - 类型: 安全加固
 - 录入: 2026-10-26
@@ -90,4 +90,4 @@ owner 追问链：密钥为何不从 PAT 派生 → 「部署时自动生成」�
 
 ## 开工记录
 
-（待「开工 018」）
+- 2026-10-26：owner 下令开工（同批裁定：016 探索另线做）。九步双闸走起——步骤 1 完成（本行＋状态 building）；步骤 2 建 issue、步骤 3 切 worktree 分支、步骤 4 行动规划、闸① DSH 对抗评审、实施、独立评审、闸②、可合并就绪后停手待 owner 合并。锚=origin/main 198e818a7。
