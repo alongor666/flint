@@ -71,6 +71,15 @@ owner 追问「echarts svg renderer 是否更佳选择、值得信任吗」。�
 - **ov2 域死态零报告（两法零命中）**：a) issue 三组关键词（overview-v2 图表空白/聚焦 死态/ov2 趋势）搜索无报告；b) FocusAuxiliary.tsx 全史 12 提交（#2290→#2576）无死态/空白修复提交。结论【断言·代码推理】：ov2 同栈（echarts-for-react/lib/core）同场景（`FocusAuxiliary.tsx:125` view 条件渲染换内容）风险敞口与 KPI 先例同构，「未爆」归因使用频率低而非免疫——019 归一动机从「防患」坐实为「还债」。
 - **主题机制实为三层混用【事实】**：① `chartColors` 为编译期 hex 常量语义板（`src/shared/styles/index.ts:442` 起；canvasNeutral 注释明言「明暗恒白/恒深」，有 chart-colors/contrast 测试锁）——FocusTimelineChart 全部取色走此层，暗色下不随动；② KPI 域内 TrendSpark 先例另走 `var(--c-primary)` CSS 变量（暗色自动跟随）；③ ov2 echarts 走 `getChartTheme(resolvedTheme)` 运行时切换。【断言·代码推理】归一组件主题最优路线=CSS 变量（TrendSpark 先例、暗色免费、SVG 原生支持）；chartColors 常量色在 SVG 用亦有对比度保证但暗色不随动——归一时须选定一层写进组件契约，这是探索 #1「风险」段两套主题机制条目的细化收窄。
 
+### 探索 #3（2026-10-26 晚，#2595 落地进展触发的基线复核）
+
+探查锚更新：origin/main 53bcb145e → **fda7d79d7**（同日 5 个合并）；#2595 刀2 已合（PR #2601，阈值 byPage 78/83/88 注册表登记 CX-ADR-8a818f）、**刀3 终刀在途**（PR #2611 开放，`origin/i/2595-k3`）。
+
+- 【事实】刀3 形态＝**加页签非替换**：FocusAuxiliary 仅 +25 行接线——新增 `matrix` 页签（仅 `variable_cost_ratio`/`policy_year_loss_ratio` 两卡显示，`VCR_MATRIX_FOCUS` 映射），`view==='trend'` 的 FocusTrend/FocusAxes 原样保留。探索 #2 的「目标不收窄」暂判就此落定（README 复核降为形式项）；趋势图归一对象范围不变。
+- 【事实】`VcrMatrixPanel`（1,069 行＋366 行测试）落位 **`src/shared/focus/`**——019 卡原文验收约束「矩阵组件落共享位」兑现；且头注明文「**零依赖手绘 SVG（组图纯 SVG 先例，禁引 echarts）**」，用色走 chartColors（+36 行色阶扩展随刀入 styles）。
+- 【断言·代码推理】聚焦域共享基座的事实技术栈已被两点钉死为 SVG：轴族（FocusAxesCharts，#2576）＋矩阵（VcrMatrixPanel，#2595 刀3，组件级「禁引 echarts」约束）。本卡选型从探索 #1 的「证据倾向 SVG」**升格为「基座既定 SVG」**——echarts 路线若坚持须同时翻 KPI 域禁令与共享基座组件级约束两案，AUQ 不再把「以哪套为基」列分叉；`renderer:'svg'` 三臂实验仅剩翻案检验价值。
+- 剩余动作（按序）：① 等 PR #2611 合并（前置满足）；② 合并后基线复核（fetch 重扫 FocusAuxiliary 接线定稿形态＋三套趋势图无漂移＋防撞车重扫）；③ 转正 AUQ——分叉已收窄为三小项：③ pivot TrendChart 是否并入（域界）、ov2 换 SVG 后 tooltip 形态（素 title vs 自绘富提示）、主题层选 CSS 变量还是 chartColors 常量（探索 #2 倾向前者）；④ owner 拍板后建 issue（工作项住 issue 树纪律）→ P3 择机开工。
+
 ## 开工记录
 
 （无）
