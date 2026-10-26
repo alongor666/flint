@@ -19,5 +19,5 @@
 | [015](cards/015-ov2-focus-absorb-kpi-focus-capabilities.md) | shipped | chexian-api | PR #2576 已合并上线（issue #2568；双闸全过+评审 8 findings 全修）；附产存量回归 #2577（KPI 三卡客群轴万元错标）待裁 | 2026-10-25 |
 | [016](cards/016-updates-entry-demotion.md) | scouted | chexian-api | 更新入口降权——AUQ 已裁（撤首页摘要卡留铃铛+保留红点）；探索#1 净删约 5 文件（含孤儿导出 latestUnreadDay、INDEX.md 同步），零语义副作用；随时可转正 | 2026-10-24 |
 | [017](cards/017-hunch-domain-navigation-user-journeys.md) | shipped | chexian-api | 导航及 G1—G8 已实施；PR #2602 由owner合并至198e818a7，issue #2598已关闭；双闸/独评及合并前完整CI通过，生产部署验收另核 | 2026-10-26 |
-| [018](cards/018-prod-jwt-secret-weak-value-hardening.md) | building | chexian-api | 生产 JWT 密钥弱值治理——owner 下令开工（2026-10-26）；方案=闸加固 PR（env.ts 强度闸+测试+模板一行）+运维三动作随部署窗口；对锚 198e818a7 零漂移免重探 | 2026-10-26 |
+| [018](cards/018-prod-jwt-secret-weak-value-hardening.md) | building | chexian-api | 生产 JWT 密钥弱值治理——**PR #2607 可合并就绪待 owner**（issue #2605；闸① 两轮 APPROVE、独评 F1/P1 已修、闸② 过、CI 9/9 绿、CLEAN）；运维三动作随部署窗口 | 2026-10-26 |
 | [019](cards/019-focus-trend-chart-unification.md) | explored | chexian-api | 聚焦趋势图三套实现归一（ov2 echarts 私有／KPI SVG 私有／pivot TrendChart）；源于工单 B 重裁（撤 B 原则并入 #2595）；探索#1 完成选型收敛 SVG 为基，真分叉两处待转正 AUQ；串行于 #2595 后择机 P3 | 2026-10-26 |

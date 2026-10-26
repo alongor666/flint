@@ -91,3 +91,11 @@ owner 追问链：密钥为何不从 PAT 派生 → 「部署时自动生成」�
 ## 开工记录
 
 - 2026-10-26：owner 下令开工（同批裁定：016 探索另线做）。九步双闸走起——步骤 1 完成（本行＋状态 building）；步骤 2 建 issue、步骤 3 切 worktree 分支、步骤 4 行动规划、闸① DSH 对抗评审、实施、独立评审、闸②、可合并就绪后停手待 owner 合并。锚=origin/main 198e818a7。
+- 2026-10-26 全链完成，**PR 可合并就绪待 owner 合并**：
+  - issue [#2605](https://github.com/alongor666/chexian-api/issues/2605)（type/bug + area/server，仓内无 type/security 标签；任务包 v2 = §1.1 短任务包形态）；worktree `chexian-api-wt-2605` 分支 `i/2605`（保留至 owner 合并，便于返修）。
+  - 闸① DSH·GLM5.3 两轮（strong 档冒烟自报 glm-5.3；headless 档今日自报 deepseek-flash，不可用于闸）：R1 REQUEST_CHANGES——F1（P2）缺「恰 64 字符」边界用例，评审抓到我漏的事实 `DEPLOY_FULLSTACK.md:163` 推荐 `openssl rand -base64 48` 恰产 64 字符、`<64`/`<=64` 原矩阵同绿；F2–F6（P3）字典动机/模板动机/空白取舍/告警噪声/行数预算 → v2 → R2 APPROVE。
+  - 实施 4 文件 +123/−3：`env.ts` 分因强度闸（「命中已知弱值」vs「长度 N < 64」，不回显值）、新测试 7 用例、`server/.env.example` 占位符统一、`rateLimiter-account-lock-parity.test.ts` 假密钥 39→75 字符。双变异实证：`<`→`<=` 恰 64 用例独红；删字典项归因用例独红。
+  - 步骤 7 独评（DSH·GLM5.3 @ 40e544468）REQUEST_CHANGES：**F1（P1）** rateLimiter 生产档用例真加载 env.ts、假密钥被新闸拦、CI 必红——我用 `server/src/config` 路径过滤器漏验（对照实验短路闸复绿证因果）→ 返修 329180aea；F2/F3（P3）登记。闸② 主会话复评通过。
+  - PR [#2607](https://github.com/alongor666/chexian-api/pull/2607)（Closes #2605；评审锚 [#issuecomment-6414491634](https://github.com/alongor666/chexian-api/pull/2607#issuecomment-6414491634)）：CI 9/9 绿——首轮 Unit Tests 21m25s 撞 `production-gate.yml:451` 的 20 分钟超时被取消（自托管 runner 同机并发 + 本地同时段评审会话争抢，非断言红），`gh run rerun --failed` 后 12m11s 过；mergeState CLEAN，落后 main 1 提交（#2609）零交集，按目标仓 CX-ADR-d3f180 非 strict 不同步。
+  - 运维三动作待 owner 随合并部署窗口：换强值 `openssl rand -base64 64`、`JWT_REFRESH_EXPIRES_IN=12h`、wrapper restart。
+  - 事故留痕：PR 正文曾被 sed 多字节替换失败→空串喂 `gh pr edit --body` 清空，已 heredoc 完整重写恢复。
