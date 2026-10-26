@@ -71,6 +71,12 @@ owner 追问「echarts svg renderer 是否更佳选择、值得信任吗」。�
 - **ov2 域死态零报告（两法零命中）**：a) issue 三组关键词（overview-v2 图表空白/聚焦 死态/ov2 趋势）搜索无报告；b) FocusAuxiliary.tsx 全史 12 提交（#2290→#2576）无死态/空白修复提交。结论【断言·代码推理】：ov2 同栈（echarts-for-react/lib/core）同场景（`FocusAuxiliary.tsx:125` view 条件渲染换内容）风险敞口与 KPI 先例同构，「未爆」归因使用频率低而非免疫——019 归一动机从「防患」坐实为「还债」。
 - **主题机制实为三层混用【事实】**：① `chartColors` 为编译期 hex 常量语义板（`src/shared/styles/index.ts:442` 起；canvasNeutral 注释明言「明暗恒白/恒深」，有 chart-colors/contrast 测试锁）——FocusTimelineChart 全部取色走此层，暗色下不随动；② KPI 域内 TrendSpark 先例另走 `var(--c-primary)` CSS 变量（暗色自动跟随）；③ ov2 echarts 走 `getChartTheme(resolvedTheme)` 运行时切换。【断言·代码推理】归一组件主题最优路线=CSS 变量（TrendSpark 先例、暗色免费、SVG 原生支持）；chartColors 常量色在 SVG 用亦有对比度保证但暗色不随动——归一时须选定一层写进组件契约，这是探索 #1「风险」段两套主题机制条目的细化收窄。
 
+### 探索 #4（2026-10-26 晚，前置满足确认）
+
+- 【事实】PR #2611（#2595 刀3 终刀）已 MERGED（11 项 CI 全绿）；issue #2595 CLOSED(COMPLETED)。main 推进至 **c54004cc6**（同日 #2612/#2613 一并合入）。
+- 【事实】基线复核通过：`src/shared/focus/` 六文件含 VcrMatrixPanel 入位；FocusAuxiliary 矩阵页签接线定稿（matrix 页签 @138/145，与 k3 分支预览一致）；**三套趋势图零漂移**（53bcb145e..c54004cc6 对 kpiFocus/、pivot/TrendChart.tsx、FocusAxesCharts.tsx、EChartContainer.tsx diff 为空）。
+- 前置时机成熟，探索阶段收口；转正 AUQ 三分叉发起（③ 并入与否／tooltip 形态／主题层——注意 #2595 基座新先例 VcrMatrixPanel 用 chartColors 常量，与 TrendSpark 的 CSS 变量先例构成主题层分叉的两个对立锚）。
+
 ### 探索 #3（2026-10-26 晚，#2595 落地进展触发的基线复核）
 
 探查锚更新：origin/main 53bcb145e → **fda7d79d7**（同日 5 个合并）；#2595 刀2 已合（PR #2601，阈值 byPage 78/83/88 注册表登记 CX-ADR-8a818f）、**刀3 终刀在途**（PR #2611 开放，`origin/i/2595-k3`）。
