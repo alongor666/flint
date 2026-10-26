@@ -62,6 +62,15 @@ owner 追问「echarts svg renderer 是否更佳选择、值得信任吗」。�
 - 【事实】死态两条竞争病理：H1 渲染器层 canvas 补建缺陷（svg renderer 可救）；H2 封装层 async init × dispose 交错 × size-sensor 0 容器失灵（svg renderer 同死——0×0 画布无人触发重画，换渲染器只换受害者）。头注「zrender 永不补建 canvas」是症状观察非根因隔离；结合四轮修复失败与封装层竞态面，H2 先验更高。
 - 【断言·代码推理】`renderer:'svg'` 定位为「30 分钟三臂实验可裁决的假设」而非可信方案：臂1 canvas 复现 / 臂2 svg（H1 检验）/ 臂3 svg+外层 ResizeObserver 手动 resize（H2 检验）。臂2 活→H1 成立候选转正；臂2 死臂3 活→根因在监听层，正解是 EChartContainer 包 ResizeObserver（修好后 KPI 域禁令原始理由消失）；臂3 也死→SVG 自绘彻底封案。验证通过也仅在 019 重写承载窗口有采用时机，KPI 域已稳定三件 SVG 无回迁理由（撤销域禁令是治理成本，收益仅富 tooltip）。
 
+## 探索 #2
+
+探查锚同 #1（chexian-api @ 53bcb145e，2026-10-26）。四项增量：
+
+- **#2595 对本卡目标的影响面【事实】**：读 #2595 issue 全文——刀三组件清单为「象限图/哑铃≤3 自动切/五块一页/吸顶 Tab+scroll-spy/联动表/业务员下钻」，**未列时间趋势折线承载**；且原型目录 `design-handoff/vcr-matrix-prototype-20261026/` 尚未入 origin/main（`git ls-tree origin/main -- design-handoff/` 无 vcr-matrix*，属 owner 本地/待入仓）。暂判：卡内「若其矩阵图承载落了共享位，本卡目标随之收窄」不触发——#2595 动 FocusAuxiliary 接线（VCR 卡聚焦内容替换）但不触碰 buildFocusTrendOption/FocusTrend 代码路径；撞写面=同文件并行政动，串行约束维持。终判以原型 README 裁定回执复核（issue 失效条件原文「以 README 为准」）。
+- **chartKey 非死态防御【事实】**：`src/widgets/charts/zoomAwareChart.tsx` 实现+头注——`chartKey` 只随页面缩放档变化（`zf-${factor}`，2026-09-19 评审 R1 的 canvas 位图密度补偿），与切卡/换容器内容无关、不触发 remount。ov2 侧经 EChartContainer 无任何已知死态防御层。
+- **ov2 域死态零报告（两法零命中）**：a) issue 三组关键词（overview-v2 图表空白/聚焦 死态/ov2 趋势）搜索无报告；b) FocusAuxiliary.tsx 全史 12 提交（#2290→#2576）无死态/空白修复提交。结论【断言·代码推理】：ov2 同栈（echarts-for-react/lib/core）同场景（`FocusAuxiliary.tsx:125` view 条件渲染换内容）风险敞口与 KPI 先例同构，「未爆」归因使用频率低而非免疫——019 归一动机从「防患」坐实为「还债」。
+- **主题机制实为三层混用【事实】**：① `chartColors` 为编译期 hex 常量语义板（`src/shared/styles/index.ts:442` 起；canvasNeutral 注释明言「明暗恒白/恒深」，有 chart-colors/contrast 测试锁）——FocusTimelineChart 全部取色走此层，暗色下不随动；② KPI 域内 TrendSpark 先例另走 `var(--c-primary)` CSS 变量（暗色自动跟随）；③ ov2 echarts 走 `getChartTheme(resolvedTheme)` 运行时切换。【断言·代码推理】归一组件主题最优路线=CSS 变量（TrendSpark 先例、暗色免费、SVG 原生支持）；chartColors 常量色在 SVG 用亦有对比度保证但暗色不随动——归一时须选定一层写进组件契约，这是探索 #1「风险」段两套主题机制条目的细化收窄。
+
 ## 开工记录
 
 （无）
