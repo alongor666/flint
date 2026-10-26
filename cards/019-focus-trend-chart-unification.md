@@ -1,6 +1,6 @@
 # 019 · 聚焦趋势图三套实现归一（新版 echarts 私有／KPI SVG 私有／业绩透视 TrendChart）
 
-- 状态: discussed
+- 状态: scouted（已转正 issue [#2619](https://github.com/alongor666/chexian-api/issues/2619)，P3 择机待开工）
 - 目标仓: chexian-api（依据：三套实现均在该仓前端）
 - 类型: 优化（承载归一重构，行为不变优先）
 - 录入: 2026-10-26
@@ -13,6 +13,7 @@ owner 2026-10-26（chexian-api 协调会话，对「工单 B（聚焦视图复�
 
 - Q1 工单 B 如何重裁 选项: A 撤 B、原则并入 #2595（推荐）/ B 收窄为趋势图归一 / C 保持原卡串行其后 / D 彻底撤销 → **owner 答: A**（2026-10-26）。本卡即 A 项「趋势图三套归一另立小项择机」的载体；按 chexian-api 根 AGENTS.md「灵感先进卡、转正才建 issue」纪律先录卡。
 - 先探可定：目标仓 chexian-api；类型 优化/重构；优先级 P3（选项原文「择机」）。
+- Q（转正 AUQ，2026-10-26 晚，前置 #2595 合并后发起）四问全采推荐：① pivot TrendChart **不并入**（聚焦域内归一，透视域留原地）；② 悬停精读＝素 `<title>`＋既有逐月数据表；③ 取色层＝chartColors 常量（与 VcrMatrixPanel 基座先例一致）；④ **现在建 issue**——已转正 [chexian-api#2619](https://github.com/alongor666/chexian-api/issues/2619)（type/tech-debt＋area/frontend）。
 
 ## 讨论
 
