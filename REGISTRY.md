@@ -18,3 +18,5 @@
 | [014](cards/014-sidebar-accordion-default-landing-v2.md) | building | chexian-api | 开工（10-25）：手风琴段 issue #2572→PR #2574 双闸过+CI 全绿可合并就绪待 owner；闸①三轮（机制锁重定位裁定）+独立评审 APPROVE+闸②亲评+rebase 1c9e202c0；落点段挂起（体检融合未立项） | 2026-10-24 |
 | [015](cards/015-ov2-focus-absorb-kpi-focus-capabilities.md) | shipped | chexian-api | PR #2576 已合并上线（issue #2568；双闸全过+评审 8 findings 全修）；附产存量回归 #2577（KPI 三卡客群轴万元错标）待裁 | 2026-10-25 |
 | [016](cards/016-updates-entry-demotion.md) | clarifying | chexian-api | 前日更新/历史更新入口降权（主要用户是数据分析者，更新日志非核心）；形态 AUQ 两问待答 | 2026-10-24 |
+| [017](cards/017-hunch-domain-navigation-user-journeys.md) | scouted | chexian-api | G1/G2/G3 已裁定；实施规划 v1 已补入口/权限/通知/写集/验收，G4—G8 单列，暂不实施 | 2026-10-26 |
+| [018](cards/018-prod-jwt-secret-weak-value-hardening.md) | discussed | chexian-api | 生产 JWT 密钥弱值治理——换强密钥＋启动闸「长度≥48+弱值字典」升级（成因与修法已探明） | 2026-10-26 |
