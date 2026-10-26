@@ -16,5 +16,5 @@
 | [012](cards/012-qv-upload-checklist-policy-support.md) | scouted | quote-vision | 开工（10-25 并行）：线2=PR-② 清单 UX+doc_kind+PII 双闸 | 2026-10-24 |
 | [013](cards/013-qv-compare-page-3-section-redesign.md) | building | quote-vision | 开工（10-25）：PR #46 独立评审 NO-GO（P0 系数兜底白屏等）→ 全处置、CI 绿、e2e 24/24；待 owner UI 预览表态+合并授权 | 2026-10-24 |
 | [014](cards/014-sidebar-accordion-default-landing-v2.md) | building | chexian-api | 开工（10-25）：手风琴段 issue #2572→PR #2574 双闸过+CI 全绿可合并就绪待 owner；闸①三轮（机制锁重定位裁定）+独立评审 APPROVE+闸②亲评+rebase 1c9e202c0；落点段挂起（体检融合未立项） | 2026-10-24 |
-| [015](cards/015-ov2-focus-absorb-kpi-focus-capabilities.md) | scouted | chexian-api | 探索 #1-#3 完＋七裁定齐（main@e86f4e9d：#2513 已合并、迁移面收窄为两轴+标注增强、一刀挂 #2274；Q5 同伴卡+板块页链接／Q6 并入趋势页签／Q7 03 单位轴先降级）；**随时可转正** | 2026-10-25 |
+| [015](cards/015-ov2-focus-absorb-kpi-focus-capabilities.md) | shipped | chexian-api | PR #2576 已合并上线（issue #2568；双闸全过+评审 8 findings 全修）；附产存量回归 #2577（KPI 三卡客群轴万元错标）待裁 | 2026-10-25 |
 | [016](cards/016-updates-entry-demotion.md) | clarifying | chexian-api | 前日更新/历史更新入口降权（主要用户是数据分析者，更新日志非核心）；形态 AUQ 两问待答 | 2026-10-24 |
