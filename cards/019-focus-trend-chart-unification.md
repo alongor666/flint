@@ -87,6 +87,12 @@ owner 追问「echarts svg renderer 是否更佳选择、值得信任吗」。�
 - 【断言·代码推理】聚焦域共享基座的事实技术栈已被两点钉死为 SVG：轴族（FocusAxesCharts，#2576）＋矩阵（VcrMatrixPanel，#2595 刀3，组件级「禁引 echarts」约束）。本卡选型从探索 #1 的「证据倾向 SVG」**升格为「基座既定 SVG」**——echarts 路线若坚持须同时翻 KPI 域禁令与共享基座组件级约束两案，AUQ 不再把「以哪套为基」列分叉；`renderer:'svg'` 三臂实验仅剩翻案检验价值。
 - 剩余动作（按序）：① 等 PR #2611 合并（前置满足）；② 合并后基线复核（fetch 重扫 FocusAuxiliary 接线定稿形态＋三套趋势图无漂移＋防撞车重扫）；③ 转正 AUQ——分叉已收窄为三小项：③ pivot TrendChart 是否并入（域界）、ov2 换 SVG 后 tooltip 形态（素 title vs 自绘富提示）、主题层选 CSS 变量还是 chartColors 常量（探索 #2 倾向前者）；④ owner 拍板后建 issue（工作项住 issue 树纪律）→ P3 择机开工。
 
+### 探索 #5（2026-10-27，开工前基线复核）
+
+- 【事实】main 推进至 **5e3d98324**（11 提交：#2614/#2616/#2617/#2618——vcr-matrix 阈值链收尾刀「byPage 退役改 byBranch＋右闭边界」、ETL 三件），**开放 PR 队列清空**。
+- 【事实】019 写集五块（FocusAuxiliary/kpiFocus/pivot TrendChart/shared/focus 趋势面/EChartContainer＋styles）对 c54004cc6 **零漂移**；唯一 shared/focus 变化＝VcrMatrixPanel ⓘ 说明层 6 行文案勘误（阈值区间边界表述），非趋势承载、不在写集。
+- 结论：issue #2619 失效条件未触发，基线复核通过，随时可「开工 019」；锚点刷新 5e3d98324（2026-10-27）。
+
 ## 开工记录
 
 （无）
