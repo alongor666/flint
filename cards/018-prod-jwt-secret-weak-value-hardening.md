@@ -1,6 +1,6 @@
 # 018 · 生产 JWT 签名密钥弱值治理（换强密钥＋启动闸强度升级）
 
-- 状态: building（2026-10-26 owner 下令开工；对锚 origin/main 198e818a7，较探索#3 锚 53bcb145e 漂移 12 提交全属 hunch 域与 merge，env.ts:43-45 / server/.env.example:6 / config 测试目录 / #1303 未合入四处关键事实零漂移，免重探）
+- 状态: shipped（2026-10-26 22:19 owner 合并 PR #2607、issue #2605 自动关闭；同晚 23:07 生产换强值+23:37 重启、新闸随部署上线，10-27 晨复核健康 8h。终态详见开工记录末条）（2026-10-26 owner 下令开工；对锚 origin/main 198e818a7，较探索#3 锚 53bcb145e 漂移 12 提交全属 hunch 域与 merge，env.ts:43-45 / server/.env.example:6 / config 测试目录 / #1303 未合入四处关键事实零漂移，免重探）
 - 目标仓: chexian-api（先探可定：隐患全部事实在该仓生产环境与 `server/src/config/env.ts` 实证）
 - 类型: 安全加固
 - 录入: 2026-10-26
@@ -99,3 +99,8 @@ owner 追问链：密钥为何不从 PAT 派生 → 「部署时自动生成」�
   - PR [#2607](https://github.com/alongor666/chexian-api/pull/2607)（Closes #2605；评审锚 [#issuecomment-6414491634](https://github.com/alongor666/chexian-api/pull/2607#issuecomment-6414491634)）：CI 9/9 绿——首轮 Unit Tests 21m25s 撞 `production-gate.yml:451` 的 20 分钟超时被取消（自托管 runner 同机并发 + 本地同时段评审会话争抢，非断言红），`gh run rerun --failed` 后 12m11s 过；mergeState CLEAN，落后 main 1 提交（#2609）零交集，按目标仓 CX-ADR-d3f180 非 strict 不同步。
   - 运维三动作待 owner 随合并部署窗口：换强值 `openssl rand -base64 64`、`JWT_REFRESH_EXPIRES_IN=12h`、wrapper restart。
   - 事故留痕：PR 正文曾被 sed 多字节替换失败→空串喂 `gh pr edit --body` 清空，已 heredoc 完整重写恢复。
+- 2026-10-27 晨终态复核（**shipped**）：
+  - **PR #2607 owner 已于 10-26 22:19 合并**（mergedAt 14:19:24Z），issue #2605 自动关闭（CLOSED）。22:51 那轮 Production Gate 被取消——新闸代码未在旧弱值期启动，无拦停窗口。
+  - **运维三动作之 1、3 已由 owner（或其另一会话）于 10-26 晚完成，非本会话执行**（时间线证据：`.env` mtime 23:07:05 + 备份 `.env.bak-jwt-20261026-230705`（cp -p 保留源时间 17:35）；23:33 deploy success；23:37:54 进程重启）。现值经无回传值探针定性：88 字符纯 base64、解码 64 字节、可打印率 0.38、唯一字符 53 —— **随机 512-bit，非编码文本**；全部 16 个历史备份的旧值均为 32 字符（<64，新闸可拦——「先合并会拦停」的告警对旧值成立，owner 以「先换值再让部署落地」的正确顺序执行避开）。线上 `dist/config/env.js` 含 `JWT_SECRET_MIN_LENGTH`（部署只发 dist，src 无符号属正常）。健康 200、日志无 [env] 报错、稳定 8h。
+  - **三动作之 2（`JWT_REFRESH_EXPIRES_IN=12h`）未做**：.env 无此键，refresh 仍默认 7d 滑动（另发现生产 `JWT_EXPIRES_IN=24h` 覆盖了代码默认 4h）。「会话不过夜」未落地——属可选动作，执行者刻意未设，是否补设待 owner 裁定；补设=生产 .env 加一行+wrapper restart（会再踢一次在线会话）。
+  - 本会话在授权后实际执行的部分：VPS 只读探针（键长/字符集/解码统计/时间线/健康检查，全程不回传值），未改任何生产状态——到达时轮换与重启均已完成。
