@@ -95,4 +95,9 @@ owner 追问「echarts svg renderer 是否更佳选择、值得信任吗」。�
 
 ## 开工记录
 
-（无）
+- 2026-10-27 开工（本日完成探索#4/#5 基线复核后 owner 下令）。issue [#2619](https://github.com/alongor666/chexian-api/issues/2619) → **PR [#2628](https://github.com/alongor666/chexian-api/pull/2628)**（worktree `chexian-api-wt-2619` 分支 `i/2619`，基线 5e3d98324）。
+- 闸① DSH·GLM5.3（strong 冒烟自报 glm-5.3）三轮：R1 REQUEST_CHANGES（1P0/5P1/4P2/3P3——P0=ov2 既有趋势单测 interaction.test 被规划漏列）→ v2；R2 REQUEST_CHANGES（1P1/3P2/6P3——P1=断言迁移示例性列举致覆盖净损失）→ v3；R3 终审 APPROVE（余 5×P3 并入 v3.1）。规划 `docs/plans/2026-10-27-focus-trend-chart-unification-plan.md` v3.2 随 PR 入库。
+- 实施 S1-S7（13 文件 +690/−251）：新增 `shared/focus/FocusTrendChart`（L1 绘制件）+`shared/hooks/useElementWidth` 上提（kpiFocus re-export）；KPI FocusTimelineChart 收敛口径映射壳（**3 用例零改动仍绿**）；ov2 FocusTrend+06 附线换承载（buildFocusTrendOption 删、echarts imports 清零）；interaction.test 趋势组断言意图逐条迁 DOM（无净损失）；focus-axes 悬空 mock 删；INDEX 两处登记。
+- 独立评审（DSH strong，非作者）：P0×0/**P1×1**/P2×2/P3×4——P1=ov2 趋势域 `Math.min(...vals,0)` 强制含 0 与换前 scale:true 非零基语义相反（金额序列贴顶压缩 ~12 倍）。返修 `bddf8d8e4` 全处置（域改真非零基+cy 分散性锁防复发+isFinite 同构+行为差清单补录 14 项）。评审锚 PR#2628 issuecomment-6431204579。
+- 闸②主会话亲自复评返修增量：**通过**（修法与评审建议一致、padv 兜底链覆盖退化已复核、断言验算 146.6>105.6 实跑绿、清单诚实补录）。
+- 验收：typecheck 三工程绿／四目录 406 用例绿／governance exit 0／E2E CI 强制（本地缺 E2E_PASSWORD 前置）。待 CI 终态后按第 9 步停手交 owner 合并。
