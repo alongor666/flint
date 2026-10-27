@@ -1,6 +1,6 @@
 # 019 · 聚焦趋势图三套实现归一（新版 echarts 私有／KPI SVG 私有／业绩透视 TrendChart）
 
-- 状态: scouted（已转正 issue [#2619](https://github.com/alongor666/chexian-api/issues/2619)，P3 择机待开工）
+- 状态: building（2026-10-27 开工，issue [#2619](https://github.com/alongor666/chexian-api/issues/2619)）
 - 目标仓: chexian-api（依据：三套实现均在该仓前端）
 - 类型: 优化（承载归一重构，行为不变优先）
 - 录入: 2026-10-26
