@@ -100,6 +100,7 @@ owner 追问「echarts svg renderer 是否更佳选择、值得信任吗」。�
 - 实施 S1-S7（13 文件 +690/−251）：新增 `shared/focus/FocusTrendChart`（L1 绘制件）+`shared/hooks/useElementWidth` 上提（kpiFocus re-export）；KPI FocusTimelineChart 收敛口径映射壳（**3 用例零改动仍绿**）；ov2 FocusTrend+06 附线换承载（buildFocusTrendOption 删、echarts imports 清零）；interaction.test 趋势组断言意图逐条迁 DOM（无净损失）；focus-axes 悬空 mock 删；INDEX 两处登记。
 - 独立评审（DSH strong，非作者）：P0×0/**P1×1**/P2×2/P3×4——P1=ov2 趋势域 `Math.min(...vals,0)` 强制含 0 与换前 scale:true 非零基语义相反（金额序列贴顶压缩 ~12 倍）。返修 `bddf8d8e4` 全处置（域改真非零基+cy 分散性锁防复发+isFinite 同构+行为差清单补录 14 项）。评审锚 PR#2628 issuecomment-6431204579。
 - 闸②主会话亲自复评返修增量：**通过**（修法与评审建议一致、padv 兜底链覆盖退化已复核、断言验算 146.6>105.6 实跑绿、清单诚实补录）。
-- 验收：typecheck 三工程绿／四目录 406 用例绿／governance exit 0／E2E CI 强制（本地缺 E2E_PASSWORD 前置）。待 CI 终态后按第 9 步停手交 owner 合并。
+- 验收：typecheck 三工程绿／四目录 406 用例绿／governance exit 0／E2E CI 强制（本地缺 E2E_PASSWORD 前置）。
+- **第 9 步可合并就绪（2026-10-27 10:15）**：rebase 后 CI 11 项全 pass（双 E2E shard 绿——首轮 claims spec 红在新基座 0ad655808 消失，证实基座竞争非本 PR）；MERGEABLE 无冲突、走查-可查标签、双路评审锚齐备。**停手待 owner 手合 PR #2628**（禁 auto-merge）。
 - **并行会话撞车实录（2026-10-27 上午，chexian-api 分支级）**：本会话等 CI 期间，owner 另开的 ZCode 会话对 PR #2628 做了第二路独立评审（issuecomment-6431347447，七条 findings）＋返修（commit 69d86913d）＋复审，直接 push 到 `i/2619`。本会话 rebase 到新 main（0ad655808）时完整保留其提交（cb2d3ff17），闸②增量复评通过：修本会话 S7 INDEX.md Focus 行 python replace 静默未命中、真发现第 15 项 KPI x 标签变化（「1月」vs 裸数字）、勘正第 4 项（ov2 单线无 compactHide 不砍线）、更强 y 域定向锁（低值点必落绘图区下半，变异红绿验证）、组件三小修（JSDoc/bareLineIndex 提循环外/zeroLine 越界 dev 警告）。零工作丢失，双会话返修链全保序。
 - 首轮 CI：E2E Shard 2 唯一红＝`32-workbench-claims.spec.ts:92`（赔案当年发展列头匹配，与本 PR 写集零交集）——main 基座同期同 shard 红（c611ac4d 01:18Z failure），后 #2624/#2627（含 claims 测试静稳修复 07b6c6c86）合入 main 恢复绿（0ad655808 run success）。处置＝rebase 到 0ad655808 重跑 CI（force-with-lease 推送，四目录 406 用例+governance 复验绿）。
