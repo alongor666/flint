@@ -16,7 +16,7 @@
 | [012](cards/012-qv-upload-checklist-policy-support.md) | scouted | quote-vision | 开工（10-25 并行）：线2=PR-② 清单 UX+doc_kind+PII 双闸 | 2026-10-24 |
 | [013](cards/013-qv-compare-page-3-section-redesign.md) | building | quote-vision | 开工（10-25）：PR #46 独立评审 NO-GO（P0 系数兜底白屏等）→ 全处置、CI 绿、e2e 24/24；待 owner UI 预览表态+合并授权 | 2026-10-24 |
 | [014](cards/014-sidebar-accordion-default-landing-v2.md) | building | chexian-api | 开工（10-25）：手风琴段 issue #2572→PR #2574 双闸过+CI 全绿可合并就绪待 owner；闸①三轮（机制锁重定位裁定）+独立评审 APPROVE+闸②亲评+rebase 1c9e202c0；落点段挂起（体检融合未立项） | 2026-10-24 |
-| [015](cards/015-ov2-focus-absorb-kpi-focus-capabilities.md) | shipped | chexian-api | PR #2576 已合并上线（issue #2568；双闸全过+评审 8 findings 全修）；附产存量回归 #2577（KPI 三卡客群轴万元错标）待裁 | 2026-10-25 |
+| [015](cards/015-ov2-focus-absorb-kpi-focus-capabilities.md) | shipped | chexian-api | PR #2576 已合并上线（issue #2568；双闸全过+评审 8 findings 全修）；附产 #2577 经 PR #2591 修复上生产（10-26 收口） | 2026-10-25 |
 | [016](cards/016-updates-entry-demotion.md) | scouted | chexian-api | 更新入口降权——AUQ 已裁（撤首页摘要卡留铃铛+保留红点）；探索#1 净删约 5 文件（含孤儿导出 latestUnreadDay、INDEX.md 同步），零语义副作用；随时可转正 | 2026-10-24 |
 | [017](cards/017-hunch-domain-navigation-user-journeys.md) | shipped | chexian-api | 导航及 G1—G8 已实施；PR #2602 由owner合并至198e818a7，issue #2598已关闭；双闸/独评及合并前完整CI通过，生产部署验收另核 | 2026-10-26 |
 | [018](cards/018-prod-jwt-secret-weak-value-hardening.md) | shipped | chexian-api | 生产 JWT 密钥弱值治理——**已上线**（owner 10-26 22:19 合并 PR #2607，issue #2605 关闭；同晚生产换 512-bit 强值+重启，新闸随部署生效，健康 8h 复核）；可选 `JWT_REFRESH_EXPIRES_IN=12h` 未设待裁 | 2026-10-26 |
