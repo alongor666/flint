@@ -99,3 +99,7 @@
 
 - **刀 B 完成（2026-10-27）**：闸①一轮 REQUEST_CHANGES（1×P1 null 态满环语义回归＋3×P2＋7×P3 全处置后授权直接实施）→ 实施四件（RateDonut 纯 SVG/口径 ⓘ/零白名单机检闸红转绿自证/清单行状态）→ PR **[#2659](https://github.com/alongor666/chexian-api/pull/2659)** → 独立评审 APPROVE_WITH_CHANGES（P2 清单头注自相矛盾＋4×P3 全随 PR 修）→ 闸②亲评过。**插曲（如实）**：首跑 CI E2E Shard1 红——spec 25 三段断言盯 `_echarts_instance_`（规划漏探 E2E 面），断言面迁移 `renewal-rate-donut` testid 三段原意保全后复跑**全绿＋MERGEABLE，待 owner 手合**。
 - **刀 C 已裁定待刀 B 合并后开**（收编 HeatmapFocusPanelShell）；刀 D 随后（含 InfoHint/donut 同构件上提盘点——评审 F5 登记）。
+
+- **刀 B shipped（2026-10-27 owner 07:41Z 合并 PR #2659）**；spec 25 E2E 断言面迁移随刀入库。
+- **刀 C 完成（同日）**：闸①一轮 REQUEST_CHANGES（1×P1 InfoHint 落位守 shared/focus 硬约束＋5×P2＋4×P3 全处置）→ 实施四件（fallback 换 HeatmapFocusPanelShell 镜像业绩先例/InfoHint 上提 shared/focus 消三处复刻＋车驾意新增消费/重开锁页内嵌/契约测试迁移）→ PR **[#2660](https://github.com/alongor666/chexian-api/pull/2660)**（10 文件 +195/−144）→ 独立评审 APPROVE_WITH_CHANGES（P2＝规划漏入库已补 commit＋P3×5 处置）→ 闸②亲评过 → **CI 全绿＋MERGEABLE，待 owner 手合**。#958 史实辨析入 PR 正文（当年拒的是 shared/ui/Drawer 模态壳，族壳即 #958 正解）；fallback 生产不可达披露（specialty 页恒在宿主内）。
+- **余量＝刀 D**（待 C 合并后）：#3/#4 口径注记补齐、重开锁测试名对账＋shared/focus 消费关系对账两机检、SVG donut 两处上提盘点。
