@@ -80,3 +80,9 @@
   - **[#2639](https://github.com/alongor666/chexian-api/issues/2639)** ov2 辅助栏解除固定宽——回到全站标准可拖调（type/feature＋area/frontend；方案/行为披露/验收/失效条件随 issue 入库，锚 c611ac4de）——可即刻开工，与在途 #2628 零写集重叠。
   - **[#2640](https://github.com/alongor666/chexian-api/issues/2640)** 聚焦卡内容规范统一：九处对表收敛至 shared/focus 规范（type/feature＋area/frontend；串行 #2619 合并后，矩阵行号级正本以本卡探索 #1 为引用源）。
 - 卡维持 scouted（building 待 owner「开工」令）；时点注记：转正时 PR #2628 已 CI 11 项全绿待 owner 手合（flint 7099911）。
+
+## 开工记录（2026-10-27，进行中）
+
+- **#2639 宽度小刀**：issue #2639 → worktree `chexian-api-wt-2639` 分支 `i/2639`（基线 8c5c8d614，锚复核写集零漂移，issues:claim 认领）。**闸① 两轮过**：R1 REQUEST_CHANGES（1×P1+1×P2+4×P3——P1=§4 漏 side 区间两条行为披露：ov2 加载自动展开异常列表（FocusAuxiliary.tsx:91-94 sideLayout 门）＋转主区不收起（:95-98）；P2=E2E spec 26 1280×1024 帧宽 1096 落新区间初始态变化预告；P3=:219 JSDoc 漏删/「三套」实为六套 23 处/宽度偏好全站共享键/矮窗 full 新态＋问句表）→ v2 全处置 → R2 **APPROVE**（R2-1 非阻塞 P3＝S3 窄窗示例须高≥650，已修入）。规划正本 `docs/plans/2026-10-27-ov2-aux-width-plan.md` v2+R2-1 已 commit 推送 @ i/2639 `31a36bded`。
+- **暂停点**（2026-10-27 owner 重启电脑）：闸①过、S1-S3 实施未开始（编辑区域已勘定：SidebarLayout:515-516／WorkbenchAuxiliary :218-220/:310-311/:317/:396／test :44-70）。续接：直接按规划 S1-S3 实施→§5 验证链→PR（Closes #2639，正文含 §4 行为变化全表＋ui-user-perspective 问句表）→独立评审→闸②。
+- **#2640 规范统一**：串行 #2628 owner 手合后（重启后 owner 侧动作）。
