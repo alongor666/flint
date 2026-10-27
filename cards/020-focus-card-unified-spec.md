@@ -92,3 +92,7 @@
 
 - **#2640 初刀完成（同日）**：基线复核过（九处分级 6/1/1 不变；补记勘误：行业对标/报价/续保三处均有页内嵌重开断言，无锁面实为 3/9——独立评审 P1 揪出我矩阵漏检，已如实改）→ 规划两轮闸①（R1 1×P1「横条仅限单值分布」无锚新造降待裁＋3×P2＋4×P3 → R2 APPROVE）→ 实施三产物（`开发文档/聚焦卡规范与资产清单.md` 57 行：六维规范全锚既有裁定＋九处矩阵＋收编路线刀 B/C/D＋能力边界声明；DESIGN.md §7 归宿③行；shared/INDEX 指针＋doc-entries 登记）→ PR **[#2646](https://github.com/alongor666/chexian-api/pull/2646)**（Refs，多刀制）→ 独立评审 R1 REQUEST_CHANGES（P1 重开锁覆盖面失实）→ 返修 12fcd60d8 → R2 APPROVE → 复审 P3 两处修（d292ac00e）→ 闸②亲评过 → **CI 全绿（docs-only 路径）＋MERGEABLE，待 owner 手合**。
 - **双 PR 停手点（2026-10-27）**：#2642（#2639 宽度刀）与 #2646（#2640 初刀）均闸①②过＋CI 绿＋可合并就绪待 owner。#2640 余量＝收编刀 B（续保图表收编）/C（车驾意，AUQ 待裁 fallback 处置）/D（六处口径补缺），以两 PR 合并后 main 为基线择机。
+- **#2639 shipped（2026-10-27 owner 05:42Z 合并 PR #2642，issue 自动关闭；worktree 已清）**。
+- **#2640 初刀 shipped（同日 owner 06:16Z 合并 PR #2646；规范文档三产物入 main bf4f3ae08）**。
+- **刀 C 裁定（2026-10-27 owner AUQ）**：车驾意 fallback **收编 HeatmapFocusPanelShell**（消 0 共享件状态，同刀补口径注记与重开锁）——规范清单 §五待裁项之三落定，实施时同步勾销。
+- **刀 B 启动（同日）**：续保 v2 图表收编管线开工，基线 main bf4f3ae08。
