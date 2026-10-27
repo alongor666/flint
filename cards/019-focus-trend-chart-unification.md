@@ -1,6 +1,6 @@
 # 019 · 聚焦趋势图三套实现归一（新版 echarts 私有／KPI SVG 私有／业绩透视 TrendChart）
 
-- 状态: building（2026-10-27 开工，issue [#2619](https://github.com/alongor666/chexian-api/issues/2619)）
+- 状态: shipped（2026-10-27 owner 合并 PR [#2628](https://github.com/alongor666/chexian-api/pull/2628) @956585fc9，deploy success 生产上线；issue #2619 CLOSED）
 - 目标仓: chexian-api（依据：三套实现均在该仓前端）
 - 类型: 优化（承载归一重构，行为不变优先）
 - 录入: 2026-10-26
@@ -102,5 +102,6 @@ owner 追问「echarts svg renderer 是否更佳选择、值得信任吗」。�
 - 闸②主会话亲自复评返修增量：**通过**（修法与评审建议一致、padv 兜底链覆盖退化已复核、断言验算 146.6>105.6 实跑绿、清单诚实补录）。
 - 验收：typecheck 三工程绿／四目录 406 用例绿／governance exit 0／E2E CI 强制（本地缺 E2E_PASSWORD 前置）。
 - **第 9 步可合并就绪（2026-10-27 10:15）**：rebase 后 CI 11 项全 pass（双 E2E shard 绿——首轮 claims spec 红在新基座 0ad655808 消失，证实基座竞争非本 PR）；MERGEABLE 无冲突、走查-可查标签、双路评审锚齐备。**停手待 owner 手合 PR #2628**（禁 auto-merge）。
+- **终态（2026-10-27 11:25）**：owner 合并 PR #2628（MERGED @956585fc9，03:25:37Z）→ deploy.yml 自动部署 success（03:37:44Z）生产上线；issue #2619 随 Closes 关闭（COMPLETED）。worktree `chexian-api-wt-2619` 与分支 `i/2619` 已清。周发布说明待当周（W44）收录。
 - **并行会话撞车实录（2026-10-27 上午，chexian-api 分支级）**：本会话等 CI 期间，owner 另开的 ZCode 会话对 PR #2628 做了第二路独立评审（issuecomment-6431347447，七条 findings）＋返修（commit 69d86913d）＋复审，直接 push 到 `i/2619`。本会话 rebase 到新 main（0ad655808）时完整保留其提交（cb2d3ff17），闸②增量复评通过：修本会话 S7 INDEX.md Focus 行 python replace 静默未命中、真发现第 15 项 KPI x 标签变化（「1月」vs 裸数字）、勘正第 4 项（ov2 单线无 compactHide 不砍线）、更强 y 域定向锁（低值点必落绘图区下半，变异红绿验证）、组件三小修（JSDoc/bareLineIndex 提循环外/zeroLine 越界 dev 警告）。零工作丢失，双会话返修链全保序。
 - 首轮 CI：E2E Shard 2 唯一红＝`32-workbench-claims.spec.ts:92`（赔案当年发展列头匹配，与本 PR 写集零交集）——main 基座同期同 shard 红（c611ac4d 01:18Z failure），后 #2624/#2627（含 claims 测试静稳修复 07b6c6c86）合入 main 恢复绿（0ad655808 run success）。处置＝rebase 到 0ad655808 重跑 CI（force-with-lease 推送，四目录 406 用例+governance 复验绿）。

@@ -20,5 +20,5 @@
 | [016](cards/016-updates-entry-demotion.md) | scouted | chexian-api | 更新入口降权——AUQ 已裁（撤首页摘要卡留铃铛+保留红点）；探索#1 净删约 5 文件（含孤儿导出 latestUnreadDay、INDEX.md 同步），零语义副作用；随时可转正 | 2026-10-24 |
 | [017](cards/017-hunch-domain-navigation-user-journeys.md) | shipped | chexian-api | 导航及 G1—G8 已实施；PR #2602 由owner合并至198e818a7，issue #2598已关闭；双闸/独评及合并前完整CI通过，生产部署验收另核 | 2026-10-26 |
 | [018](cards/018-prod-jwt-secret-weak-value-hardening.md) | shipped | chexian-api | 生产 JWT 密钥弱值治理——**已上线**（owner 10-26 22:19 合并 PR #2607，issue #2605 关闭；同晚生产换 512-bit 强值+重启，新闸随部署生效，健康 8h 复核）；可选 `JWT_REFRESH_EXPIRES_IN=12h` 未设待裁 | 2026-10-26 |
-| [019](cards/019-focus-trend-chart-unification.md) | scouted | chexian-api | 聚焦趋势图三套归一——已转正 issue #2619（AUQ 四裁定：pivot 不并/素 title/chartColors/即刻建 issue），P3 择机待开工；探索四轮锚 c54004cc6，选型基座既定 SVG | 2026-10-26 |
+| [019](cards/019-focus-trend-chart-unification.md) | shipped | chexian-api | PR #2628 已合并上线（@956585fc9，issue #2619；闸①三轮+双路独立评审+闸②全过，CI 11 项绿）；聚焦基座 echarts 清零，行为差 15 项清单在 PR 内规划文档 | 2026-10-27 |
 | [020](cards/020-focus-card-unified-spec.md) | building | chexian-api | 开工（10-27）：#2639 宽度小刀先行（锚复核零漂移）；#2640 规范统一串行 #2628 owner 手合后接续 | 2026-10-27 |
