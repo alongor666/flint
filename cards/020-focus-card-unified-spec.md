@@ -73,3 +73,10 @@
 
 - 宽度刀: `bun run typecheck`；`bun run test --run src/components/layout/__tests__/workbench-auxiliary.test.tsx src/features/operating-overview-v2/__tests__/`；`bun run governance`；E2E CI（26 路由矩阵走查）；人工验证＝1440 视口开聚焦面板拖调 320–560、网格 4↔2 列回流无破版。
 - 规范刀: 按 issue 细化（九处六维对照清单逐项核对＋定向三域测试），实施规划时定。
+
+## 转正记录（2026-10-27）
+
+- 探索 #1 后 owner 下令「转正 020」，按 AUQ 既有裁定（Q3/Q4：宽度小刀先行独立 issue＋两刀均独立 issue）即刻建两 issue，无新增分叉：
+  - **[#2639](https://github.com/alongor666/chexian-api/issues/2639)** ov2 辅助栏解除固定宽——回到全站标准可拖调（type/feature＋area/frontend；方案/行为披露/验收/失效条件随 issue 入库，锚 c611ac4de）——可即刻开工，与在途 #2628 零写集重叠。
+  - **[#2640](https://github.com/alongor666/chexian-api/issues/2640)** 聚焦卡内容规范统一：九处对表收敛至 shared/focus 规范（type/feature＋area/frontend；串行 #2619 合并后，矩阵行号级正本以本卡探索 #1 为引用源）。
+- 卡维持 scouted（building 待 owner「开工」令）；时点注记：转正时 PR #2628 已 CI 11 项全绿待 owner 手合（flint 7099911）。
