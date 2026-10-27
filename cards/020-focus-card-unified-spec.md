@@ -103,3 +103,7 @@
 - **刀 B shipped（2026-10-27 owner 07:41Z 合并 PR #2659）**；spec 25 E2E 断言面迁移随刀入库。
 - **刀 C 完成（同日）**：闸①一轮 REQUEST_CHANGES（1×P1 InfoHint 落位守 shared/focus 硬约束＋5×P2＋4×P3 全处置）→ 实施四件（fallback 换 HeatmapFocusPanelShell 镜像业绩先例/InfoHint 上提 shared/focus 消三处复刻＋车驾意新增消费/重开锁页内嵌/契约测试迁移）→ PR **[#2660](https://github.com/alongor666/chexian-api/pull/2660)**（10 文件 +195/−144）→ 独立评审 APPROVE_WITH_CHANGES（P2＝规划漏入库已补 commit＋P3×5 处置）→ 闸②亲评过 → **CI 全绿＋MERGEABLE，待 owner 手合**。#958 史实辨析入 PR 正文（当年拒的是 shared/ui/Drawer 模态壳，族壳即 #958 正解）；fallback 生产不可达披露（specialty 页恒在宿主内）。
 - **余量＝刀 D**（待 C 合并后）：#3/#4 口径注记补齐、重开锁测试名对账＋shared/focus 消费关系对账两机检、SVG donut 两处上提盘点。
+
+- **刀 D 收官（2026-10-27）**：闸①两轮（R1 15 findings——P1×3 全是我 ⓘ 草稿的口径事实错：系数均值实为商业险加权/车均应为件均÷保单号件数/同比基期；R2 4 findings 收窄）→ 实施五件（#3/#4 口径 ⓘ 逐句对 SSOT 核字/业绩热力页内嵌重开锁/两对账机检 spec-inventory-contract/清单收官含 donut 不上提结论/kpiFocus 豁免换锚显式 open）→ PR **[#2665](https://github.com/alongor666/chexian-api/pull/2665)**（Closes #2640，6 文件 +197/−7）→ 独立评审 **APPROVE**（零 P0-P2；ⓘ 文案逐句对源终验全成立；「Closes」终判＝验收三条全着落、残余四项全带论证）→ F1 一行修（消费方计数六）→ **CI 全绿＋MERGEABLE，待 owner 手合即 #2640 自动关闭、020 全程闭环**。
+- **变红自证插曲（如实）**：前两次变异实验不红——多现文件单点变异不改变 includes 判定，换单现锚文件（QuoteFocusCard「重开」唯一出现）才红→恢复绿，两轮教训记 PR 正文。
+- **020 终态**：#2639 shipped（#2642）；#2640 四刀＝初刀 A（#2646）/B（#2659）/C（#2660）已合＋D（#2665）就绪。九处聚焦卡全部壳内规范化（含机制壳 2），口径 ⓘ 全域覆盖，重开锁专项 2＋页内嵌 5＋豁免 1（kpiFocus 显式 open 兜底），机检 3 件（echarts.init 闸/重开锁锚对账/无孤儿消费），SSOT 清单入仓。owner 走查判断点余量＝各刀 PR 正文所列（本机无数据未跑实页）。
