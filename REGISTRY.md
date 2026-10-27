@@ -21,3 +21,4 @@
 | [017](cards/017-hunch-domain-navigation-user-journeys.md) | shipped | chexian-api | 导航及 G1—G8 已实施；PR #2602 由owner合并至198e818a7，issue #2598已关闭；双闸/独评及合并前完整CI通过，生产部署验收另核 | 2026-10-26 |
 | [018](cards/018-prod-jwt-secret-weak-value-hardening.md) | shipped | chexian-api | 生产 JWT 密钥弱值治理——**已上线**（owner 10-26 22:19 合并 PR #2607，issue #2605 关闭；同晚生产换 512-bit 强值+重启，新闸随部署生效，健康 8h 复核）；可选 `JWT_REFRESH_EXPIRES_IN=12h` 未设待裁 | 2026-10-26 |
 | [019](cards/019-focus-trend-chart-unification.md) | scouted | chexian-api | 聚焦趋势图三套归一——已转正 issue #2619（AUQ 四裁定：pivot 不并/素 title/chartColors/即刻建 issue），P3 择机待开工；探索四轮锚 c54004cc6，选型基座既定 SVG | 2026-10-26 |
+| [020](cards/020-focus-card-unified-spec.md) | discussed | chexian-api | 全站聚焦卡统一规范＋ov2 辅助栏宽度可调——AUQ 四裁定全采推荐（解固定宽/中立共享规范/宽度小刀先行/独立 issue）；两 issue 两刀待探索转正 | 2026-10-27 |
