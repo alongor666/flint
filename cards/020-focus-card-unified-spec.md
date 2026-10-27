@@ -96,3 +96,6 @@
 - **#2640 初刀 shipped（同日 owner 06:16Z 合并 PR #2646；规范文档三产物入 main bf4f3ae08）**。
 - **刀 C 裁定（2026-10-27 owner AUQ）**：车驾意 fallback **收编 HeatmapFocusPanelShell**（消 0 共享件状态，同刀补口径注记与重开锁）——规范清单 §五待裁项之三落定，实施时同步勾销。
 - **刀 B 启动（同日）**：续保 v2 图表收编管线开工，基线 main bf4f3ae08。
+
+- **刀 B 完成（2026-10-27）**：闸①一轮 REQUEST_CHANGES（1×P1 null 态满环语义回归＋3×P2＋7×P3 全处置后授权直接实施）→ 实施四件（RateDonut 纯 SVG/口径 ⓘ/零白名单机检闸红转绿自证/清单行状态）→ PR **[#2659](https://github.com/alongor666/chexian-api/pull/2659)** → 独立评审 APPROVE_WITH_CHANGES（P2 清单头注自相矛盾＋4×P3 全随 PR 修）→ 闸②亲评过。**插曲（如实）**：首跑 CI E2E Shard1 红——spec 25 三段断言盯 `_echarts_instance_`（规划漏探 E2E 面），断言面迁移 `renewal-rate-donut` testid 三段原意保全后复跑**全绿＋MERGEABLE，待 owner 手合**。
+- **刀 C 已裁定待刀 B 合并后开**（收编 HeatmapFocusPanelShell）；刀 D 随后（含 InfoHint/donut 同构件上提盘点——评审 F5 登记）。
