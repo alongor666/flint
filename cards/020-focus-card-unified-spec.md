@@ -1,6 +1,6 @@
 # 020 · 全站聚焦卡统一规范与 ov2 辅助栏宽度可调
 
-- 状态: discussed（AUQ 四问已裁，2026-10-27 全采推荐）
+- 状态: scouted（探索 #1 完成，2026-10-27，随时可转正）
 - 目标仓: chexian-api（原文明示）
 - 类型: 优化（前端承载统一＋交互补齐；先探可定）
 - 录入: 2026-10-27
@@ -34,3 +34,42 @@
 宽度小刀改动面极小（SidebarLayout 一处 fixedLayout 撤除＋ov2 核心区在 720px 基准下的八卡网格回归验证）；统一规范是大面（9 处对表→规范/组件收敛，scout 需出能力对表矩阵：页签结构/指标头/图表承载/口径注记/重开行为/窄窗呈现/筛选继承等维度）。015/019 成果均在 `src/shared/focus/`（L2 横向禁令下唯一合法共享位），中立共享规范路线有现成基座。
 
 **转正映射（AUQ 裁定后定稿）**：两 issue 两刀——①宽度小刀（独立 issue，先行，不等 #2628，写集=SidebarLayout＋ov2 布局测试）；②统一规范大刀（独立 issue，串行 #2628 合并后以新 main 为基线，shared/focus 中立基座，9 处聚焦卡对表收敛；scout 先出能力对表矩阵供实施规划）。
+
+## 探索 #1（2026-10-27）
+
+- 探查锚: chexian-api @ origin/main `c611ac4de`（同日 fetch；PR #2628 在途 OPEN，仅 Production Gate 未终）；矩阵取证含只读子代理，载荷断言已主会话抽核（见下）。
+
+### 防撞车（两法交叉验证）
+
+- 【事实】gh issue/pr 搜索「辅助栏 宽度」「fixedLayout」「聚焦 统一」零相关命中（命中项 #2619=趋势图归一、#2068=筛选器聚焦模式、#2274/#1090=ov2/壳层史诗，均非本卡）；文档域 `git grep fixedLayout origin/main -- 开发文档 docs .claude` 零命中。
+- 【事实】#1090 史诗执行规划 `docs/plans/2026-10-03-unified-auxiliary-workbench.md` 明文「1280px 不必强制底部；须测实际容器、浏览器缩放与页内表格宽度」——宽度刀与其原则**同向**非撞车；其边界表把「宽度偏好」划给布局宿主、「聚焦内容」划给页面适配器——本卡两刀均在史诗已交付壳层之外，无在途规划认领聚焦内容规范。
+- 【事实】PR #2628 文件清单（`gh pr diff 2628 --name-only`，13 文件）不含 SidebarLayout/WorkbenchAuxiliary/layout 测试——**宽度刀写集净空可先行**；但含 FocusAuxiliary.tsx 与 ov2 interaction.test——**规范刀须串行其后**。
+
+### 实施要点 · 宽度小刀
+
+- 唯一病灶: `SidebarLayout.tsx:515` 路由条件 fixedLayout（全仓唯一消费方，PR #2342 ov2 初建带入，无后续裁定锁值）。
+- 948 来历【事实】: ＝ov2 八卡网格自身 4 列容器断点 `OperatingOverviewV2Page.tsx:198` `[@container_(min-width:948px)]:grid-cols-4`——fixedLayout 语义是「并排时恒 4 列」。撤除后核心区最低 720（壳 CORE_MIN_WIDTH），560–947px 容器区间网格回落 2 列（容器查询既有设计档 index.css:470-482 族）、<560 单列——与其他页一致的回流行为。
+- 壳层行为变化【事实，WorkbenchAuxiliary.tsx:310-317/:364/:396-397，GAP=8】: side 门限 1272→1048；拖调手柄出现（320–560 钳位、localStorage 按 preferenceOwner 持久化、缺省 360）；面板宽 316→360 缺省。
+- 内容适配【事实】: FocusAuxiliary 无定宽假设（网格均 `auto_1fr` 响应式型）；VcrMatrixPanel 联动表 `min-w-[600px]`（:970）在 316 下本就横滚，加宽只更友好。
+- 死代码处置: 撤条件后 fixedLayout prop 零消费——按减法红线同 PR 删 prop（WorkbenchAuxiliary.tsx:218/:220/:310-311/:317/:396 五处简化）＋ `workbench-auxiliary.test.tsx:50` fixed 分支改写。
+- 测试面【事实】: ov2 单测直挂 WorkbenchAuxiliary 不带 fixedLayout（focus-reopen.test.tsx:3/:25、interaction.test.tsx:622 注释已是 1048 语义）——零改动；E2E 无 316/948 断言（tests/e2e grep 零命中）。
+- 行为披露（写进 PR 正文）: 1048–1271 帧宽区间从 bottom 停靠变 side 并排；典型笔记本（1440 视口−184 侧栏=1256 帧）从「bottom＋4 列网格＋聚焦全屏模态」变「side＋2 列网格＋并排聚焦」——即裁定方向本身，但需在 PR 明示防走查意外。
+
+### 实施要点 · 统一规范大刀（能力对表矩阵结论）
+
+九处分级（A 宿主/B 内容/C 口径/D 重开/E 筛选/F 共享件六维全查，行号级矩阵在探索记录，主会话抽核三处载荷断言实证）：
+
+- 【事实】**6 处已壳内规范化**（kpiFocus 266 行、ov2 FocusAuxiliary 773 行、业绩透视 PivotFocusCard 227 行、业绩热力 HeatmapFocusPanel 226 行、行业对标 IndustryFocusCard 132 行、报价透视 FocusCard 487+323 行——均住 WorkbenchTool 且消费至少一个共享基座）；**1 处半规范化**（续保 v2 FocusCard 305 行：几何已入壳但 0 共享件，且 `:121` 手写 `echarts.init(svg)`——与报价侧 FocusCharts.tsx:15 头注纪律「EChartContainer 为 L1 唯一实现、禁手写 echarts.init」直接冲突）；**1 处域内私有**（车驾意 CrossSellHeatmapFocusPanel 211 行：fallback 自造 overlay `:95-99`，0 共享件消费）。
+- 四维分歧度排序【断言·代码推理】（统一收益高→低）: ①**图表承载四栈并存**（SVG 自绘/EChartContainer/HTML 横条/手写 init）——#2628 合并后聚焦趋势图已收敛 SVG 家族，剩余处置面=报价 echarts 三图（复杂图合法栈）与续保手写 donut（违纪）；②**口径注记**——infoText ⓘ 气泡＋FOCUS_NO_AXIS_NOTE 诚实降级模式仅 KPI 族与 ov2 落地，业绩透视/热力/车驾意/续保四处裸奔；③**指标头五型并存**（主值大字+档位章/chip 网格/dl 事实表/指标卡网格/主值+灯+摘要）；④**重开行为三模式**（selectionKey 自动/显式 open/宿主持 tab）且回归锁测试仅 ov2 与业绩透视有专项（interaction.test/pivotFocusReopen.test）。
+- 宿主接线维度已基本收敛（7/9 入 WorkbenchTool，唯二特例均有实证理由：ov2 `narrowPresentation="modal"` 有 E2E 顶栏拦截实证、续保工具注册上移宿主）——**大刀主战场在内容层四维，非壳层**。
+- 壳关系定论【事实】: PivotFocusShell（3 消费方：业绩透视/行业对标/报价）与 HeatmapFocusPanelShell（2 消费方：业绩热力/金融同业）是「无宿主 fallback 保底壳」，与 WorkbenchAuxiliary 平行互补、互斥渲染（`if (auxiliary) WorkbenchTool else Shell` 统一写法）——统一规范落位＝shared/focus 内容件族＋规范文档，不动两 fallback 壳机制。
+- 基线串行: 规范刀以 #2628 合并后 main 为基线（FocusAuxiliary 趋势承载 echarts→SVG 换装在途）。
+
+### 转正映射建议（细化 AUQ 裁定）
+
+2 issues：①**宽度小刀**（type/feature＋area/frontend，即刻可建可开工；写集 3 文件：SidebarLayout/WorkbenchAuxiliary/其测试，零在途冲突）；②**聚焦卡统一规范**（type/feature＋area/frontend，串行 #2628 合并后转正；初刀＝规范文档落位（DESIGN.md §7 新增聚焦卡行或 shared/focus 规范文档）＋九处差距清单，收编刀按体量拆 PR——续保 v2（图表承载收编+口径注记补齐）与车驾意（fallback 壳收编 HeatmapFocusPanelShell 或声明例外）两块最大）。
+
+### 验收
+
+- 宽度刀: `bun run typecheck`；`bun run test --run src/components/layout/__tests__/workbench-auxiliary.test.tsx src/features/operating-overview-v2/__tests__/`；`bun run governance`；E2E CI（26 路由矩阵走查）；人工验证＝1440 视口开聚焦面板拖调 320–560、网格 4↔2 列回流无破版。
+- 规范刀: 按 issue 细化（九处六维对照清单逐项核对＋定向三域测试），实施规划时定。
