@@ -24,5 +24,5 @@
 | [020](cards/020-focus-card-unified-spec.md) | shipped | chexian-api | 全站聚焦卡统一规范＋ov2 宽度可调——五 PR 全合并（#2642/#2646/#2659/#2660/#2665），双 issue CLOSED；九处全壳内规范化、口径 ⓘ 全域、机检 3 件 | 2026-10-27 |
 | [021](cards/021-health-check-navigation-status-trend.md) | building | chexian-api | [#2694](https://github.com/alongor666/chexian-api/issues/2694) → [PR #2700](https://github.com/alongor666/chexian-api/pull/2700)；规划/实施及修复复审通过，本地实测及同头CI通过，可合并就绪；待owner合并 | 2026-10-28 |
 | [022](cards/022-loop-whiteboard-merge-system-ledger.md) | building | chexian-api | 开工（10-28）：终裁甲′镜像方案（主会话误用旧卡问出甲，owner 知情重申甲′）；走 build.md 标准流程 | 2026-10-28 |
-| [023](cards/023-loop-process-state-into-repo.md) | scouted | chexian-api | 探索裁定收口：任务关联＋复盘留痕＋八步进度；人工确认关联，复盘沿用该问题决策权；两顺序 PR 候选，未开工 | 2026-10-28 |
+| [023](cards/023-loop-process-state-into-repo.md) | building | chexian-api | 开工：任务关联＋复盘留痕＋八步进度；人工确认关联，复盘沿用该问题决策权；按标准流程推进 | 2026-10-28 |
 | [024](cards/024-business-rule-dictionary-governance.md) | discussed | chexian-api | 车险业务规则字典治理：编号止血、落地闭环、三址归一；四方向待讨论，与 #1066 分界待定，仅登记未开工 | 2026-10-28 |
