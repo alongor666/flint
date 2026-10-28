@@ -31,4 +31,4 @@
 | [027](cards/027-operating-overview-home-enhancement-layer.md) | building | chexian-api | 021 增强层：三板块结论＋风险句＋八卡聚焦；PR #2730 已消解已合并 #2731 冲突，增量复评、真实组合首页及新提交 CI 全绿，可合并就绪待 owner；未合并发布 | 2026-10-29 |
 | [028](cards/028-home-loop-taskflow-pill.md) | building | chexian-api | [#2724](https://github.com/alongor666/chexian-api/issues/2724) → [PR #2731](https://github.com/alongor666/chexian-api/pull/2731)：只读胶囊/八步/法定工作钟；双闸、本地验证及当前提交 CI 全绿，可合并就绪，待 owner 合并；派工归 029 | 2026-10-28 |
 
-| [029](cards/029-taskflow-dispatch-feishu-group.md) | building | chexian-api | [PR #2732](https://github.com/alongor666/chexian-api/pull/2732)；b04f33748 已合流027/028、组合制品与独立复评通过，当前头CI排队；待owner合并 | 2026-10-29 |
+| [029](cards/029-taskflow-dispatch-feishu-group.md) | shipped | chexian-api | owner授权合并 [PR #2732](https://github.com/alongor666/chexian-api/pull/2732) 至82de11a7f，#2725关闭；独评与9项CI通过，网页派工入口保留；生产配置/补列/真实群验收另核 | 2026-10-29 |
