@@ -1,6 +1,6 @@
 # 025 · 「1+2+5 战略」更名治理（实为细分目标客群简称，防误导）
 
-- 状态: scouted
+- 状态: building
 - 目标仓: chexian-api（依据：1+2+5 段口径 SSOT `server/src/config/strategy-segments.ts`、`/strategy` 路由族与战略驾驶舱 UI 均在该仓，MCP 路由描述多处引用）
 - 类型: 优化（命名治理/防误导）
 - 录入: 2026-10-28
