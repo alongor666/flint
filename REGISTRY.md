@@ -26,4 +26,4 @@
 | [022](cards/022-loop-whiteboard-merge-system-ledger.md) | shipped | chexian-api | [PR #2705](https://github.com/alongor666/chexian-api/pull/2705) 已授权合并并部署（b131d495b）；两项初始化缺陷已修复，独评/闸②及主干检查通过，线上只读核验通过；镜像现场启用与真实任务联合验收未执行 | 2026-10-28 |
 | [023](cards/023-loop-process-state-into-repo.md) | shipped | chexian-api | [PR #2709](https://github.com/alongor666/chexian-api/pull/2709) 已授权合并（7820051c2），最终联合部署为b131d495b；主干/部署成功，发布指纹/进程/只读业务查询核验通过；真实任务新写及现场联合验收未执行 | 2026-10-28 |
 | [024](cards/024-business-rule-dictionary-governance.md) | building | chexian-api | 可合并就绪：#2707 → [PR #2708](https://github.com/alongor666/chexian-api/pull/2708)；编号/证据索引/枚举同源，双闸与最终 CI 通过；全文重排后置，待 owner 合并 | 2026-10-28 |
-| [025](cards/025-125-strategy-rename.md) | scouted | chexian-api | 已探索@b131d495b：「战略」1048 处/242 文件，人读面 ≈208（服务端51+前端71+测试联动67+机检4+活文档15），历史38不动；防撞车净；映射表+3 PR 拆法就绪，驾驶舱页面名 needs:owner | 2026-10-28 |
+| [025](cards/025-125-strategy-rename.md) | scouted | chexian-api | 已探索@b131d495b：「战略」1048 处/242 文件，人读面 ≈208（服务端51+前端71+测试联动67+机检4+活文档15），历史38不动；防撞车净；映射表+3 PR 拆法就绪；驾驶舱页面名与日报板块名 owner 裁定均为「1+2+5 客群」（无驾驶舱），分叉清零 | 2026-10-28 |
