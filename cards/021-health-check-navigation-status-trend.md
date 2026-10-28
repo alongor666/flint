@@ -1,6 +1,6 @@
 # 021 · 导航命名与经营体检状态、趋势统一
 
-- 状态: building（owner 2026-10-28「开工021」；可合并就绪，待owner合并）
+- 状态: building（owner 2026-10-28「开工021」；主干冲突已消解，同步提交CI核验中）
 - 目标仓: chexian-api（先探已定：repos.md 路由及现有导航、经营体检术语）
 - 类型: 优化（导航信息架构与展示口径统一）
 - 录入: 2026-10-28
@@ -54,11 +54,12 @@
 
 - 2026-10-28：owner「开工021」，进入目标仓实施；独立 worktree，止于可合并就绪，合并由 owner 执行。
 - 【事实·静态复核】重新 fetch 后目标锚为 `ccec01651fc717609615be04571037d482fc3a82`；相对探索锚，导航/体检核心文件无变化；行业装载、业务字典等周边已变化，实施前增量核实。验收与评审尚未执行。
-- 转正：[issue #2694](https://github.com/alongor666/chexian-api/issues/2694) → [PR #2700](https://github.com/alongor666/chexian-api/pull/2700)，目标分支 `i/2694`；当前实现头 `c005d5005572dbf8f727218d9939f4064fcdd62b`，未合并。
-- 【事实·评审与实测】规划经 DSH·GLM5.3 最高档 APPROVE；实施独评发现不兼容日期窗比较与成本估值说明不可见两项，已修复并独立复审 APPROVE，主会话亲审修复。定向测试、真实 DuckDB、类型检查与治理通过；两省本地接口 200 非空，行业原子对拍及浏览器/窄屏走查留在 PR。同头CI已通过，可合并就绪；未合并，不记 shipped。
+- 转正：[issue #2694](https://github.com/alongor666/chexian-api/issues/2694) → [PR #2700](https://github.com/alongor666/chexian-api/pull/2700)，目标分支 `i/2694`；当前实现头 `7add14365198e9f97c53d1796cf77553d8537e3e`，未合并。
+- 【事实·评审与实测】规划经 DSH·GLM5.3 最高档 APPROVE；实施独评发现不兼容日期窗比较与成本估值说明不可见两项，已修复并独立复审 APPROVE，主会话亲审修复。定向测试、真实 DuckDB、类型检查与治理通过；两省本地接口 200 非空，行业原子对拍及浏览器/窄屏走查留在 PR。前一头CI已通过；同步主干后的CI另行核验，未合并，不记 shipped。
 - 【结果边界】缺日期窗、未来预起保锚等不兼容当前值保留、趋势明确不可比；成本按当前快照重算并可见披露；行业历史缺年初/缺维度/缺单元时不可判，不以起保补位或部分月份冒充签单年度。生产部署与生产业务验收 NOT RUN，owner 合并后续核发布链。
 - 【事实·CI返修】前一提交全量单测暴露旧导航搜索断言与全仓扫描计数漏项；同步名称并补页名匹配反例，五处取数降级补显式日志。逐文件确认净增5个候选、0个无日志候选，只同步总候选上限，扫描判据/范围及无日志上限不变。最终增量独评及主会话亲审 APPROVE（[记录](https://github.com/alongor666/chexian-api/pull/2700#issuecomment-6463307527)），相关58项测试、8项真实DuckDB集成及三工程类型检查通过。
-- 【事实·最终CI】最终头 `c005d5005572dbf8f727218d9939f4064fcdd62b`：[Production Gate](https://github.com/alongor666/chexian-api/actions/runs/40649887449) 全量单测、两E2E分片、代码契约、类型/构建/集成/Python及汇总均成功；[Secret Scan](https://github.com/alongor666/chexian-api/actions/runs/40649887486) 首轮checkout超时，原头重跑后成功。E2E第二分片理赔工作台既有用例重试1次后通过，波动见PR正文。最终远端状态OPEN、非draft、MERGEABLE/CLEAN、未开启auto-merge；交付owner合并。
+- 【事实·首轮交付CI】前一头 `c005d5005572dbf8f727218d9939f4064fcdd62b`：[Production Gate](https://github.com/alongor666/chexian-api/actions/runs/40649887449) 全量单测、两E2E分片、代码契约、类型/构建/集成/Python及汇总均成功；[Secret Scan](https://github.com/alongor666/chexian-api/actions/runs/40649887486) 首轮checkout超时，原头重跑后成功。E2E第二分片理赔工作台既有用例重试1次后通过，波动见PR正文。当时远端状态OPEN、非draft、MERGEABLE/CLEAN、未开启auto-merge；交付owner合并。
+- 【事实·主干冲突消解】owner指出冲突后，fetch核实主干 `8495fe6398eb596de650cc96f4830fde60e5c3c4` 已含016的PR #2701；仅首页组合发生内容冲突。以合并提交 `7add14365198e9f97c53d1796cf77553d8537e3e` 保留两边结果：更新摘要移出首页，系数仅在监管红线中渲染一次，不改写既有提交。冲突增量独评及主会话亲审通过（[记录](https://github.com/alongor666/chexian-api/pull/2700#issuecomment-6463898403)）；本地4文件73项测试、三工程类型检查、治理通过。远端已MERGEABLE；新头[Production Gate](https://github.com/alongor666/chexian-api/actions/runs/40654249744) 待终态，[Secret Scan](https://github.com/alongor666/chexian-api/actions/runs/40654249896) 成功，旧头全绿不替代新头证据。
 
 ## 探索 #1（2026-10-28）
 
