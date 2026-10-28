@@ -1,6 +1,6 @@
 # 024 · 车险业务规则字典治理：编号止血、落地闭环、三址归一
 
-- 状态: building
+- 状态: shipped
 - 目标仓: chexian-api
 - 类型: 优化（规则字典治理讨论）
 - 录入: 2026-10-28
@@ -131,3 +131,10 @@ owner 本轮原话：「先讨论 024：只读核实与 #1066 的分界，再给
 - 本地验证（上述实施锚）：定向测试与完整治理通过；独立反例涵盖后续裁定改写/删除/插前、main 多提交前置基线、非法标题及缩进等形态。原字典全文（去除新增标记/维护段）及历史实体指纹与 main 一致；无生产/Mini 验收。
 - 首轮远端单测曾因扫描候选量上限失败；逐文件复算确认增量来自新治理入口的有日志失败出口，按既有机制登记审计及精确计数，扫描判据/范围和无日志上限保持。原失败及复现证据见 [PR 返修记录](https://github.com/alongor666/chexian-api/pull/2708#issuecomment-6465008272)；不以重跑掩盖该次失败。
 - 远端检查：上述实施锚的 [Production Gate](https://github.com/alongor666/chexian-api/actions/runs/40661879862) 与 [Secret Scan](https://github.com/alongor666/chexian-api/actions/runs/40661879863) 均 `SUCCESS`；代码契约、类型/构建/集成/pytest、全量单测和必需聚合通过，GitGuardian 通过；E2E 按现行 PR 路径规则跳过，未冒充实跑。最终核验 PR 为 `CLEAN` / `MERGEABLE`、与 main 同步，未开启 auto-merge，详见 [最终交付核验](https://github.com/alongor666/chexian-api/pull/2708#issuecomment-6465196554)。已达可合并就绪，合并由 owner 执行；本会话不合并、不部署。
+
+### 合并收尾与完成边界（2026-10-28）
+
+- owner 告知已合并后在线核实：[PR #2708](https://github.com/alongor666/chexian-api/pull/2708) 于北京时间 2026-10-28 17:21:42 合并至 `f812de917834f149932f4d7c1f57d19e29b4e190`；[#2707](https://github.com/alongor666/chexian-api/issues/2707) 已关闭，原因 `completed`。该合并已进入当前 main，实施相关文件与最终受审版本一致。
+- 合并版本 [Production Gate](https://github.com/alongor666/chexian-api/actions/runs/40663634392) 为 `SUCCESS`。同版本 [Arch Ledger Sentinel](https://github.com/alongor666/chexian-api/actions/runs/40663634394) 的哨兵执行及台账推送成功，产物上传因 `ECONNRESET` 失败；单列为基础设施运行异常，不记为全部检查通过，也未据此扩大本卡实施范围。
+- 首期规划验收完成：编号/唯一性与历史保护、旧号兼容、工作项/证据关联视图、枚举同源及对应测试/治理/评审。按 `docs/build.md` 转 `shipped`，表示本期代码与文档交付已合并，不表示历史业务欠账全部清零或生产验收。
+- 原始长期治理目标尚有后续：存量裁定逐条核义与补验收证据；字典、章节、注册表在全部事实类型上的分批归并；全文重排与节级/全局手工版本号策略。枚举同源只是三址归一的首批切口。上述不纳入本期完成声明；#1066 的具体实现及 Mini 三日对账继续由其自身验收承接。
