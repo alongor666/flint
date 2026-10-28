@@ -22,5 +22,5 @@
 | [018](cards/018-prod-jwt-secret-weak-value-hardening.md) | shipped | chexian-api | 生产 JWT 密钥弱值治理——**已上线**（owner 10-26 22:19 合并 PR #2607，issue #2605 关闭；同晚生产换 512-bit 强值+重启，新闸随部署生效，健康 8h 复核）；可选 `JWT_REFRESH_EXPIRES_IN=12h` 未设待裁 | 2026-10-26 |
 | [019](cards/019-focus-trend-chart-unification.md) | shipped | chexian-api | PR #2628 已合并上线（@956585fc9，issue #2619；闸①三轮+双路独立评审+闸②全过，CI 11 项绿）；聚焦基座 echarts 清零，行为差 15 项清单在 PR 内规划文档 | 2026-10-27 |
 | [020](cards/020-focus-card-unified-spec.md) | shipped | chexian-api | 全站聚焦卡统一规范＋ov2 宽度可调——五 PR 全合并（#2642/#2646/#2659/#2660/#2665），双 issue CLOSED；九处全壳内规范化、口径 ⓘ 全域、机检 3 件 | 2026-10-27 |
-| [021](cards/021-health-check-navigation-status-trend.md) | scouted | chexian-api | 探索#1-#3 全裁定（Q2-Q7）：系数二态、上月末趋势、增速红线=链路A+先不亮灯+双展示+月内同日进度折算；方案就绪未实施，上限数值后裁 | 2026-10-28 |
+| [021](cards/021-health-check-navigation-status-trend.md) | scouted | chexian-api | 探索#1-#4 全裁定（Q2-Q11）：系数二态、上月末趋势、增速红线红绿灯=对标增速差分省分对象独立亮灯（SX低风险4pt/车险6pt、SC燃非营个客/车险0pt，年度月度各一盏）；Q10/Q11 原话解读开工复核 | 2026-10-28 |
 | [022](cards/022-loop-whiteboard-merge-system-ledger.md) | discussed | chexian-api | 探索#1：PR #2679 已合并（4edbbe413）→ 甲＝新 PR 修 main §1.3（≤2 文件文档级，锚 ccec01651）；R1 甲/乙终选、R2 画板加注、R3 空表处置待裁 | 2026-10-28 |
