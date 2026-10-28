@@ -123,3 +123,16 @@
 ## 开工记录
 
 - 2026-10-28：issue [#2711](https://github.com/alongor666/chexian-api/issues/2711)（映射表 SSOT v3）；分支 `i/2711`（已 claim）；闸①两轮——一轮 REQUEST_CHANGES（R1-R8：判据互斥/映射表漏 164 行表外/镜像锁归属错置等，5 处关键证据抽验全坐实）→ issue v2 修订 → 二轮 **APPROVE**（R1-R8 闭环、无新 P1/P2；N1-N5 勘误已收敛：N1 四行「老标签」记述按引语类保留）。dry-run 实证：sed 全局替换会击穿引语行与路径指针行，实施用 python 行级管线（白名单行保护+前置形态特判）。
+
+
+## 开工记录（续）
+
+- 三 PR 已开并完成独立评审返修（双路：DSH·GLM5.3 + 编排子代理，CX-ADR-035 现行口径）：
+  - PR-1 [#2716](https://github.com/alongor666/chexian-api/pull/2716)（服务端 85 文件）
+  - PR-2 [#2717](https://github.com/alongor666/chexian-api/pull/2717)（前端 101 文件）
+  - PR-3 [#2718](https://github.com/alongor666/chexian-api/pull/2718)（活文档 15 文件）
+- 独立评审 findings（两路合并裁定）：F1 历史路径引用断链 13 处（行级白名单枚举不完备的教训：dry-run 只保护了 1 处同型指针）、伪词「非目标客群外」3 处、历史 label 引用 3 处按 N1 处置、复份 5 文件摘除、client-contracts 自增注释击穿判据 1——全部返修完毕并登记 issue。
+- 实施期治理闸发现（三处拆分修正）：指标字典（生成链）入 PR-1、metric-labels.json（codegen）入 PR-2、规则字典整份为裁定治理保护区（governance 拦截正文改写，回退+头部全局声明）。
+- 验证状态：PR-1 typecheck/vitest 630/governance 107；PR-2 552/107；PR-3 107/107；三 PR MERGEABLE，CI 终态待收。
+- 事故声明：实施期间误删并行会话（026）的本地分支引用 wt/025-gate1（其内容 23dde20 已在 main，已重建引用还原，无净损失）；起因是 `worktree add | tail` 管道吃掉失败退出码致 && 链在残留 worktree 继续执行。教训：worktree add 不接管道、先 prune 检查残留目录。
+- 合并顺序建议（评审）：2716 → 2717 → 2718（双端锁句两侧同批；复份已摘除后无顺序硬约束）。
