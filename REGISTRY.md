@@ -28,4 +28,4 @@
 | [024](cards/024-business-rule-dictionary-governance.md) | building | chexian-api | 可合并就绪：#2707 → [PR #2708](https://github.com/alongor666/chexian-api/pull/2708)；编号/证据索引/枚举同源，双闸与最终 CI 通过；全文重排后置，待 owner 合并 | 2026-10-28 |
 | [025](cards/025-125-strategy-rename.md) | building | chexian-api | 开工：已探索+已评审（DSH·GLM5.3 规划评审 7 findings 全处置，5 处抽验坐实）：映射表 v2（派生词带前缀/否定语境=非目标客群，owner 二裁）、四桶口径 48/68/30/30+10、白名单补 server/data+gitignore、双端锁句同批交付；随时可转正 | 2026-10-28 |
 | [026](cards/026-focus-panel-dynamic-width-nav-autocollapse.md) | building | chexian-api | 开工：探索锚 b131d495b 未漂移；按需求正本 13 条推进动态宽度上限与开卡收导航，单 issue 单 PR，待规划评审 | 2026-10-28 |
-| [027](cards/027-operating-overview-home-enhancement-layer.md) | building | chexian-api | 021 增强层：三板块结论文字生成规则＋风险句＋八卡迁入＋卡→聚焦导航；已开工规划，监管红线新增风险规则待追裁，完整裁定见卡片 | 2026-10-28 |
+| [027](cards/027-operating-overview-home-enhancement-layer.md) | building | chexian-api | 021 增强层：三板块结论文字生成规则＋风险句＋八卡迁入＋卡→聚焦导航；#2720 已认领，首轮规划评审后修订中，待裁与完整裁定见卡片 | 2026-10-28 |
