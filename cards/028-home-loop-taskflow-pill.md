@@ -1,6 +1,6 @@
 # 028 · 首页经营闭环任务流胶囊：八步全流程可视化＋一键派工
 
-- 状态: scouted（2026-10-28 晚探索落卡；派工动作整体剥离至 [029](029-taskflow-dispatch-feishu-group.md)，本卡只做只读展示面）
+- 状态: building（2026-10-28 owner 指令「实施028」；派工动作整体剥离至 [029](029-taskflow-dispatch-feishu-group.md)，本卡只做只读展示面）
 - 目标仓: chexian-api（首页与 operating-loop 域均在该仓；八步数据基座为已合并 PR #2709 的 case-process-projection，指标基座为 VCR 矩阵 `server/src/routes/query/vcr-matrix.ts`）
 - 类型: 功能（首页区块 + 派工动作）
 - 录入: 2026-10-28
@@ -79,4 +79,7 @@ owner 2026-10-28 同会话指令，按时序逐条原话（形态演化见「澄
 
 ## 开工记录
 
-（未开工）
+- 2026-10-28：owner 下令实施；目标仓 [#2724](https://github.com/alongor666/chexian-api/issues/2724)，基准 `5dad0c6ae6285506138fd99865a18f30d9f01d39`，独立工作区 `chexian-api-028`。
+- 本聊天补裁：步骤采用混合语义（保留真实证据状态，另按明确推进规则显示当前步）；工作钟采用中国法定工作日（含调休）每天 8:00–20:00。
+- 增量核查发现已有全仓节假日日历服务 `server/src/services/holiday-calendar/holiday-service.ts`，本次复用；探索 #2「工作钟零基建」仅对小时计算成立，不代表日历不存在。日历未覆盖时不得静默按普通周一至周五冒充法定日历。
+- 正在核实多问题卡汇总规则与步骤完成证据；完成规划评审后实施。交付止于可合并 PR，owner 合并后再转 shipped。
