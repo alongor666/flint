@@ -119,3 +119,7 @@
 
 - 假设 d 证伪：chart-atlas/metric-atlas 测试无「战略」断言，无传导。
 - dimension-list-ratchet baseline 条目为 `路径::声明名[英文键]` 形态、不含中文标签——改标签不触发「改名须登记」，**前提是不动 strategy-* 文件名**（owner 已裁定 ✓，issue 内带一句防实施者误动）。
+
+## 开工记录
+
+- 2026-10-28：issue [#2711](https://github.com/alongor666/chexian-api/issues/2711)（映射表 SSOT v3）；分支 `i/2711`（已 claim）；闸①两轮——一轮 REQUEST_CHANGES（R1-R8：判据互斥/映射表漏 164 行表外/镜像锁归属错置等，5 处关键证据抽验全坐实）→ issue v2 修订 → 二轮 **APPROVE**（R1-R8 闭环、无新 P1/P2；N1-N5 勘误已收敛：N1 四行「老标签」记述按引语类保留）。dry-run 实证：sed 全局替换会击穿引语行与路径指针行，实施用 python 行级管线（白名单行保护+前置形态特判）。
