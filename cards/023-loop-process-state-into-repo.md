@@ -1,8 +1,8 @@
 # 023 · 问题处理闭环：流程与状态引入项目并综合
 
-- 状态: discussed（2026-10-28 AUQ 三问收拍：独立卡/形态探索后定/022 收口后探索）
+- 状态: scouted（2026-10-28 探索完成；owner 已选首期「关联＋复盘＋八步进度」，实施须另行开工）
 - 目标仓: chexian-api（先探可定：画板/步骤表已登记于该仓 `数据管理/knowledge/external-ops-assets.md` §1.1/§1.2；闭环系统代码域 `server/src/operating-loop/`；见 022 探索 #1 实查）
-- 类型: 待定（功能/研究，AUQ 回填）
+- 类型: 功能（复用现有闭环能力，补关系与复盘事实，派生八步进度）
 - 录入: 2026-10-28
 
 ## 原文
@@ -16,6 +16,8 @@
 - Q1 与 022 边界: 023 独立（推荐）/ 扩展 022 范围 → **owner 答: 023 独立，022 照甲′收口**
 - Q2 引入形态预判: 探索后定（推荐）/ 状态机系统化 / 流程正本入仓 → **owner 答: 探索后定**
 - Q3 探索时机: 022 收口后同会话探索（推荐）/ 立即并行探索 → **owner 答: 022 收口后探索**
+- Q4 首期范围（本轮探索后）: 贯通闭环 / 先统一展示 / 全面流程化 → **owner 答: 贯通闭环：关联、复盘、进度一起做**。
+- 本轮 owner 直接点名「探索023」，据此开展只读探索；022 当前仍在实施，不能把这次点名解释为 022 已收口。
 - 先探可定字段与依据：
   - 画板=八步流程（预警→诊断→派工→认领→合议→决策→实施→复盘），SVG 已有仓内备份 `数据管理/knowledge/external-assets/问题处理闭环流程图.svg`（PR #2679）。
   - 「状态」两处载体：步骤详情表（base BJzEbk…/tblBDAIMpbpNHsas，6 字段含状态流转全集，8 条记录对应 8 步骤）+ 系统台账七态状态机（`server/src/operating-loop/services/vcr-ledger-schema.ts` LEDGER_STATUS，SE 折叠态双向映射）。
@@ -25,15 +27,141 @@
 ## 讨论
 
 - 初评：探索核心命题=「镜像表 × 八步流程 × 七态状态机」三者的综合建模——现有系统已覆盖前四步，引入的增量面在合议/实施/复盘三步的系统化与全流程状态的统一视图；形态（代码状态机 vs 仓内正本 vs 混合）留给探索 #1 铺开后裁。
-- 待办：022 开工收口后本会话点名探索本卡。
+- 原待办由本轮点名探索承接；后三步实现程度以下方最新代码证据为准，前述「系统未接」为历史初评，已被本轮细化纠正。
 
 ## 防重与并卡
 
 - 建卡前读 REGISTRY 全表：022 是跟踪表合流（数据镜像），与本卡（流程结构+状态机引入）语义不同源，不并卡；关联卡=022。其余卡无同源。
 
-## 探索 #1
+## 探索 #1（2026-10-28 · owner「探索023」）
 
-（未探索）
+探查锚：`chexian-api @ ccec01651fc717609615be04571037d482fc3a82`（已 fetch 的 origin/main）；飞书流程文档 revision=6，步骤详情表 revision=43、完整读取且 has_more=false。目标仓相关代码与当前检出比对一致；卡片只存路径与方法，不收录表格原始导出、组织个人标识或业务数据。
+
+### 1. 【事实】三类状态之外，还有现成的问题工作态
+
+方法：飞书实读＋源码静态核实；下列文件锚均对应上述目标仓版本。
+
+| 对象 | 已有表达与证据 | 对本卡的约束 |
+|---|---|---|
+| 流程结构 | 飞书画板实读仍为预警→诊断→派工→认领→合议→决策→实施→复盘；步骤表的状态依次为待诊断、待派工、待认领、待回复、待决策、待实施、待复盘、待推广 | 画板是结构正本；步骤表的状态是流程语义输入，不直接覆盖系统状态 |
+| 派工回执任务 | `services/spark-echo-receipt-projection.ts:115` 的任务对象，任务号 `SE-*`，含认领、回执、上送、办结；路径前缀为 `server/src/operating-loop/` | 派工回执有自己的事件流与责任链 |
+| 台账展示状态 | `services/vcr-ledger-schema.ts:28` 七种展示值；`:110` 把回执任务折叠到台账状态，`:183` 把表格编辑转换为回写动作 | 022 镜像的是该台账，不能在镜像目标表新增可写流程状态 |
+| 经营问题生命周期 | `services/case-projection.ts:134`：`status` 仅 open/closed，显式问题负责人和首个建议提交者分离 | 不把八步塞进生命周期字段 |
+| 经营问题工作态 | 同文件 `:188` 词表、`:234` 确定性派生；`:204` 明示 investigating、ready_for_review 当前无源，不能派生 | 不增加人工工作态 setter，不把“未留痕”猜成“已完成” |
+
+流程读取复核入口：`lark-cli docs +fetch --doc <external-ops-assets.md §1.1 文档指针> --as user`，按返回画板 token 运行 `docs +media-download --type whiteboard`；步骤表以 §1.2 的 base/table 标识运行 `base +field-list` 与 `base +record-list`，投影步骤/状态/角色/触点/交付物/平台，完整读取并检查 has_more。原始读取仅在本机会话临时区，公开卡不留 token 或记录原文。
+
+**结构差异【事实】**：画板把合议放在车险部经理泳道，步骤表角色为跨团队协作；画板预警平台含网页/飞书，步骤表为网页应用。因此不能把步骤表整行直接编译成权限或平台切换。按 `.claude/rules/process-whiteboard-ssot.md:1`，结构以画板为准；它描述的业务角色不能直接等同账户角色授权。
+
+**状态解释【断言·代码与表格推理】**：步骤表“预警→待诊断”等更像该步交付后的下一待办，而非步骤本身的完成态；不能凭名字建立八态全序。“待推广”出现在复盘行，但画板没有第九步；本卡不自行增加推广步骤或自动晋升规则。
+
+### 2. 【事实】已有能力与真正断点
+
+| 八步 | 可复用的现有事实 | 缺口及诚实呈现 |
+|---|---|---|
+| 预警 | `schemas/operating-case.schema.ts:839` 的 case_opened/finding_recorded；体检摄入已存在 | 只能证明发现已记录，不据此宣称人工已查看 |
+| 诊断 | 同文件 `:306` 的诊断报告等证据引用；proposal_submitted 可携带证据 | 详情页 `src/features/operating-cases/OperatingCaseDetailPage.tsx:392` 仍有调查能力占位；有报告引用可展示，缺材料为未留痕 |
+| 派工 | `services/daily-report-task-pack.ts`、`services/vcr-action-dispatch.ts` 已产生回执任务 | 任务与问题卡尚无正式对象关联，不按机构/指标猜关联 |
+| 认领 | `services/spark-echo-receipt-orchestrator.ts` 的 claimSeTask；问题卡另有 case_assignment_changed | 两种责任事实分别展示，认领回执任务不自动更换问题卡负责人 |
+| 合议 | 现有建议、证据、历史建议展示可承载输入 | 尚无独立合议完成事件；回执不能冒充合议结论，可复用建议证据附会议/文档材料 |
+| 决策 | `services/case-decision-orchestrator.ts:288` 记录正式裁决，校验后可晋升动作；前端已有决策区 | 复用现有裁决权限和能力位，不另造审批引擎；拒绝/补证是分支，不等于进入实施 |
+| 实施 | `services/case-action-orchestrator.ts:231` 的动作结果、进展事件和监控契约；详情接口 `routes/operating-loop.ts:867` 返回监控与效果差值 | 已有执行/监测基础；动作关闭不直接证明复盘完成，也不把公司系统部署自动化纳入本卡 |
+| 复盘 | CX-ADR-49fb0f（`docs/decisions/20260910-product-structure-ruling-49fb0f.md:44`）已采纳问题关闭后记录 case_reviewed 与知识引用 | 当前事件枚举没有 case_reviewed；`case-projection.ts:160` 的 knowledge_refs 仍为 never[]，需补正式事实与界面 |
+
+**两项关键纠偏【静态核实】**：
+
+1. “合议/实施/复盘三步系统未接”过于粗：建议/裁决/动作/监测已在；最明确的新模型缺口是任务关联和复盘事实。目标是贯通现有能力，不重建后三步。
+2. 回执任务不等于经营问题卡：`spark-echo-receipt-projection.ts:115` 无 case_id；`spark-echo-receipt-orchestrator.ts:440` 明示任务不是 Case、通知 caseId=null。反向检查 `case-projection.ts` 与问题事件 schema 也没有 SE 关系字段。首次关联必须由正式事实记录，不能把两个编号互换。
+
+**纯函数夹具实测（PASS，非生产链路）**：在 `/tmp` 用 bun 导入上述相同源码，调用 deriveWorkState、seTaskToLedgerStatus、ledgerRowToWritebackAction。三个可复现判据：①关闭且无建议/动作的问题仍派生 detected（因此必须同时读生命周期）；②完成依据 metric_changed 映射为台账“已办结·指标改善”；③给台账传“待复盘”得到 noop。夹具只证明函数语义，不证明线上数据或流程跑通。
+
+**效果语义风险【静态核实】**：`spark-echo-receipt-orchestrator.ts:283` 的 metric_changed 要求指标非空且发生变化，并未在该分支判断变好方向。八步视图不能因为台账文案带“改善”就自动宣告经营改善或复盘通过；效果沿用现有监控/效果差值与人工结论。本卡不顺手重写旧办结口径。
+
+### 3. 防撞车与旧规划承接
+
+【事实·远端实读】[史诗 #158](https://github.com/alongor666/chexian-api/issues/158) 已覆盖经营闭环与知识引用；本卡是其增量实现候选，不新建平行史诗。其旧正文的“当前缺失”描述存在过时项，现状以本轮代码为准。
+
+【事实·远端与本地交叉】[022 工作项 #2703](https://github.com/alongor666/chexian-api/issues/2703) 仍 OPEN；活动检出 `chexian-api-022 @ feaf06b8b` 正在修改镜像集成与发布挂载。开放 PR 查询时未见该工作项对应 PR，不能认定 022 已收口。023 不修改其集成脚本、镜像表 schema、发布扇出；若将来要把流程字段推入镜像，须另算依赖，不能夹带进本轮。
+
+防重方法一：连接器查询开放 issue（闭环、合议、KnowledgeRef、case_reviewed）及开放 PR 全集；方法二：`git grep` 最新 main 的相关代码/规划，并核查 `git worktree list`。结果：已找到 #158 与既定复盘裁定，**不是无重复从零建设**；case_reviewed 的代码检索零命中，经 CASE_EVENT_TYPES 完整枚举与 knowledge_refs 类型交叉验证。开放 PR 未见同一任务关联/复盘实现写集；这只是本轮快照，开工必须重查。
+
+### 4. 方案比较与 owner 选定范围
+
+| 方案 | 能解决什么 | 结论 |
+|---|---|---|
+| 不改 | 022 可提供新鲜派工台账镜像 | 仍缺对象关联、复盘事实和八步进度，不能满足本卡 |
+| 仅文档/展示映射 | 引用画板，在页面解释流程，成本最低 | 能对齐术语，但无法记录缺失事实；owner 本轮未选 |
+| **贯通闭环（本轮选定）** | 保留现有状态与权限，补任务关联、复盘留痕，按证据呈现八步 | **owner 已选首期方向**；下述是实施建议，尚未开工 |
+| 全面流程化 | 独立合议、审批流、公司系统实施与推广引擎 | 超出首期，不引入八态可写状态机或第二套授权注册表 |
+
+**建议的综合方式【断言·设计建议】**：画板定义结构；问题/动作/回执事件记录事实；八步进度为只读投影；022 跟踪表保留原样只读镜像。每步输出证据、对应对象、时间及缺口，不只给一个高亮“当前步”。补证、驳回、上送可以形成分支与并行待办，不强迫线性推进。无源环节明确“未留痕/尚未接入”，不补造旧事件。
+
+### 5. PR 实施方案深度（候选写集，开工时按最新版本复核）
+
+建议单卡转为 #158 下的工作项树，同域同一办理线，两个顺序 PR；实际 issue/PR 数以目标仓加工结果为准，本轮不建 issue、不切目标仓分支。
+
+**PR-A：正式关联＋八步证据视图。**
+
+- `server/src/operating-loop/schemas/operating-case.schema.ts:839`：候选增加任务关联事件与严格请求载荷，记录精确任务号、操作者及来源；现有事件不改写。
+- `services/case-projection.ts:134`：追加关联投影；`services/case-process-projection.ts`（候选新增）集中派生各步证据/缺口。保持 status/work_state 现有契约，未知不猜；不另建整体流程状态存储。
+- `services/case-task-link-orchestrator.ts`（候选新增）：复用两个事件存储的读取能力，校验双方存在、调用者可见/可写、同省同业务范围；精确关联与幂等，禁止日期/中文标题模糊连线。若涉及解绑/换绑，追加显式纠正事件，不覆盖历史；首期关系基数与纠错规则在实施规划中明确。
+- `routes/operating-loop.ts:867`：详情响应 additive 提供关联与进度；关联写入口复用现有认证、主省和正式写权限，能力位由服务端返回；关联前的跨对象权限检查先于暴露任务详情。
+- `src/shared/api/operating-loop-api.ts`、`src/features/operating-cases/OperatingCaseDetailPage.tsx:170`、其详情 hook、候选 `components/CaseProcessProgress.tsx`：提供关联入口和证据展开；原决策、责任人、动作监控直接复用。派工任务侧保留自己的状态与责任人，只以关系跳转问题卡。
+- 合议材料优先复用 `CaseEvidenceRefSchema:306` 和建议提交链：知识节点引用已存在，不重新造文档引用结构。仅有建议/回执时显示材料状态，不虚构“已合议”；需精确合议完成事实时再定载荷，不复用回执 completion 冒充。
+- 同步 `server/src/config/api-routes.ts` 等现有端点契约登记（具体命中由开工复核），不另开认证域。
+
+**PR-B：正式复盘＋知识引用＋进度收口（依赖 PR-A）。**
+
+- 同一问题事件 schema 增加 case_reviewed 载荷（结论、结果依据、知识引用、操作者、幂等标识）；按 CX-ADR-025 演进协议确认版本策略、强绑定校验及旧事件兼容。复用现有 evidence-ref 的知识节点形态，确有不足才最小扩展，不另起知识系统。
+- 候选 `services/case-review-orchestrator.ts`＋上述路由：按 CX-ADR-49fb0f 仅接受**已经关闭的问题**的复盘；不得因此重开问题或重新批准动作。重复请求幂等；补充/更正结论追加记录，不能覆盖原始结论。
+- `case-projection.ts:160`、`services/case-orchestrator.ts` 的公共初始化、前端问题与事件类型、`components/CaseEventTimeline.tsx`、`utils/caseFormat.ts` 同步接复盘与知识引用。详情页在已关闭后仍展示复盘入口/历史，不能被原有 can_close=false 隐藏。
+- `case-process-projection.ts` 与进度视图消费正式复盘事实：问题关闭≠已复盘，指标改变≠已改善，已复盘≠已推广；不自动把知识写入正式规则/范本。
+- 如上线界面改变画板定义的触点或交付物，按现有画板规则先改飞书画板、同步 SVG 和资产登记，随后改实现。画板/步骤表结构差异的修正及 `.claude/rules/**` 既有规则修订，均不从本轮探索推定写授权。
+
+**依赖与边界**：022 保持独立，目标仓关系/复盘不依赖向镜像新增列；共享文件 `external-ops-assets.md` 如需更新，须等 022 相交改动落定后复核再接续。流程结构查该文件指针，不把飞书标识写进代码。业务角色与账户角色由现有授权体系转换，Agent 不能取得批准/复盘确认权。
+
+### 6. 验收场景与命令（计划，尚未执行）
+
+| 场景 | 字面预期/负例 |
+|---|---|
+| 旧事件回放 | 旧问题照常读；无关联/复盘的历史问题显示缺失事实，不补造完成时间 |
+| 精确关联 | 合法两对象关联成功且重试不重复；不存在/不可见对象拒绝；跨省、越权、冲突关联均拒绝，不泄露对象存在性 |
+| 状态并存 | 认领任务不更换问题负责人；回执/上送/办结不自动批准动作、关闭问题或通过复盘；原台账回写映射不变 |
+| 非线性流程 | 补证/拒绝保留真实分支；多动作或多任务不压成一条虚假的已完成链；缺合议材料显示未留痕 |
+| 复盘权限与终态 | 未关闭问题拒绝复盘；有权人员成功、无权/跨省拒绝；关闭后能留痕，重复请求不增记录，更正保留历史 |
+| 效果与知识 | 方向未知或恶化不能因“指标变化”宣称改善；复盘引用可追溯，普通引用不触发正式知识晋升 |
+| 镜像回归 | 不增加镜像可写入口，不改变 022 的列或发布脚本；原派工、回写测试保持通过 |
+
+拟执行命令：
+
+```sh
+bun run test --run server/src/operating-loop/services/__tests__/case-projection.test.ts server/src/operating-loop/services/__tests__/case-projection-work-state.test.ts server/src/operating-loop/services/__tests__/vcr-ledger-schema.test.ts server/src/operating-loop/services/__tests__/vcr-ledger-writeback.test.ts server/src/operating-loop/services/__tests__/spark-echo-receipt-state-machine.test.ts
+bun run test --run src/features/operating-cases/__tests__/OperatingCaseDetailPage.test.tsx src/features/operating-cases/__tests__/caseFormat.test.ts src/features/operating-cases/__tests__/workStateDetailUi.test.tsx
+bun run typecheck
+bun run governance
+```
+
+并随新增编排器/投影/路由补定向测试及真实前端→接口→临时事件目录验收，隔离数据/身份覆盖上述负例；不能仅用模拟界面替代串通验收。最终必需 CI 按目标仓现行根协议。**本轮 NOT RUN：上述实施测试、接口串通、生产请求/写入、部署验收**；本轮只实读飞书、核源码/远端及跑三个只读纯函数夹具。
+
+### 7. 待裁、风险与回滚
+
+- 已裁：首期=贯通闭环（任务关联＋复盘留痕＋八步进度）；这项选择不等于「开工」。
+- 待 owner 回答：首次关系由有权人员确认还是自动匹配；正式复盘确认权采用现有决策权还是扩大到负责人/全员。仅阻塞相关设计，不把待裁选项写成既定权限。
+- 实施规划还须明确关系基数、重复/纠错契约及跨对象校验；建议从显式精确关联开始，不批量回填旧任务，不按标题/日期自动归并。
+- 风险：把工作态、派工态、流程待办混为一谈；越权连线泄露信息；关闭后的复盘误入旧“禁止任何写”路径；新增事件不能被旧消费者静默跳过；只看旧 ADR/issue 的欠账描述而重建已存在能力。
+- 回滚：新增写入口关闭后保留事件；读侧保留对新增事件的兼容，不能直接退到会丢弃新事件的老读取器。不删除事件、复盘、镜像行，不因代码回滚改写正式业务历史。
+- 失效条件：目标仓 main 的相关域/授权裁定改变、022 更改共享资产入口、画板/步骤表修订、同域新 PR 出现时，开工重新比对。
+- 就绪判断：**探索完成；尚未开工。任务关联/复盘权的待裁和逐 PR 规划未补齐前，NOT READY FOR IMPLEMENTATION。**
+
+### 8. 接续指令（只读规划边界）
+
+```text
+继续 flint 023 探索收口，不实施目标仓。
+步骤 0：git fetch 最新代码，读 flint 根与 scout 协议、目标仓根 AGENTS.md 和相关分区规则；复查开放 issue/PR 与活动 worktree；把本卡事实逐项复核，把设计断言独立重推导，向 owner 报告实质差异后继续已授权探索。任何仓内写入先建立或核实本任务独立 worktree。
+已选目标：复用现有状态与授权，补派工任务—问题卡关系、正式复盘记录、八步证据进度；022 仍独立只读镜像。事实/断言和复核入口见本卡探索 #1，基准 ccec01651 只是快照。
+接续：收齐关系方式和复盘权限裁定，细化 PR-A/PR-B 的关系/幂等/版本兼容合同及验收；不得以台账办结推断复盘完成，不得复制第二套状态机或权限表。
+权限：本轮仅探索和 flint 回填；不在目标仓建 issue/分支、写实现、改飞书结构或写生产。owner 另说「开工023」时读取 flint 根对应路由，再按目标仓协议转正。
+```
 
 ## 开工记录
 
