@@ -24,5 +24,5 @@
 | [020](cards/020-focus-card-unified-spec.md) | shipped | chexian-api | 全站聚焦卡统一规范＋ov2 宽度可调——五 PR 全合并（#2642/#2646/#2659/#2660/#2665），双 issue CLOSED；九处全壳内规范化、口径 ⓘ 全域、机检 3 件 | 2026-10-27 |
 | [021](cards/021-health-check-navigation-status-trend.md) | building | chexian-api | [#2694](https://github.com/alongor666/chexian-api/issues/2694) → [PR #2700](https://github.com/alongor666/chexian-api/pull/2700)；主干冲突已消解，增量复核及本地验证通过，同步提交CI核验中；待owner合并 | 2026-10-28 |
 | [022](cards/022-loop-whiteboard-merge-system-ledger.md) | building | chexian-api | 开工（10-28）：终裁甲′镜像方案（主会话误用旧卡问出甲，owner 知情重申甲′）；走 build.md 标准流程 | 2026-10-28 |
-| [023](cards/023-loop-process-state-into-repo.md) | building | chexian-api | [#2706](https://github.com/alongor666/chexian-api/issues/2706)：关联＋复盘＋八步进度；DSH·GLM5.3/max 闸①两轮通过，进入实现，未交付 | 2026-10-28 |
+| [023](cards/023-loop-process-state-into-repo.md) | building | chexian-api | [#2706](https://github.com/alongor666/chexian-api/issues/2706) → [PR #2709](https://github.com/alongor666/chexian-api/pull/2709)；关联＋复盘＋八步进度已实现，双闸/独评及本地真实链路通过，主干冲突已消解，最终CI核验中；待owner合并 | 2026-10-28 |
 | [024](cards/024-business-rule-dictionary-governance.md) | building | chexian-api | 可合并就绪：#2707 → [PR #2708](https://github.com/alongor666/chexian-api/pull/2708)；编号/证据索引/枚举同源，双闸与最终 CI 通过；全文重排后置，待 owner 合并 | 2026-10-28 |
