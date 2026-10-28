@@ -28,7 +28,7 @@
 | [024](cards/024-business-rule-dictionary-governance.md) | building | chexian-api | 可合并就绪：#2707 → [PR #2708](https://github.com/alongor666/chexian-api/pull/2708)；编号/证据索引/枚举同源，双闸与最终 CI 通过；全文重排后置，待 owner 合并 | 2026-10-28 |
 | [025](cards/025-125-strategy-rename.md) | building | chexian-api | 开工：已探索+已评审（DSH·GLM5.3 规划评审 7 findings 全处置，5 处抽验坐实）：映射表 v2（派生词带前缀/否定语境=非目标客群，owner 二裁）、四桶口径 48/68/30/30+10、白名单补 server/data+gitignore、双端锁句同批交付；随时可转正 | 2026-10-28 |
 | [026](cards/026-focus-panel-dynamic-width-nav-autocollapse.md) | building | chexian-api | 可合并就绪：[#2714](https://github.com/alongor666/chexian-api/issues/2714) → [PR #2719](https://github.com/alongor666/chexian-api/pull/2719)；6f8204757 双闸/独评及全部9项CI通过，23158单元通过，浏览器2项重试通过与6项既有跳过已披露；待owner合并 | 2026-10-28 |
-| [027](cards/027-operating-overview-home-enhancement-layer.md) | building | chexian-api | 021 增强层：三板块结论文字生成规则＋风险句＋八卡迁入＋卡→聚焦导航；#2720 已认领，首轮规划评审后修订中，待裁与完整裁定见卡片 | 2026-10-28 |
+| [027](cards/027-operating-overview-home-enhancement-layer.md) | building | chexian-api | 021 增强层：三板块结论文字生成规则＋风险句＋八卡迁入＋卡→聚焦导航；#2720 实施中，规划及成本增量复评通过，进入真实走查与独立复评，完整裁定见卡片 | 2026-10-28 |
 | [028](cards/028-home-loop-taskflow-pill.md) | discussed | chexian-api | 首页闭环任务流单胶囊↔八步全流程（变动成本率；限时倒计时+一键派工飞书群）；步骤语义待裁 | 2026-10-28 |
 
 | [029](cards/029-taskflow-dispatch-feishu-group.md) | scouted | chexian-api | 任务流派工步接飞书（机构群派发+任务台账表）：四项已拍板+前置链全就绪＝028 派工动作的后端通道 | 2026-10-28 |
