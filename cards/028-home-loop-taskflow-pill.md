@@ -1,10 +1,10 @@
 # 028 · 首页经营闭环任务流胶囊：八步全流程可视化＋一键派工
 
-- 状态: discussed（原型多轮迭代、裁定齐备；步骤状态语义一项待裁）
+- 状态: scouted（2026-10-28 晚探索落卡；派工动作整体剥离至 [029](029-taskflow-dispatch-feishu-group.md)，本卡只做只读展示面）
 - 目标仓: chexian-api（首页与 operating-loop 域均在该仓；八步数据基座为已合并 PR #2709 的 case-process-projection，指标基座为 VCR 矩阵 `server/src/routes/query/vcr-matrix.ts`）
 - 类型: 功能（首页区块 + 派工动作）
 - 录入: 2026-10-28
-- 关联: [023](023-loop-process-state-into-repo.md)（八步证据投影与复盘事件基座，shipped）；[027](027-operating-overview-home-enhancement-layer.md)（同一首页另一板块层，变动成本率口径同源、区块不重叠）；flint issue #7（VCR 矩阵）
+- 关联: [023](023-loop-process-state-into-repo.md)（八步证据投影与复盘事件基座，shipped）；[027](027-operating-overview-home-enhancement-layer.md)（同一首页另一板块层，挂载布局需协调）；[029](029-taskflow-dispatch-feishu-group.md)（派工动作剥离承接卡，其深探已覆盖派工后端全链）；flint issue #7（VCR 矩阵）
 
 ## 原文
 
@@ -47,6 +47,35 @@ owner 2026-10-28 同会话指令，按时序逐条原话（形态演化见「澄
 - 实施要点: 八步数据=PR #2709 `server/src/operating-loop/services/case-process-projection.ts`（证据投影）；档位与七维=VCR 矩阵端点；首页挂载点与 027 增强层协调布局；派工动作需新增服务端写路径（飞书发送依赖上述核查结论）。
 - 转正映射建议: 1 个 issue（首页任务流胶囊区块），可拆 2 个 PR（①前端只读区块：胶囊/八步/诊断面板/倒计时 ②派工动作+飞书链路）。
 - 验收: 三角色（管理员/机构/非机构）各只见本层级胶囊；倒计时按工作钟；派工幂等且只发预警/危险恶化机构。
+
+## 范围变更（2026-10-28 owner 指令）
+
+> 派工先空缺，由卡29工作。
+
+一键派工与飞书群发送动作（原转正建议 PR-②）整体剥离至 [029](029-taskflow-dispatch-feishu-group.md)（并行会话已建卡并深探至 PR 方案深度：群映射/凭据/发送层/白名单/催办调和均就绪）；本卡收敛为**只读展示面**（胶囊/八步全流程/诊断面板/倒计时/权限层级），上方裁定中派工相关条目随 029 生效。
+
+两卡对齐（2026-10-28 摸底确认无冲突）：①转正拆分合并口径＝028 单 issue（先只读区块，029 API 就绪后接线，与 029「028 转 PR② 页面接线」建议兼容）；②派工条件「预警/危险**且环比恶化**」（本卡裁定）与既有 vcr-action-derive「≥warn 起派+滞回」的差异归 029 实施时处理。
+
+## 探索 #2（2026-10-28 晚 · 范围收窄后完整版，实施建议取代 #1）
+
+- 探查锚: chexian-api @ origin/main `5dad0c6ae`（2026-10-28；复核命令 `git show origin/main:<path>`）
+- 防撞车: 开放 PR #2716–#2722 无同主题；issue #2720（=027 首页增强层）同页不同区块——挂载布局需协调非冲突；代码 grep「任务流/胶囊」零命中（与 issue 面搜索两法同证）。
+
+【事实】（附锚可复现）
+1. 八步数据基座现成：`GET /api/operating-loop/cases/:caseId` 详情响应内嵌 `process`（CaseProcessView：steps[id,label,status,evidence,note]+linked_tasks+reviews）——`server/src/operating-loop/routes/operating-loop.ts:886-939`；前端合同 `src/shared/api/operating-loop-api.ts:627-646`；列表口 `GET /cases` 同文件。既有渲染组件 `src/features/operating-cases/components/CaseProcessPanel.tsx`（详情页竖排卡片）。
+2. 步骤语义=证据态（recorded/partial/missing 独立亮灯，投影注释明言「不反推缺失步骤」）——**无「当前步」概念**。owner 原型时间态（绿/蓝/灰）需新增推导层（最深非 missing 步≈当前）；「待裁·步骤状态语义」证据补强。
+3. 变动成本率数据源现成：`GET /api/query/vcr-matrix`（#2595）——七维×**两锚（数据日 vs 上月末，环比恶化判定现成）**、机构白名单 SSOT=`branch-org-mapping/SX.json` 13 单元、档位 SX 78/83/88（#2614 byBranch 分省档）、**非山西上下文 available:false**（SC 侧无数据，他省扩展待 owner 拍板）。
+4. 权限模型（`server/src/config/preset-users.ts` + `case-visibility.ts`）：branch_admin dataScope=all（全省档）；org_user/sx_manager dataScope=org（本机构档）；Case 可见性判据 SSOT=case-visibility.ts（all→branchCode∪visibleBranches；org→仅本机构；其余→空集）。**注意**：sx_finance_peer dataScope=all 且 routeWhitelistExempt（首页可达，preset-users.ts:329、:504-507）——「金融同业不开放」不能靠页面可达性，区块须自建角色判据（排除非机构角色）。
+5. 首页挂载点：`src/features/pages/LandingHomePage.tsx` 极薄（HealthCheckSection+CoefficientMonitorSummaryCard）；027（issue #2720，building）重构首页三板块——胶囊区块挂载位置/顺序须与 027 落地形态协调。
+6. 工作钟零基建：`git grep 'businessHour|working_hour' origin/main` 零命中（与语义词「工作时段」交叉验证，命中均测试语境非工作钟）；最近似概念=coefficient-monitor 北京日历日键控。倒计时 8:00–20:00 工作钟=新增实现面，跨日/节假日口径需裁定。
+7. 耗时/停留天数：Case 事件流各步证据带 occurred_at，步间耗时可推导；证据态下步骤非顺序推进，推导口径随「步骤状态语义」裁定一并定。
+
+【断言】（代码推理，实施前复核）
+- 数据聚合建议：新增一个轻聚合端点（或前端并调 /cases 列表 + 详情 process + /vcr-matrix），首页一次取全胶囊所需；只读不碰写路径。
+- 改动面（单 PR）：前端新组件族（胶囊折叠态/八步全流程/诊断面板/倒计时）挂 LandingHomePage；服务端至多 1 个聚合端点；区块角色判据复用 resolveRoleDataScope。
+- 风险：a) 时间态推导对乱序 Case 失真；b) SC 用户胶囊空态口径（vcr-matrix 无他省数据）；c) 与 027 首页重构的布局冲突；d) 工作钟口径无先例。
+- 验收: branch_admin=全省胶囊、org_user=本机构胶囊、sx_finance_peer=区块不渲染（三角色实测）；倒计时按工作钟走秒；诊断面板七维值与 /vcr-matrix 对拍一致。
+- 转正映射: 本卡 1 issue → 1 PR（只读区块）；029 API 就绪后的页面接线归 029 转正线。
 
 ## 开工记录
 
