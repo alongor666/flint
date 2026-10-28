@@ -83,7 +83,9 @@ owner 2026-10-28 同会话指令，按时序逐条原话（形态演化见「澄
 - 本聊天补裁：步骤采用混合语义（保留真实证据状态，另按明确推进规则显示当前步）；工作钟采用中国法定工作日（含调休）每天 8:00–20:00。
 - 增量核查发现已有全仓节假日日历服务 `server/src/services/holiday-calendar/holiday-service.ts`，本次复用；探索 #2「工作钟零基建」仅对小时计算成立，不代表日历不存在。日历未覆盖时不得静默按普通周一至周五冒充法定日历。
 - 多案例补裁：仅取当前授权层级最近更新的一张变动成本率机构问题卡；全省同样选一张并明确所属机构。最近更新沿用 Case 业务 `updated_at`，不改写文档性事件的生命周期语义。
-- 已实施：[PR #2731](https://github.com/alongor666/chexian-api/pull/2731)，head `e25a6a6b3c907c5ec275e29ce4cfb680a7e35b97`。新增只读聚合端点与首页胶囊；前序缺证不补绿，正式复盘终态可达；派工归 029。
+- 已实施：[PR #2731](https://github.com/alongor666/chexian-api/pull/2731)，head `eb675d744bab3054f0b5712d60ec977d6be56a06`。新增只读聚合端点与首页胶囊；前序缺证不补绿，正式复盘终态可达；派工归 029。
 - 双闸：DSH·GLM5.3 max 规划评审与复评通过；独立 fresh-context 代码评审发现目标省传输遗漏，修复后复评 APPROVE；主会话亲自核验修复。独评记录见 [PR 评论](https://github.com/alongor666/chexian-api/pull/2731#issuecomment-6472717387)。
 - 验证：270 项定向/回归/接口合同通过，末轮路由 12 项再跑通过；前端/服务端/CLI 类型检查及治理通过。真实本地 HTTP 三角色与七维矩阵通过；浏览器完成默认折叠、八步、键盘诊断、本机构单胶囊及两态同宽测量。流程事件来自隔离合成仓，诊断读取本机数据，不构成生产验收。
-- 当前远端 CI 核验中；交付止于可合并 PR，owner 合并后再转 shipped。未合并、未部署。
+- CI 返修：首轮全量单测23180项通过、6项跳过，仅扫描候选上限失败；逐文件审计确认唯一新增为有日志日历失败出口1/0，按既有协议同步精确边界及审计记录，未改变扫描器/无日志上限。42项定向复验及独立增量复评通过，详见 [返修评论](https://github.com/alongor666/chexian-api/pull/2731#issuecomment-6473073102)。
+- 最终 CI：head `eb675d744bab3054f0b5712d60ec977d6be56a06` 的 [Production Gate](https://github.com/alongor666/chexian-api/actions/runs/40715569101) 全绿，覆盖接口合同、类型/构建/集成/Python、全量单测、两个 E2E 分片及汇总闸；密钥扫描通过。E2E 合计249项通过、6项跳过，两分片均无重试后才通过的用例。
+- 可合并就绪：GitHub 当前 CLEAN / MERGEABLE，未启用 auto merge。交付止于可合并 PR，卡片保持 building，owner 合并后再转 shipped。未合并、未部署，生产验收待后续执行。
