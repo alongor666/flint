@@ -24,4 +24,4 @@
 | [020](cards/020-focus-card-unified-spec.md) | shipped | chexian-api | 全站聚焦卡统一规范＋ov2 宽度可调——五 PR 全合并（#2642/#2646/#2659/#2660/#2665），双 issue CLOSED；九处全壳内规范化、口径 ⓘ 全域、机检 3 件 | 2026-10-27 |
 | [021](cards/021-health-check-navigation-status-trend.md) | building | chexian-api | [#2694](https://github.com/alongor666/chexian-api/issues/2694) → [PR #2700](https://github.com/alongor666/chexian-api/pull/2700)；规划/实施及修复复审通过，本地实测及同头CI通过，可合并就绪；待owner合并 | 2026-10-28 |
 | [022](cards/022-loop-whiteboard-merge-system-ledger.md) | building | chexian-api | 开工（10-28）：终裁甲′镜像方案（主会话误用旧卡问出甲，owner 知情重申甲′）；走 build.md 标准流程 | 2026-10-28 |
-| [023](cards/023-loop-process-state-into-repo.md) | scouted | chexian-api | 首期已选：复用现有状态，补任务关联＋复盘留痕＋八步进度；两顺序 PR 候选，关系方式/复盘权限待裁，未开工 | 2026-10-28 |
+| [023](cards/023-loop-process-state-into-repo.md) | scouted | chexian-api | 探索裁定收口：任务关联＋复盘留痕＋八步进度；人工确认关联，复盘沿用该问题决策权；两顺序 PR 候选，未开工 | 2026-10-28 |
