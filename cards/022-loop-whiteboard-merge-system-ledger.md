@@ -103,4 +103,12 @@
 - 2026-10-28 owner「开工 022」。开工时清算一次裁定冲突：主会话误用主检出旧版卡（落后 origin/main 三提交，未含 7a22772 甲′落账）问出 R1=甲/R2=画板加注/R3=改名停用；owner 知情（甲′已两轮 AUQ 落账）后终裁＝**甲′镜像方案**，刚才的甲作废。
 - 开工实查补证（2026-10-28 lark-cli/gh）：①手工表仍在（base-get 200，名称「体验问题处理闭环·派工任务跟踪表」，记录仍空模板行，零变化）；②PR #2679 纯文档登记（4 文件，零飞书写操作）；③chexian-api origin/main=ccec01651 与探索锚一致无漂移，开放 PR 无撞车。
 - 按 build.md 标准流程执行：建 issue → 切分支 → 规划 → 闸① DSH 对抗评审 → 实施+PR+governance → 独立评审 → 闸② → 可合并就绪交 owner。
-- 闸①第一轮（DSH·glm-5.3 strong 档，2026-10-28）：REQUEST_CHANGES，13 findings（4×P1）——其中 F-05 勘误本卡：源表 env 键名实为 `VCR_LEDGER_BITABLE_TABLE_ID`（本卡原文漏 BITABLE，server 真实键名见 vcr-ledger-config.ts:31），卡内两处已改。其余 findings 全量吸收进目标仓规划文档修订版（commit 5be20483f）。
+- 闸①第一轮（DSH·glm-5.3 strong 档，2026-10-28）：REQUEST_CHANGES，13 findings（4×P1）——其中 F-05 勘误本卡：源表 env 键名实为 `VCR_LEDGER_BITABLE_TABLE_ID`（本卡原文漏 BITABLE，server 真实键名见 vcr-ledger-config.ts:31），卡内两处已改。其余 findings 全量吸收进目标仓规划文档修订版。
+- 闸①第二轮 REQUEST_CHANGES（1×P2 判据双锚 + 5×P3 顺修，N-06 跨仓提示经 `git show origin/main:` 实证不成立——评审者 web_fetch 命中 CDN 缓存）；第三轮确认轮 **APPROVE**。规划定稿 `docs/plans/2026-10-28-vcr-ledger-mirror.md`。
+- **实施**：issue [#2703](https://github.com/alongor666/chexian-api/issues/2703) → 分支 `i/2703` → PR [#2705](https://github.com/alongor666/chexian-api/pull/2705)。改动面＝新集成 `数据管理/integrations/vcr_ledger_mirror/`（bootstrap/sync_mirror/README）+ client.py 两薄封装（delete_field/list_views）+ sync-and-reload.mjs Stage 5.6 扇出 + external-ops-assets.md §1.3 镜像化注记 + 10 用例测试（含 schema.ts 机器对拍锁）+ 治理随行（lineref 基线、钉子登记）。
+- **双路独立评审**：DSH 第一路 APPROVE（6×P3）、编排端子代理第二路 REQUEST_CHANGES（1×P2 视图清单导出缺席 + 5×P3）→ 11 项修复一并吸收；**闸②主会话亲评通过**（对拍锁经真实 schema.ts 实测 18 列/七态/三态全提取；并集/防御/双向差集闭环核验）。
+- **密钥闸事件与根治**：bootstrap.py 曾硬编码目标表 bitable 标识（代码赋值形态）触发 gitleaks generic-api-key + GitGuardian（#2679 同值在文档表格形态放行）→ 根治＝目标标识参数化 `--target-*`（标识不入代码，同先例纪律）；分支重建净历史。**第一次重建踩坑**：第三轮 DSH 评审在 worktree 内 `git fetch` 前移了 origin/main，随后 `reset --soft origin/main` 把新 main 设为父而树仍旧基线——产出「回退 main 6 个 merge」假象（CI typecheck 红）；从 ce4f（树与父链均正确）重做修正。
+- **追 main 两次 rebase**：①#2700 主页重构等 6 merge（无冲突）；②+20 提交含 #2707 同批抬钉子 1315 → 冲突解为叠加 1316/1029（登记行保留双方）。
+- **验收**：判据 4（`test:py` 10 passed + governance 107/107）✅、判据 5（双锚 1/1）✅、A.0 检视留痕（lark-cli 实测 11 字段+5 组 select 枚举录 §1.3）✅；判据 1/2/3（dry-run/execute 对拍/field-list 18 列）**留 mini 现场**——前置 R6（owner 飞书 console 给本机探索应用加源 base 只读协作者）+ 生产 env `VCR_LEDGER_BITABLE_APP_TOKEN`/`VCR_LEDGER_BITABLE_TABLE_ID` 登记，步骤见 README「启用步骤」。
+- **状态**：PR #2705 CI 全绿（第二次 rebase 后重跑中）、可合并就绪，**合并权在 owner**。合并后：① mini 现场 bootstrap+首跑；② 卡转 shipped。
+- 教训（写入记忆）：①`reset --soft origin/main` 前核实本地 origin/main 未被评审者 fetch 前移（worktree 共享 .git，评审者 fetch 即全局生效）；②重建历史禁 `git add -u`，一律点名文件；③bitable 标识不进代码常量（文档表格放行、代码赋值判 secret）；④全仓计数钉子是热点冲突区，追 main 后在对方新值上叠加而非覆盖。
