@@ -26,3 +26,4 @@
 | [022](cards/022-loop-whiteboard-merge-system-ledger.md) | building | chexian-api | [#2703](https://github.com/alongor666/chexian-api/issues/2703) → [PR #2705](https://github.com/alongor666/chexian-api/pull/2705)；owner委托最终合并，联合评估两P2已修复，独评/闸②与组合本地检查通过，返修CI核验中；镜像现场启用待 | 2026-10-28 |
 | [023](cards/023-loop-process-state-into-repo.md) | shipped | chexian-api | [PR #2709](https://github.com/alongor666/chexian-api/pull/2709) 已授权合并并自动部署（7820051c2）；主干/部署成功，发布指纹/进程/只读业务查询核验通过；真实任务新写及现场联合验收未执行 | 2026-10-28 |
 | [024](cards/024-business-rule-dictionary-governance.md) | building | chexian-api | 可合并就绪：#2707 → [PR #2708](https://github.com/alongor666/chexian-api/pull/2708)；编号/证据索引/枚举同源，双闸与最终 CI 通过；全文重排后置，待 owner 合并 | 2026-10-28 |
+| [025](cards/025-125-strategy-rename.md) | discussed | chexian-api | 「1+2+5 战略」更名「1+2+5 客群」（AUQ 已裁定：人读面全改/标识符不动/历史加注；1+2+5 命中 123 文件，待探索圈定「战略」系措辞人读面） | 2026-10-28 |
