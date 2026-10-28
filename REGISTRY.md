@@ -31,4 +31,4 @@
 | [027](cards/027-operating-overview-home-enhancement-layer.md) | building | chexian-api | 021 增强层：三板块结论文字生成规则＋风险句＋八卡迁入＋卡→聚焦导航；#2720 已认领，首轮规划评审后修订中，待裁与完整裁定见卡片 | 2026-10-28 |
 | [028](cards/028-home-loop-taskflow-pill.md) | discussed | chexian-api | 首页闭环任务流单胶囊↔八步全流程（变动成本率；限时倒计时+一键派工飞书群）；步骤语义待裁 | 2026-10-28 |
 
-| [029](cards/029-taskflow-dispatch-feishu-group.md) | discussed | chexian-api | 任务流派工步接飞书（机构群派发+任务台账表）：四项已拍板+前置链全就绪＝028 派工动作的后端通道 | 2026-10-28 |
+| [029](cards/029-taskflow-dispatch-feishu-group.md) | scouted | chexian-api | 任务流派工步接飞书（机构群派发+任务台账表）：四项已拍板+前置链全就绪＝028 派工动作的后端通道 | 2026-10-28 |

@@ -1,6 +1,6 @@
 # 029 · 任务流派工步接飞书：机构群派发 + 飞书任务台账表
 
-- 状态: discussed（2026-10-28 需求四项已拍板）
+- 状态: scouted（2026-10-28 深探完成，实施要点到 PR 方案深度，随时可转正）
 - 目标仓: chexian-api（先探可定：八步任务流代码域 `server/src/operating-loop/` 已随 023 shipped；飞书发送层 `server/src/services/feishu-app-client.ts` 既有）
 - 类型: 功能
 - 录入: 2026-10-28
@@ -39,6 +39,28 @@
   - 权限：两人账号白名单走配置禁硬编码；催办＝同任务多行留痕
 - 转正映射建议: 1 issue、2 PR——①服务端派工 API＋台账表首建（不依赖页面可先行）；②页面转正后按钮接线（随 023 后续 UI 线）
 - 验收: 派工一条真实任务 → 目标群收到文字＋表格链接 → 台账表落一行 → outbox 留 message_id → 重复派工＝催办多行
+
+
+## 探索 #2（2026-10-28 深探 · scout 协议）
+
+- 探查锚: chexian-api @ origin/main b131d495（PR #2709 已合并；PR #2715 文档待合并）
+- 防撞车（两法同证）:
+  - 法一 grep 派工/dispatch：既有派工链共两条——日报任务包（`routes/daily-report-task-pack.ts`）与 VCR 行动项派工（`services/vcr-action-dispatch.ts`，CX-ADR-0b9663）——落点均为**单一派工体验群**（百晓生通道）+ SE 任务台账；
+  - 法二 grep feishu_chat_groups / DEVASSIST：origin/main 仅文档命中（PR #2715 两文件），零代码消费点。
+  - 结论：机构群分发（13 群×org 路由×应用开发助手）为全新增量，非重复。
+- 实施要点（文件级）:
+  1. `server/src/config/env.ts`：FEISHU_DEVASSIST_* 读取器（生产 env 已配并验证）+ 派工权限账号清单（两人，env 配置禁硬编码）
+  2. `server/src/services/feishu-app-client.ts`：零改动（sendFeishuAppPostMessage/sendFeishuAppChatMessage 已参数化凭据，token 缓存按 appId 分桶）
+  3. 群路由模块（新）：读 `server/data/feishu_chat_groups.json`（org_level_3→chatId，运行时资产；缺机构 fail-visible）
+  4. `schemas/notification-outbox.schema.ts`：OUTBOX_SCENE_EXTRA_CHANNELS 加新通道枚举（照抄百晓生「只加宽行级、不并全集」先例，不污染既有 scene）
+  5. `services/notification-dispatch.ts`：新增 devassist 机构群派发函数（message_id 回执）
+  6. 派工编排 service（新，对齐 vcr-action-dispatch 形态）：派工条件（预警/危险档且环比恶化，028 裁定）→ org→群 → 台账 → outbox
+  7. 路由：operating-loop.ts 新端点（权限=两人白名单）
+- 台账口径（转正时须 owner 确认一项）: 【断言】既有 VCR 飞书台账（`services/vcr-ledger-sync.ts`，SE 折叠态唯一事实源+client_token 幂等+每日 sweep）已是事实上的任务台账；owner 拍板的「一张常驻台账表」三种落法——A 扩展 VCR 台账加分发列（合「无第二本账」铁律，倾向）／B 独立分发表（每派发一行，催办多行天然成立）／C outbox 即分发台账（message_id 已留痕，无飞书侧表格）。028 原型展示了「表格链接」交互 → 若需要飞书侧可点表格，B 或 A。
+- 催办语义调和（028×029）: 028 裁定「已派工不重复发」与 029「重复派发=催办」不冲突——正常态幂等（同任务同日不重发，抄 vcr-action-dispatch 日粒度 dedupe 先例），显式点「催办」=人工动作落新行（新 dedupe_key）。
+- 风险: 群发仅需 bot 在群内（13 群已全在，实测），无可用范围风险；@机构负责人需本域 open_id 反查（跨域存量不可用，已实证），首版可不做 @。
+- 转正映射建议: 1 issue「任务流派工飞书机构分发（029 后端通道）」＋1 PR；028 转 PR②（页面接线）Closes 同域相邻 issue，两线在 operating-loop 域协作不互堵。
+- 验收: 白名单账号 curl 派工端点 → 目标机构群收到文字＋表格链接 → outbox 行含 message_id → 同任务当日重发幂等、显式催办落新行 → 非白名单 403 → 缺机构映射 fail-visible。
 
 ## 开工记录
 
