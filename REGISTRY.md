@@ -27,5 +27,5 @@
 | [023](cards/023-loop-process-state-into-repo.md) | shipped | chexian-api | [PR #2709](https://github.com/alongor666/chexian-api/pull/2709) 已授权合并（7820051c2），最终联合部署为b131d495b；主干/部署成功，发布指纹/进程/只读业务查询核验通过；真实任务新写及现场联合验收未执行 | 2026-10-28 |
 | [024](cards/024-business-rule-dictionary-governance.md) | building | chexian-api | 可合并就绪：#2707 → [PR #2708](https://github.com/alongor666/chexian-api/pull/2708)；编号/证据索引/枚举同源，双闸与最终 CI 通过；全文重排后置，待 owner 合并 | 2026-10-28 |
 | [025](cards/025-125-strategy-rename.md) | building | chexian-api | 开工：已探索+已评审（DSH·GLM5.3 规划评审 7 findings 全处置，5 处抽验坐实）：映射表 v2（派生词带前缀/否定语境=非目标客群，owner 二裁）、四桶口径 48/68/30/30+10、白名单补 server/data+gitignore、双端锁句同批交付；随时可转正 | 2026-10-28 |
-| [026](cards/026-focus-panel-dynamic-width-nav-autocollapse.md) | scouted | chexian-api | 已探索@b131d495b＋需求正本 13 条＋独立对抗评审 **GO**（无 P0；2×P1＋5×P2 全处置复审 OK）：动态帽落点分置（:12 只视口帽）、onOpenChange 接线、spec 34 断言面实证；单 issue 单 PR 就绪 | 2026-10-28 |
+| [026](cards/026-focus-panel-dynamic-width-nav-autocollapse.md) | building | chexian-api | 开工：探索锚 b131d495b 未漂移；按需求正本 13 条推进动态宽度上限与开卡收导航，单 issue 单 PR，待规划评审 | 2026-10-28 |
 | [027](cards/027-operating-overview-home-enhancement-layer.md) | discussed | chexian-api | 021 增强层：三板块结论文字生成规则＋风险四句＋八卡迁入＋卡→聚焦导航；21 项 AUQ 已裁（起保口径/四档右闭/山西先行等），规则文档与静态原型在目标仓 design-handoff | 2026-10-28 |
