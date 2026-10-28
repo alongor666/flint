@@ -53,14 +53,14 @@
 
 **main 现状锚【静态核实】**：`数据管理/knowledge/external-ops-assets.md` §1.3 派工任务跟踪表＝行 40-50（资源名称 行44、base_token 行47、字段结构 行49）；§2 防漂移规则第 5 条「数据隔离」＝行75（复核 `git show origin/main:数据管理/knowledge/external-ops-assets.md | grep -n "派工任务跟踪表"`）。
 
-**系统台账配置锚【静态核实】**：`server/src/operating-loop/services/vcr-ledger-bootstrap.ts:5`——env 未配 `VCR_LEDGER_BITABLE_APP_TOKEN`/`VCR_LEDGER_TABLE_ID` 时自动建 base；表名锚 `vcr-ledger-schema.ts:18,21`（「经营总览·派工任务跟踪表」/「VCR 行动项」，owner 可在 console 改名、同步按 app_token 寻址不受影响）；回写链 `vcr-ledger-writeback.ts`（event_id 去重可重入，见 :249 附近注释）；派工落任务 `daily-report-task-pack.ts:9,29,41`；行动项第二出口 `vcr-action-dispatch.ts` 存在（ls 实测）。
+**系统台账配置锚【静态核实】**：`server/src/operating-loop/services/vcr-ledger-bootstrap.ts:5`——env 未配 `VCR_LEDGER_BITABLE_APP_TOKEN`/`VCR_LEDGER_BITABLE_TABLE_ID` 时自动建 base；表名锚 `vcr-ledger-schema.ts:18,21`（「经营总览·派工任务跟踪表」/「VCR 行动项」，owner 可在 console 改名、同步按 app_token 寻址不受影响）；回写链 `vcr-ledger-writeback.ts`（event_id 去重可重入，见 :249 附近注释）；派工落任务 `daily-report-task-pack.ts:9,29,41`；行动项第二出口 `vcr-action-dispatch.ts` 存在（ls 实测）。
 
 **防撞车【两法同证·均零命中】**：法一 `git grep` origin/main——「体验问题处理闭环」零命中、「external-ops」仅 #2679 已合四文件自身；法二 `gh search prs/issues --repo alongor666/chexian-api "派工任务跟踪 OR external-ops" --state open` 零命中 → 无并行实现、无在途冲突。
 
 ### 甲 · PR 实施方案（R1 终选后执行；目标仓纪律：转正必建 issue、PR Closes #N、推送前 `bun run governance`、AI 不合并）
 
 1. 改动面（单 PR，≤2 个仓内文件，文档级）：
-   - `数据管理/knowledge/external-ops-assets.md` §1.3（行 40-50 重写）：资源名称→「经营总览·派工任务跟踪表（系统在用）」；链接/表标识换为系统台账实际值——值从生产 env `VCR_LEDGER_BITABLE_APP_TOKEN`/`VCR_LEDGER_TABLE_ID` 读取后按既有条目风格写入该私有仓文档（值不入本公开卡），并注「与生产 env 对齐，变更走本文件同步规则」；字段结构行→「18 列，schema SSOT＝vcr-ledger-schema.ts」；加一行「状态列由系统回写链维护，人工只读」。
+   - `数据管理/knowledge/external-ops-assets.md` §1.3（行 40-50 重写）：资源名称→「经营总览·派工任务跟踪表（系统在用）」；链接/表标识换为系统台账实际值——值从生产 env `VCR_LEDGER_BITABLE_APP_TOKEN`/`VCR_LEDGER_BITABLE_TABLE_ID` 读取后按既有条目风格写入该私有仓文档（值不入本公开卡），并注「与生产 env 对齐，变更走本文件同步规则」；字段结构行→「18 列，schema SSOT＝vcr-ledger-schema.ts」；加一行「状态列由系统回写链维护，人工只读」。
    - 同文件 §2 第 5 条（行75）补注：「系统台账运营数据同样仅在飞书侧、不进 warehouse——数据隔离规则不变」，防误读合流＝数据入仓。
 2. 画板加注＝R2 待裁：若采纳「画板/步骤表加一行『派工跟踪以系统台账为准』」，按 `.claude/rules/process-whiteboard-ssot.md` 三件套先改飞书画板→同步 SVG 备份→更新本文件；若裁「仅改 md」，则本 PR 只做上两条。
 3. 手工空表处置＝R3 待裁：飞书侧改名「（停用·已被系统台账取代）」或归档；属飞书操作非仓内改动，PR 内只登记处置结果一行。
@@ -75,7 +75,7 @@
 - 方向（第二轮拍定）＝**单向只读镜像**：系统台账→闭环表；闭环表只展示不可编，编辑与回写仍走系统台账（SE 状态机唯一事实源不破，现有回写链不动）。
 
 **甲′ PR 实施方案（更新探索 #1 的甲方案）**：改动面＝1 个新脚本 + env 配置 + external-ops-assets.md §1.3 注记 + 测试，非纯文档级（约半天—一天）：
-1. `数据管理/integrations/vcr_ledger_mirror/sync_mirror.py`（照网点台账先例）：源＝系统台账（生产 env `VCR_LEDGER_BITABLE_APP_TOKEN`/`VCR_LEDGER_TABLE_ID`），目标＝闭环表（KdQPb8…，值入私有仓配置不入本卡），经飞书 API 读源 upsert 目标，幂等键＝派工编号；挂每日发布链（或 mini cron）。
+1. `数据管理/integrations/vcr_ledger_mirror/sync_mirror.py`（照网点台账先例）：源＝系统台账（生产 env `VCR_LEDGER_BITABLE_APP_TOKEN`/`VCR_LEDGER_BITABLE_TABLE_ID`），目标＝闭环表（KdQPb8…，值入私有仓配置不入本卡），经飞书 API 读源 upsert 目标，幂等键＝派工编号；挂每日发布链（或 mini cron）。
 2. 目标表 schema 改造为与台账同构（18 列）；旧 10 列中的口径定义行（影响度公式/状态/趋势/用时口径）迁 external-ops-assets.md §1.3 注记保留，不丢口径。
 3. 验收：跑后两表行数一致＋抽行字段一致；失败走既有告警通道；`bun run governance` 绿。
 4. 旧「甲（纯指针切换）」降为甲′的子集步骤（§1.3 注记仍要做）；乙作废。
@@ -103,3 +103,4 @@
 - 2026-10-28 owner「开工 022」。开工时清算一次裁定冲突：主会话误用主检出旧版卡（落后 origin/main 三提交，未含 7a22772 甲′落账）问出 R1=甲/R2=画板加注/R3=改名停用；owner 知情（甲′已两轮 AUQ 落账）后终裁＝**甲′镜像方案**，刚才的甲作废。
 - 开工实查补证（2026-10-28 lark-cli/gh）：①手工表仍在（base-get 200，名称「体验问题处理闭环·派工任务跟踪表」，记录仍空模板行，零变化）；②PR #2679 纯文档登记（4 文件，零飞书写操作）；③chexian-api origin/main=ccec01651 与探索锚一致无漂移，开放 PR 无撞车。
 - 按 build.md 标准流程执行：建 issue → 切分支 → 规划 → 闸① DSH 对抗评审 → 实施+PR+governance → 独立评审 → 闸② → 可合并就绪交 owner。
+- 闸①第一轮（DSH·glm-5.3 strong 档，2026-10-28）：REQUEST_CHANGES，13 findings（4×P1）——其中 F-05 勘误本卡：源表 env 键名实为 `VCR_LEDGER_BITABLE_TABLE_ID`（本卡原文漏 BITABLE，server 真实键名见 vcr-ledger-config.ts:31），卡内两处已改。其余 findings 全量吸收进目标仓规划文档修订版（commit 5be20483f）。
