@@ -121,3 +121,13 @@ owner 本轮原话：「先讨论 024：只读核实与 #1066 的分界，再给
 - owner 原话：「开工024」。后续结构化答复已裁：首期实施编号止血＋落地追踪＋枚举镜像归一，全文重排后置；新增裁定编号采用日期＋来源编号＋主题短键并做唯一性检查，旧编号保留兼容、不全表重编；历史裁定表保留，建立关联工作项与证据的当前视图。
 - 上述开工令取代此前“只讨论、不实施”的阶段限制；历史段落保留。状态转 `building`，按 `docs/build.md` 执行；目标仓 issue、实施规划、闸①与后续 PR 证据随进展追加。
 - 首期不重复承接 #1066 的具体实现与 Mini 对账，不实施全文重排，不自动合并或部署。目标仓现行规则与受保护路径授权按其 AGENTS.md 执行；开工不授予修改业务口径或改写历史裁定的权限。
+
+### 首期交付记录（2026-10-28）
+
+- 工作项：[chexian-api #2707](https://github.com/alongor666/chexian-api/issues/2707)；实施：[PR #2708](https://github.com/alongor666/chexian-api/pull/2708)。本卡保持 `building`，待 owner 合并；不将开 PR 或检查通过记作 `shipped`。
+- 实施锚：`8a84d202c27515abdf86a22200969e4b64fea62f`，已包含 main `24d3fc9d730d5cecba8fb86527ae38af122e5250`。保留 #2700 的字典增量。具体规划、代码、关联资产与生成视图均在目标仓，见 [实施规划](https://github.com/alongor666/chexian-api/blob/8a84d202c27515abdf86a22200969e4b64fea62f/docs/plans/2026-10-28-rule-dictionary-024.md)。
+- 首期结果：新裁定复合键与唯一性检查、历史/后续实体保护；旧号兼容指针与关联工作项/证据的当前索引；枚举闸读取字典正式值域，移除手填镜像。历史原文及旧号保持，未知落地显式未核实。全文重排、业务口径变化和 #1066 的具体实现/三日对账不在本次交付内。
+- 闸①：DSH GLM5.3 规划两轮，修订后 `APPROVE`、未解决 P0/P1 为零。strong 配置为最高推理档；模型未能自报该档，保留核验边界。独立实施评审首轮复现三个 P1，返修后原评审者独立复核通过；主会话亲自检查返修并完成闸② `PASS`。后续计数登记也经独立故障探针及主会话增量复评。证据及独立复核范围留在 [PR 最终评审记录](https://github.com/alongor666/chexian-api/pull/2708#issuecomment-6465034502)。
+- 本地验证（上述实施锚）：定向测试与完整治理通过；独立反例涵盖后续裁定改写/删除/插前、main 多提交前置基线、非法标题及缩进等形态。原字典全文（去除新增标记/维护段）及历史实体指纹与 main 一致；无生产/Mini 验收。
+- 首轮远端单测曾因扫描候选量上限失败；逐文件复算确认增量来自新治理入口的有日志失败出口，按既有机制登记审计及精确计数，扫描判据/范围和无日志上限保持。原失败及复现证据见 [PR 返修记录](https://github.com/alongor666/chexian-api/pull/2708#issuecomment-6465008272)；不以重跑掩盖该次失败。
+- 远端检查：上述实施锚的 [Production Gate](https://github.com/alongor666/chexian-api/actions/runs/40661879862) 与 [Secret Scan](https://github.com/alongor666/chexian-api/actions/runs/40661879863) 均 `SUCCESS`；代码契约、类型/构建/集成/pytest、全量单测和必需聚合通过，GitGuardian 通过；E2E 按现行 PR 路径规则跳过，未冒充实跑。最终核验 PR 为 `CLEAN` / `MERGEABLE`、与 main 同步，未开启 auto-merge，详见 [最终交付核验](https://github.com/alongor666/chexian-api/pull/2708#issuecomment-6465196554)。已达可合并就绪，合并由 owner 执行；本会话不合并、不部署。
