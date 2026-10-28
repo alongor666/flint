@@ -1,6 +1,6 @@
 # 021 · 导航命名与经营体检状态、趋势统一
 
-- 状态: building（owner 2026-10-28「开工021」；按探索 #4 最新红绿灯裁定实施，未合并）
+- 状态: building（owner 2026-10-28「开工021」；可合并就绪，待owner合并）
 - 目标仓: chexian-api（先探已定：repos.md 路由及现有导航、经营体检术语）
 - 类型: 优化（导航信息架构与展示口径统一）
 - 录入: 2026-10-28
@@ -54,9 +54,11 @@
 
 - 2026-10-28：owner「开工021」，进入目标仓实施；独立 worktree，止于可合并就绪，合并由 owner 执行。
 - 【事实·静态复核】重新 fetch 后目标锚为 `ccec01651fc717609615be04571037d482fc3a82`；相对探索锚，导航/体检核心文件无变化；行业装载、业务字典等周边已变化，实施前增量核实。验收与评审尚未执行。
-- 转正：[issue #2694](https://github.com/alongor666/chexian-api/issues/2694) → [PR #2700](https://github.com/alongor666/chexian-api/pull/2700)，目标分支 `i/2694`；当前实现头 `433002e5357a9d2c0899e47a147710763a7fda3b`，未合并。
-- 【事实·评审与实测】规划经 DSH·GLM5.3 最高档 APPROVE；实施独评发现不兼容日期窗比较与成本估值说明不可见两项，已修复并独立复审 APPROVE，主会话亲审修复。定向测试、真实 DuckDB、类型检查与治理通过；两省本地接口 200 非空，行业原子对拍及浏览器/窄屏走查留在 PR。CI 终态核验中，不据此记 shipped。
+- 转正：[issue #2694](https://github.com/alongor666/chexian-api/issues/2694) → [PR #2700](https://github.com/alongor666/chexian-api/pull/2700)，目标分支 `i/2694`；当前实现头 `c005d5005572dbf8f727218d9939f4064fcdd62b`，未合并。
+- 【事实·评审与实测】规划经 DSH·GLM5.3 最高档 APPROVE；实施独评发现不兼容日期窗比较与成本估值说明不可见两项，已修复并独立复审 APPROVE，主会话亲审修复。定向测试、真实 DuckDB、类型检查与治理通过；两省本地接口 200 非空，行业原子对拍及浏览器/窄屏走查留在 PR。同头CI已通过，可合并就绪；未合并，不记 shipped。
 - 【结果边界】缺日期窗、未来预起保锚等不兼容当前值保留、趋势明确不可比；成本按当前快照重算并可见披露；行业历史缺年初/缺维度/缺单元时不可判，不以起保补位或部分月份冒充签单年度。生产部署与生产业务验收 NOT RUN，owner 合并后续核发布链。
+- 【事实·CI返修】前一提交全量单测暴露旧导航搜索断言与全仓扫描计数漏项；同步名称并补页名匹配反例，五处取数降级补显式日志。逐文件确认净增5个候选、0个无日志候选，只同步总候选上限，扫描判据/范围及无日志上限不变。最终增量独评及主会话亲审 APPROVE（[记录](https://github.com/alongor666/chexian-api/pull/2700#issuecomment-6463307527)），相关58项测试、8项真实DuckDB集成及三工程类型检查通过。
+- 【事实·最终CI】最终头 `c005d5005572dbf8f727218d9939f4064fcdd62b`：[Production Gate](https://github.com/alongor666/chexian-api/actions/runs/40649887449) 全量单测、两E2E分片、代码契约、类型/构建/集成/Python及汇总均成功；[Secret Scan](https://github.com/alongor666/chexian-api/actions/runs/40649887486) 首轮checkout超时，原头重跑后成功。E2E第二分片理赔工作台既有用例重试1次后通过，波动见PR正文。最终远端状态OPEN、非draft、MERGEABLE/CLEAN、未开启auto-merge；交付owner合并。
 
 ## 探索 #1（2026-10-28）
 
