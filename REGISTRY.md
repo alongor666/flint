@@ -25,4 +25,4 @@
 | [021](cards/021-health-check-navigation-status-trend.md) | building | chexian-api | [#2694](https://github.com/alongor666/chexian-api/issues/2694) → [PR #2700](https://github.com/alongor666/chexian-api/pull/2700)；主干冲突已消解，增量复核及本地验证通过，同步提交CI核验中；待owner合并 | 2026-10-28 |
 | [022](cards/022-loop-whiteboard-merge-system-ledger.md) | building | chexian-api | 开工（10-28）：终裁甲′镜像方案（主会话误用旧卡问出甲，owner 知情重申甲′）；走 build.md 标准流程 | 2026-10-28 |
 | [023](cards/023-loop-process-state-into-repo.md) | building | chexian-api | 开工：任务关联＋复盘留痕＋八步进度；人工确认关联，复盘沿用该问题决策权；按标准流程推进 | 2026-10-28 |
-| [024](cards/024-business-rule-dictionary-governance.md) | discussed | chexian-api | 字典治理：已核 #1066 范围并补四方向建议与取舍；分界及选型未定案，未确认探索、未开工 | 2026-10-28 |
+| [024](cards/024-business-rule-dictionary-governance.md) | building | chexian-api | 开工：编号止血＋落地追踪＋枚举镜像归一；日期复合编号保留旧号，历史表外建当前视图；全文重排后置 | 2026-10-28 |
