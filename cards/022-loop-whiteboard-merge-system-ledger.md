@@ -1,6 +1,6 @@
 # 022 · 问题处理闭环：手工跟踪表与系统派工台账合流（PR #2679）
 
-- 状态: clarifying（甲/乙方案取舍待 owner 裁定；非交互登记，假设清单见「澄清」）
+- 状态: discussed（owner 2026-10-28 点名「探索卡 022」；探索 #1 完成，R1-R3 待裁）
 - 目标仓: chexian-api（先探已定：PR #2679 与系统派工链均在该仓，见「澄清」依据）
 - 类型: 优化（流程资产指针修正与合流说明，改动面为文档级）
 - 录入: 2026-10-28
@@ -44,6 +44,38 @@
 **防重与并卡**
 
 - 建卡前已读 REGISTRY.md 全表并 grep「闭环/派工/台账/跟踪表/external-ops/2679」：无同源卡。命中均为无关上下文——017 是观赔域导航拆分，021 仅在防撞车扫描把 #2679 列入 chexian-api 开放 PR 名单（未承载其内容），011/002 的「台账」是锚漂移提交名与图表台账页口径。故新增本卡，无并卡关系。
+
+## 探索 #1（2026-10-28 · owner 点名「探索卡 022」触发）
+
+探查锚：chexian-api @ ccec01651（2026-10-28 origin/main）；flint 本卡。证据纪律：事实/断言二分，方法学标注；零命中结论两法同证。
+
+**关键事实更新【实测】**：PR #2679 已于 2026-10-28T03:03Z 合并（merge commit 4edbbe413，`gh pr view 2679 --json state,mergedAt` 复核）——甲的实施形态由「修订未合 PR」改为「新 PR 修 main」。
+
+**main 现状锚【静态核实】**：`数据管理/knowledge/external-ops-assets.md` §1.3 派工任务跟踪表＝行 40-50（资源名称 行44、base_token 行47、字段结构 行49）；§2 防漂移规则第 5 条「数据隔离」＝行75（复核 `git show origin/main:数据管理/knowledge/external-ops-assets.md | grep -n "派工任务跟踪表"`）。
+
+**系统台账配置锚【静态核实】**：`server/src/operating-loop/services/vcr-ledger-bootstrap.ts:5`——env 未配 `VCR_LEDGER_BITABLE_APP_TOKEN`/`VCR_LEDGER_TABLE_ID` 时自动建 base；表名锚 `vcr-ledger-schema.ts:18,21`（「经营总览·派工任务跟踪表」/「VCR 行动项」，owner 可在 console 改名、同步按 app_token 寻址不受影响）；回写链 `vcr-ledger-writeback.ts`（event_id 去重可重入，见 :249 附近注释）；派工落任务 `daily-report-task-pack.ts:9,29,41`；行动项第二出口 `vcr-action-dispatch.ts` 存在（ls 实测）。
+
+**防撞车【两法同证·均零命中】**：法一 `git grep` origin/main——「体验问题处理闭环」零命中、「external-ops」仅 #2679 已合四文件自身；法二 `gh search prs/issues --repo alongor666/chexian-api "派工任务跟踪 OR external-ops" --state open` 零命中 → 无并行实现、无在途冲突。
+
+### 甲 · PR 实施方案（R1 终选后执行；目标仓纪律：转正必建 issue、PR Closes #N、推送前 `bun run governance`、AI 不合并）
+
+1. 改动面（单 PR，≤2 个仓内文件，文档级）：
+   - `数据管理/knowledge/external-ops-assets.md` §1.3（行 40-50 重写）：资源名称→「经营总览·派工任务跟踪表（系统在用）」；链接/表标识换为系统台账实际值——值从生产 env `VCR_LEDGER_BITABLE_APP_TOKEN`/`VCR_LEDGER_TABLE_ID` 读取后按既有条目风格写入该私有仓文档（值不入本公开卡），并注「与生产 env 对齐，变更走本文件同步规则」；字段结构行→「18 列，schema SSOT＝vcr-ledger-schema.ts」；加一行「状态列由系统回写链维护，人工只读」。
+   - 同文件 §2 第 5 条（行75）补注：「系统台账运营数据同样仅在飞书侧、不进 warehouse——数据隔离规则不变」，防误读合流＝数据入仓。
+2. 画板加注＝R2 待裁：若采纳「画板/步骤表加一行『派工跟踪以系统台账为准』」，按 `.claude/rules/process-whiteboard-ssot.md` 三件套先改飞书画板→同步 SVG 备份→更新本文件；若裁「仅改 md」，则本 PR 只做上两条。
+3. 手工空表处置＝R3 待裁：飞书侧改名「（停用·已被系统台账取代）」或归档；属飞书操作非仓内改动，PR 内只登记处置结果一行。
+4. 验收命令（PR 描述贴执行结果）：①`git show origin/main:数据管理/knowledge/external-ops-assets.md | grep -n "经营总览"` 命中 §1.3；②`lark-cli base +base-get` 系统台账 200 且名称一致；③`bun run governance` 绿；④手工表 `lark-cli base +record-list` 确认处置态。
+5. 风险：①生产 env 键名/取值以 bootstrap 实现为准，实施时从生产读取，拿不到则降级为「见生产 env」指针（与登记口径一致）；②换表需知会原表读者（车险部，运营动作在 PR 外）；③【断言·代码推理】台账改名不破坏指针（按 app_token 寻址，schema :20 注释）。
+
+### 待裁（转正前）
+
+- R1 甲/乙终选（推荐甲）。
+- R2 画板是否加注（走三件套）或仅改 md 指针。
+- R3 手工空表处置：改名停用 vs 归档。
+
+### 粒度映射（转正时定）
+
+单卡单 issue 单 PR（≤2 文件、无代码逻辑）；不与他卡并。
 
 ## 开工记录
 
