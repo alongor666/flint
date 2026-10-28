@@ -1,6 +1,6 @@
 # 022 · 问题处理闭环：手工跟踪表与系统派工台账合流（PR #2679）
 
-- 状态: building（owner 2026-10-28「开工 022」；主会话曾误用主检出旧版卡问出甲方案，owner 知情重申后终裁＝甲′镜像方案，甲作废）
+- 状态: shipped（2026-10-28 代码已授权合并；真实飞书镜像初始化及现场联合验收未执行，见开工记录）
 - 目标仓: chexian-api（先探已定：PR #2679 与系统派工链均在该仓，见「澄清」依据）
 - 类型: 优化（流程资产指针修正与合流说明，改动面为文档级）
 - 录入: 2026-10-28
@@ -115,3 +115,5 @@
 - 联合接管：owner 在统筹评估后明确「交给你负责，最终合并」，委托本会话办理022/023返修与合并；未将此授权扩成真实飞书结构改造或首次镜像写入。联合评估在 `9e239f97` 发现两P2：初始化重入误删新“指标”列、取错表名导致只剩后缀，均已由主会话离线独立复现。
 - 返修：`7d16d7264f0b0a229ebff90061e2ece4961275ad` 增加写前原旧字段ID journal及源/目标绑定，完整/中断重入保留新列ID、值与顺序，精确table_id取表名；未知/损坏状态拒绝猜测。最终head `7207b901c22c66c89a38819eed68e554efafaa36` 已合流023的实际合并提交 `7820051c2`，共享计数经原扫描器重算为1319/1032，Python16/40，保留双方历史且判据不变。
 - 返修验收：迁移/镜像25项及6子测试、扫描/扇出53项、治理107与权限/harness通过；fresh-context完整复评及原发现者增量复评均通过，两P2 fixed、未解决P0/P1/P2=0。主会话亲读修复并复跑独立46场景（含30个写后中断点、坏状态/身份/原子落盘失败）通过，闸②通过；见[最终返修评审](https://github.com/alongor666/chexian-api/pull/2705#issuecomment-6466476695)。远端CI核验中，现场启用仍 NOT RUN。
+- 授权合并：核验最终head `7207b901c22c66c89a38819eed68e554efafaa36`，质量汇总/密钥等7项 SUCCESS，浏览器E2E按当前改动范围为 SKIPPED，PR=OPEN/CLEAN/MERGEABLE、无autoMerge后，主会话依owner本轮明确委托绑定版本合并 [PR #2705](https://github.com/alongor666/chexian-api/pull/2705)。实际合并提交 `b131d495bdeb039f64c363952fbefbc56e46cfd9`，[PR检查](https://github.com/alongor666/chexian-api/actions/runs/40671357998)及[合并记录](https://github.com/alongor666/chexian-api/pull/2705#issuecomment-6466658702)留证。shipped仅记代码合并；发布机源/目标身份与权限确认、原结构备份、bootstrap及首次真实镜像、同一VCR任务跨平台联合验收仍 NOT RUN。
+- 合并后检查：`b131d495bdeb039f64c363952fbefbc56e46cfd9` 的[主干 Production Gate](https://github.com/alongor666/chexian-api/actions/runs/40672654582) SUCCESS，包含全量单元、两个浏览器端到端测试分片（CI合成夹具）、类型/构建/集成/Python及质量汇总；架构哨兵 SUCCESS。[自动部署](https://github.com/alongor666/chexian-api/actions/runs/40674290791)同版本 SUCCESS，发布指纹/入口资源检查及发布收尾均通过。主会话独立只读核验健康接口200、发布指纹精确匹配、服务online、核心查询非空；[最终交付证据](https://github.com/alongor666/chexian-api/pull/2705#issuecomment-6467077455)。代码部署完成，前述镜像现场启用与真实任务联合验收仍 NOT RUN。
