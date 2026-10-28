@@ -31,4 +31,4 @@
 | [027](cards/027-operating-overview-home-enhancement-layer.md) | building | chexian-api | 021 增强层：三板块结论文字生成规则＋风险句＋八卡迁入＋卡→聚焦导航；#2720 实施中，规划及成本增量复评通过，进入真实走查与独立复评，完整裁定见卡片 | 2026-10-28 |
 | [028](cards/028-home-loop-taskflow-pill.md) | building | chexian-api | [#2724](https://github.com/alongor666/chexian-api/issues/2724) → [PR #2731](https://github.com/alongor666/chexian-api/pull/2731)：只读胶囊/八步/法定工作钟；双闸、270项定向与真实本地验证通过，远端 CI 核验中；派工归 029 | 2026-10-28 |
 
-| [029](cards/029-taskflow-dispatch-feishu-group.md) | building | chexian-api | 任务流派工接飞书机构群，自动与手动双目标分发；扩展现有 VCR 台账，owner 已下令实施 | 2026-10-28 |
+| [029](cards/029-taskflow-dispatch-feishu-group.md) | building | chexian-api | 机构群派工与离线快照实现见 PR #2732；独立评审通过，待持续检查与 owner 合并 | 2026-10-28 |
