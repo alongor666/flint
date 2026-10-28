@@ -28,7 +28,7 @@
 | [024](cards/024-business-rule-dictionary-governance.md) | shipped | chexian-api | 首期完成：#2707 关闭、[PR #2708](https://github.com/alongor666/chexian-api/pull/2708) 合并至 f812de917；编号/证据索引/枚举同源及双闸通过，合并版质量闸通过；存量核义/全面归并/全文重排后续 | 2026-10-28 |
 | [025](cards/025-125-strategy-rename.md) | building | chexian-api | 开工：已探索+已评审（DSH·GLM5.3 规划评审 7 findings 全处置，5 处抽验坐实）：映射表 v2（派生词带前缀/否定语境=非目标客群，owner 二裁）、四桶口径 48/68/30/30+10、白名单补 server/data+gitignore、双端锁句同批交付；随时可转正 | 2026-10-28 |
 | [026](cards/026-focus-panel-dynamic-width-nav-autocollapse.md) | building | chexian-api | 可合并就绪：[#2714](https://github.com/alongor666/chexian-api/issues/2714) → [PR #2719](https://github.com/alongor666/chexian-api/pull/2719)；6f8204757 双闸/独评及全部9项CI通过，23158单元通过，浏览器2项重试通过与6项既有跳过已披露；待owner合并 | 2026-10-28 |
-| [027](cards/027-operating-overview-home-enhancement-layer.md) | building | chexian-api | 021 增强层：三板块结论＋风险句＋八卡聚焦；#2720／PR #2730，双闸与真实本地 v7 验证通过，完整 CI 收口中，未合并发布；裁定见卡片 | 2026-10-28 |
+| [027](cards/027-operating-overview-home-enhancement-layer.md) | building | chexian-api | 021 增强层：三板块结论＋风险句＋八卡聚焦；#2720／PR #2730 双闸、真实本地 v7 验证及 CI 全绿，可合并就绪待 owner；未合并发布 | 2026-10-28 |
 | [028](cards/028-home-loop-taskflow-pill.md) | building | chexian-api | [#2724](https://github.com/alongor666/chexian-api/issues/2724) → [PR #2731](https://github.com/alongor666/chexian-api/pull/2731)：只读胶囊/八步/法定工作钟；双闸、270项定向与真实本地验证通过，远端 CI 核验中；派工归 029 | 2026-10-28 |
 
 | [029](cards/029-taskflow-dispatch-feishu-group.md) | building | chexian-api | 机构群派工与离线快照实现见 PR #2732；独立评审通过，待持续检查与 owner 合并 | 2026-10-28 |
