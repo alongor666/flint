@@ -112,3 +112,6 @@
 - **验收**：判据 4（`test:py` 10 passed + governance 107/107）✅、判据 5（双锚 1/1）✅、A.0 检视留痕（lark-cli 实测 11 字段+5 组 select 枚举录 §1.3）✅；判据 1/2/3（dry-run/execute 对拍/field-list 18 列）**留 mini 现场**——前置 R6（owner 飞书 console 给本机探索应用加源 base 只读协作者）+ 生产 env `VCR_LEDGER_BITABLE_APP_TOKEN`/`VCR_LEDGER_BITABLE_TABLE_ID` 登记，步骤见 README「启用步骤」。
 - **状态**：PR #2705 CI 全绿（第二次 rebase 后重跑中）、可合并就绪，**合并权在 owner**。合并后：① mini 现场 bootstrap+首跑；② 卡转 shipped。
 - 教训（写入记忆）：①`reset --soft origin/main` 前核实本地 origin/main 未被评审者 fetch 前移（worktree 共享 .git，评审者 fetch 即全局生效）；②重建历史禁 `git add -u`，一律点名文件；③bitable 标识不进代码常量（文档表格放行、代码赋值判 secret）；④全仓计数钉子是热点冲突区，追 main 后在对方新值上叠加而非覆盖。
+- 联合接管：owner 在统筹评估后明确「交给你负责，最终合并」，委托本会话办理022/023返修与合并；未将此授权扩成真实飞书结构改造或首次镜像写入。联合评估在 `9e239f97` 发现两P2：初始化重入误删新“指标”列、取错表名导致只剩后缀，均已由主会话离线独立复现。
+- 返修：`7d16d7264f0b0a229ebff90061e2ece4961275ad` 增加写前原旧字段ID journal及源/目标绑定，完整/中断重入保留新列ID、值与顺序，精确table_id取表名；未知/损坏状态拒绝猜测。最终head `7207b901c22c66c89a38819eed68e554efafaa36` 已合流023的实际合并提交 `7820051c2`，共享计数经原扫描器重算为1319/1032，Python16/40，保留双方历史且判据不变。
+- 返修验收：迁移/镜像25项及6子测试、扫描/扇出53项、治理107与权限/harness通过；fresh-context完整复评及原发现者增量复评均通过，两P2 fixed、未解决P0/P1/P2=0。主会话亲读修复并复跑独立46场景（含30个写后中断点、坏状态/身份/原子落盘失败）通过，闸②通过；见[最终返修评审](https://github.com/alongor666/chexian-api/pull/2705#issuecomment-6466476695)。远端CI核验中，现场启用仍 NOT RUN。

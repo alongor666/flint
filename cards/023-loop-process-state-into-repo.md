@@ -1,6 +1,6 @@
 # 023 · 问题处理闭环：流程与状态引入项目并综合
 
-- 状态: building（2026-10-28 owner「开工023」；关联＋复盘＋八步进度，人工确认关联，复盘沿用该问题决策权）
+- 状态: shipped（2026-10-28 代码已合并并自动部署；真实经营任务关联/复盘写入验收未执行，见开工记录）
 - 目标仓: chexian-api（先探可定：画板/步骤表已登记于该仓 `数据管理/knowledge/external-ops-assets.md` §1.1/§1.2；闭环系统代码域 `server/src/operating-loop/`；见 022 探索 #1 实查）
 - 类型: 功能（复用现有闭环能力，补关系与复盘事实，派生八步进度）
 - 录入: 2026-10-28
@@ -181,3 +181,4 @@ flint 023 探索及本轮裁定已收口，当前不实施目标仓。
 - 随后 owner 合入 #2708/#2670，主干变为 `012a0cb0`，同一计数/审计文件冲突已在最终 head `19d9390e652899b47def9e187429b70d871549fb` 合流解决。双方历史完整保留；原 023 全部产品文件与已审 `e22e224bc` 哈希逐一相等。原扫描器实测最新主干 1313/1028，加本卡 5/3 后为 1318/1031，主会话及从零上下文评审分别核验；定向 30 项、治理 107 项及权限/harness通过。隔离夹具按新主干生成器迁到省子目录，旧生成文件先核 hash 并备份，真实重启后 health/Case GET 均 200、关系与复盘历史保留。最终独评及闸②通过，见 [主干合流复评](https://github.com/alongor666/chexian-api/pull/2709#issuecomment-6465520786)，CI 核验中。
 - 边界：未合并、未部署、未写生产或飞书；生产经营结果验收、真实跨进程并发及完整真实 PAT 凭据链端到端 NOT RUN。单进程串行边界和保留新事件兼容读的回滚要求见目标仓 PR。待远端检查结算，卡保持 building，owner 合并后另记 shipped。
 - 最终交付：head `19d9390e652899b47def9e187429b70d871549fb` 的[最终 CI](https://github.com/alongor666/chexian-api/actions/runs/40665347208) 九项全部 SUCCESS（含全量单元、两个端到端分片、类型/构建/集成/Python、质量汇总及密钥扫描）。单一监视结束后再次独立核验 PR=OPEN、非草稿、MERGEABLE/CLEAN、autoMergeRequest=null；[可合并就绪记录](https://github.com/alongor666/chexian-api/pull/2709#issuecomment-6465839673)。双闸及最终独评已通过，未解决 P0/P1/P2=0。交付止于 owner 合并前，卡保持 building；生产经营结果验收仍 NOT RUN，不从 CI 或合并就绪推断已上线。
+- 后续授权与合并：owner 明确「交给你负责，最终合并」，将本轮两PR返修及合并委托主会话。重新核验已审head、九项检查及独评后，绑定版本合并 [PR #2709](https://github.com/alongor666/chexian-api/pull/2709)，实际合并提交 `7820051c26455f48844f362b97d26d6e8024769c`。[主干检查](https://github.com/alongor666/chexian-api/actions/runs/40670098873)及[自动部署](https://github.com/alongor666/chexian-api/actions/runs/40671389902)均 SUCCESS；独立只读核查健康接口200、发布指纹匹配、进程online、核心查询非空。shipped仅记录代码合并与部署；真实经营任务的新关联/复盘写入，以及与022镜像的现场联合验收仍 NOT RUN。
