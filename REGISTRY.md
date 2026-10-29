@@ -29,6 +29,6 @@
 | [025](cards/025-125-strategy-rename.md) | building | chexian-api | 开工：已探索+已评审（DSH·GLM5.3 规划评审 7 findings 全处置，5 处抽验坐实）：映射表 v2（派生词带前缀/否定语境=非目标客群，owner 二裁）、四桶口径 48/68/30/30+10、白名单补 server/data+gitignore、双端锁句同批交付；随时可转正 | 2026-10-28 |
 | [026](cards/026-focus-panel-dynamic-width-nav-autocollapse.md) | building | chexian-api | 可合并就绪：[#2714](https://github.com/alongor666/chexian-api/issues/2714) → [PR #2719](https://github.com/alongor666/chexian-api/pull/2719)；6f8204757 双闸/独评及全部9项CI通过，23158单元通过，浏览器2项重试通过与6项既有跳过已披露；待owner合并 | 2026-10-28 |
 | [027](cards/027-operating-overview-home-enhancement-layer.md) | shipped | chexian-api | 基础 PR #2730 与监管追加修复 PR #2780 均已合并；监管修复的主干/自动部署/线上接口核验通过，同城系数、本月两行及右侧入口已发布；其余生产验收边界见卡 | 2026-10-29 |
-| [028](cards/028-home-loop-taskflow-pill.md) | building（一期 PR #2731 已合并上线；二期走查反馈：全站常驻+两级展开=指标列表→单指标八步，10-29 已录入待实施） | chexian-api | [#2724](https://github.com/alongor666/chexian-api/issues/2724) → [PR #2731](https://github.com/alongor666/chexian-api/pull/2731)：只读胶囊/八步/法定工作钟；派工归 029 | 2026-10-28 |
+| [028](cards/028-home-loop-taskflow-pill.md) | building（一期 PR #2731 已合并上线；二期走查反馈：全站常驻+两级展开=指标列表→单指标八步，10-29 下令实施中） | chexian-api | [#2724](https://github.com/alongor666/chexian-api/issues/2724) → [PR #2731](https://github.com/alongor666/chexian-api/pull/2731)：只读胶囊/八步/法定工作钟；派工归 029 | 2026-10-28 |
 
 | [029](cards/029-taskflow-dispatch-feishu-group.md) | shipped | chexian-api | owner授权合并 [PR #2732](https://github.com/alongor666/chexian-api/pull/2732) 至82de11a7f，#2725关闭；独评与9项CI通过，网页派工入口保留；生产配置/补列/真实群验收另核 | 2026-10-29 |
