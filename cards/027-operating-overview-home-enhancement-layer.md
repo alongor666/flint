@@ -1,6 +1,6 @@
 # 027 · 经营总览首页增强层：三板块结论文字生成规则＋风险句＋八卡迁入（021 之上）
 
-- 状态: building
+- 状态: shipped
 - 目标仓: chexian-api（依据：首页 `src/features/pages/LandingHomePage.tsx`、体检 `src/features/dashboard/components/HealthCheckSection.tsx`、八卡 `src/features/operating-overview-v2/`、矩阵端点 `server/src/routes/query/vcr-matrix.ts` 均在该仓；基线 PR #2700 已于 2026-10-28 合并）
 - 类型: 功能（首页信息架构 + 结论文案生成规则）
 - 录入: 2026-10-28
@@ -184,3 +184,5 @@ owner 2026-10-28 同会话全程指令，按时序逐条原话（含后被取代
 - 2026-10-29 冲突收口：owner 指出与 #2731 冲突；实时核查 #2731 已合入主干，#2730 确为冲突态。本分支合入主干形成新锚 `58d19a5086a4b55c5ed5292daf54e688ca621bd8`，保留任务流胶囊、稳定滚动条及027工作台；审计计数按实际组合复核，两方历史不覆盖。相关定向、三工程类型、治理、独立增量复评及真实组合首页桌面／窄屏验证通过；同一新锚CI全部通过，终态复核GitHub为ready、CLEAN／MERGEABLE，工作树干净、主干无落后，恢复可合并就绪待owner。旧锚CI结果保留为历史；未开启auto merge、未合并、未生产发布，详见 [PR #2730](https://github.com/alongor666/chexian-api/pull/2730)。
 
 - 2026-10-29 后续紧急修复：实时核实原 [PR #2730](https://github.com/alongor666/chexian-api/pull/2730) 已合并，合并锚 `a59c191342030ef0bd5e392cb1b77be8544f6454`。owner 追加监管入口与可判诉求，并按拍板㉛关闭范围／窗口分叉；新工作项 [#2779](https://github.com/alongor666/chexian-api/issues/2779)、[PR #2780](https://github.com/alongor666/chexian-api/pull/2780)。本地真实双入口、同城判定、本月两行与桌面／窄屏验证通过，独立复评两项P2均关闭；当前新提交CI中，本轮已有owner直接合并授权。基础实现合并不代表生产业务验收，本次状态以目标仓PR为准。
+
+- 2026-10-29 本轮授权合并：PR #2780 最终提交 `48b0a11c91580dc18392cd658ec4574e604d9e24` 的完整CI全部通过，独立复评及主会话修复复核通过。先前主干合流的过时维度计数断言已如实记录并以确切集合断言修正，未改筛选运行时或削弱检查。按owner本轮明确授权绑定核验HEAD直接合并，GitHub确认实际合并锚 `99ab5c348be9219a6b6c09a3fa68822b1c309a9b`，#2779已自动关闭，卡转shipped；未开启auto merge。主干检查与现有自动部署核验仍在继续，尚不声明生产验收完成。
