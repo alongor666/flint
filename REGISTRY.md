@@ -28,7 +28,7 @@
 | [024](cards/024-business-rule-dictionary-governance.md) | shipped | chexian-api | 首期完成：#2707 关闭、[PR #2708](https://github.com/alongor666/chexian-api/pull/2708) 合并至 f812de917；编号/证据索引/枚举同源及双闸通过，合并版质量闸通过；存量核义/全面归并/全文重排后续 | 2026-10-28 |
 | [025](cards/025-125-strategy-rename.md) | building | chexian-api | 开工：已探索+已评审（DSH·GLM5.3 规划评审 7 findings 全处置，5 处抽验坐实）：映射表 v2（派生词带前缀/否定语境=非目标客群，owner 二裁）、四桶口径 48/68/30/30+10、白名单补 server/data+gitignore、双端锁句同批交付；随时可转正 | 2026-10-28 |
 | [026](cards/026-focus-panel-dynamic-width-nav-autocollapse.md) | building | chexian-api | 可合并就绪：[#2714](https://github.com/alongor666/chexian-api/issues/2714) → [PR #2719](https://github.com/alongor666/chexian-api/pull/2719)；6f8204757 双闸/独评及全部9项CI通过，23158单元通过，浏览器2项重试通过与6项既有跳过已披露；待owner合并 | 2026-10-28 |
-| [027](cards/027-operating-overview-home-enhancement-layer.md) | building | chexian-api | 021 增强层：三板块结论＋风险句＋八卡聚焦；PR #2730 已消解已合并 #2731 冲突，增量复评、真实组合首页及新提交 CI 全绿，可合并就绪待 owner；未合并发布 | 2026-10-29 |
+| [027](cards/027-operating-overview-home-enhancement-layer.md) | building | chexian-api | 基础 PR #2730 已合并；监管入口与可判追加修复 #2779／PR #2780，本地真实验证及独立复评通过，CI中；owner已授权本轮通过后直接合并 | 2026-10-29 |
 | [028](cards/028-home-loop-taskflow-pill.md) | building | chexian-api | [#2724](https://github.com/alongor666/chexian-api/issues/2724) → [PR #2731](https://github.com/alongor666/chexian-api/pull/2731)：只读胶囊/八步/法定工作钟；双闸、本地验证及当前提交 CI 全绿，可合并就绪，待 owner 合并；派工归 029 | 2026-10-28 |
 
 | [029](cards/029-taskflow-dispatch-feishu-group.md) | shipped | chexian-api | owner授权合并 [PR #2732](https://github.com/alongor666/chexian-api/pull/2732) 至82de11a7f，#2725关闭；独评与9项CI通过，网页派工入口保留；生产配置/补列/真实群验收另核 | 2026-10-29 |
