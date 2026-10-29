@@ -105,4 +105,9 @@ owner 2026-10-28 同会话指令，按时序逐条原话（形态演化见「澄
 ### 二期开工（2026-10-29）
 
 - owner 下令「实施吧」。范围＝上方二期裁定（全站常驻＋两级展开）；两个未答口径按原型默认进实施：未接入指标＝灰置占位、常驻位置＝全局壳内容区顶部。
-- 目标仓 issue/分支/PR 见下行，随实施回填。
+- 目标仓 [#2792](https://github.com/alongor666/chexian-api/issues/2792) → [PR #2796](https://github.com/alongor666/chexian-api/pull/2796)（分支 `i/2792`，两个实现提交 + 一个 e2e 基线提交）。
+- **闸①**：DSH·glm-5.3 规划评审两轮——首轮 REQUEST_CHANGES 6 findings（F1 黄金前提错「金 master 只冻结请求线缆不含响应形状」/F2 全局挂载全出血与 <1024 展开态/F3 纯态口径延伸无拍板锚/F4 metrics 安放位点/F5 全局失败态与无效轮询/F6 available=false 三态归属）全修入规划；二轮 APPROVE + R1-R3 一行级（验收文件指错/padding 纵向缺失/行号漂移）修复后放行。
+- **实施要点**：服务端 `home-taskflow` 响应恒带 `metrics` 骨架（五指标 id 实名注册表、名称复用注册表 `name`、仅 variable_cost_ratio enabled；并入 base 常量五处 res.json 全自动覆盖）；组件三态重构（fold→metrics→flow，◂/▴ 逐级返回；错误降级一行小字；无权停 60s 轮询；视图切换焦点管理）；全局壳 `taskflowPill` slot（B330 依赖倒置 + App 懒加载 + ErrorBoundary 复壁 + 1600px 内容列对齐 + 移动端 60vh 限高）；LandingHomePage 摘除（迁移非复制）。
+- **独立对抗评审**：APPROVE_WITH_CHANGES（C1 全局常驻脱离 ErrorBoundary 故障半径扩至整壳 P2 / C2 停轮询零断言 P2 / C5 键盘焦点连续性 / C6 padding 规格 / C7 纯态假设挂走查）——C1-C6 全处置，C2 经**真实变异验证**（改回常量轮询即红）。**闸②**主会话亲评过（评审锚 PR comment 6490761208）。
+- **CI**：首轮 shard1 `webServer exited with code 143`（#2550 已知同机互杀缺陷，非本 PR）→ rerun 暴露**真回归**：`13-a11y-axe` 首屏竞争元素基线被全局胶囊顶爆（变率/滚动业绩/系数口径各 +1；KPI 看板净 −1＝胶囊 +1、占高挤出首尾 2 枚，布局露出先例同 #1952）→ 按 rerun 实测值逐页回填（45/45/58/61）并记账本依据；第三轮 CI 九项全绿（run 40834737339，含 Production Readiness Gate）。
+- **交付边界**：PR CLEAN/MERGEABLE、未开 auto merge，等 owner 手合。**纯态照显为默认假设**（AUQ 未答：owner「常驻最重要」推定，否决则一行 `!pure` 回滚）——在 PR 走查清单挂了确认项。
